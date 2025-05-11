@@ -1,13 +1,22 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 @import "tailwindcss";
 
 @theme {
-  --color-black: #1C1B1B;
-  --color-secondary: #F59E0B;
+  --color-dark: #0E0E0E;
+  --color-surface: #1A1A1A;
+  --color-accent: #333333;
+  --color-border: #2E2E2E;
+  --color-subtext: #A1A1AA;
+  --color-light: #FFFFFF;
+  --color-hover-tint: #1F1F1F;
 }
 
 body {
   font-family: "Asap", sans-serif;
+}
+
+.font-roboto {
+  font-family: "Roboto", sans-serif;
 }

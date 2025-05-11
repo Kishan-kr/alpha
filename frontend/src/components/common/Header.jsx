@@ -1,10 +1,16 @@
 import React, { useState } from 'react';
-import { ShoppingCart, User, Menu, X, Instagram, Facebook, Plus, Minus, Twitter } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, Plus, Minus } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Cart from '../cart/Cart';
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [shopOpen, setShopOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(true);
+
+  const closeCart = () => {
+    setIsCartOpen(false)
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-white shadow-md py-3">
@@ -25,16 +31,15 @@ export default function Header() {
 
         {/* Header Icons */}
         <div className="flex items-center space-x-5 font-thin">
-          <ShoppingCart className="w-5 h-5 md:w-6 md:h-6 cursor-pointer hover:text-black" />
           <User className="w-5 h-5 md:w-6 md:h-6 cursor-pointer hover:text-black" />
+          <ShoppingCart onClick={() => setIsCartOpen(true)} className="w-5 h-5 md:w-6 md:h-6 cursor-pointer hover:text-black" />
         </div>
       </div>
 
       {/* Slide-in Navigation */}
       <div
-        className={`fixed flex flex-col top-0 left-0 h-full w-68 md:w-80 bg-[var(--color-black)] text-white shadow-lg transform transition-transform duration-300 z-50 ${
-          menuOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className={`fixed flex flex-col top-0 left-0 h-full w-68 md:w-80 bg-[var(--dark-olive-green)] text-white shadow-lg transform transition-transform duration-500 z-50 ${menuOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
       >
         <div className="flex items-center justify-between p-6">
           <button className='cursor-pointer' onClick={() => setMenuOpen(false)} aria-label="Close menu">
@@ -60,12 +65,20 @@ export default function Header() {
               <span>Shop</span>
               {shopOpen ? <Minus className="w-5 h-5" /> : <Plus className="w-5 h-5" />}
             </button>
-            {shopOpen && (
-              <div className="ml-4 flex flex-col gap-6 text-sm tracking-[0.2rem] pb-6 text-white/60">
-                <Link to="/shop/oversized-tshirts" onClick={() => setMenuOpen(false)}>Oversized T-shirts</Link>
-                <Link to="/shop/trendy-polos" onClick={() => setMenuOpen(false)}>Trendy Polos</Link>
+
+            <div
+              className={`overflow-hidden transition-all duration-500 ease-in-out ${shopOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+                }`}
+            >
+              <div className="ml-4 flex flex-col gap-6 text-sm tracking-[0.2rem] pb-6 text-white/80 pt-2">
+                <Link to="/shop/oversized-tshirts" className="hover:text-white" onClick={() => setMenuOpen(false)}>
+                  Oversized T-shirts
+                </Link>
+                <Link to="/shop/trendy-polos" className="hover:text-white" onClick={() => setMenuOpen(false)}>
+                  Trendy Polos
+                </Link>
               </div>
-            )}
+            </div>
           </div>
 
           <Link
@@ -85,32 +98,35 @@ export default function Header() {
           </Link>
         </nav>
 
-        <ul className="flex pt-4 pb-1 gap-x-6 mt-auto text-gray-300 justify-center mb-4 border-t border-white/30">
+        {/* social links  */}
+        <ul className="flex pt-4 pb-1 gap-x-4 mt-auto text-gray-200 justify-center mb-4 border-t border-white/30">
           <li>
-            <Link target="_blank" to="https://instagram.com/tashn.in">
-              <Instagram className='w-5 h-5 md:w-6 md:h-6'/>
+            <Link target="_blank" to="https://instagram.com/tashn.in" className='hover:text-white text-[10px] tracking-wide uppercase font-roboto font-thin px-2'>
+              Instagram
             </Link>
           </li>
           <li>
-            <Link target="_blank" to="https://facebook.com/tashn.co.in">
-              <Facebook className='w-5 h-5 md:w-6 md:h-6'/>
+            <Link target="_blank" to="https://facebook.com/tashn.co.in" className='hover:text-white text-[10px] tracking-wide uppercase font-roboto font-thin px-2'>
+            Facebook
             </Link>
           </li>
           <li>
-            <Link target="_blank" to="https://instagram.com/tashn.in">
-              <Twitter className='w-5 h-5 md:w-6 md:h-6'/>
+            <Link target="_blank" to="https://instagram.com/tashn.in" className='hover:text-white text-[10px] tracking-wide uppercase font-roboto font-thin px-2'>
+            X
             </Link>
           </li>
         </ul>
       </div>
 
       {/* Backdrop */}
-      {menuOpen && (
+      {(menuOpen || isCartOpen) && (
         <div
           onClick={() => setMenuOpen(false)}
           className="fixed inset-0 bg-black/20 bg-opacity-40 z-40"
         />
       )}
+
+      <Cart isOpen={isCartOpen} closeCart={closeCart}/>
     </header>
   );
 }
