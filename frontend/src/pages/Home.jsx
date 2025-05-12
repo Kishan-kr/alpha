@@ -1,8 +1,7 @@
 import React, { useRef } from 'react'
 import Hero from '../components/home/Hero';
-import Statement from '../components/home/Statement';
 import LatestProducts from '../components/home/LatestProducts';
-import Testimonials from '../components/home/Testimonials';
+import CustomerDiaries from '../components/home/CustomerDiaries';
 
 export default function Home() {
   const latestProductsSection = useRef(null);
@@ -14,9 +13,8 @@ export default function Home() {
   return (
     <div className="">
       <Hero handleNewCollection={scrollToProductsSection}/>
-      {/* <Statement /> */}
       <LatestProducts scrollRef={latestProductsSection}/>
-      <Testimonials />
+      <CustomerDiaries />
     </div>
   );
 }

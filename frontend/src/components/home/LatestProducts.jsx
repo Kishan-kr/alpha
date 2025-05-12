@@ -45,14 +45,14 @@ function LatestProducts({ scrollRef }) {
         <h3 className='text-xl md:text-6xl text-nowrap text-white tracking-widest font-thin text-center uppercase'>New Arrivals</h3>
 
         <hr
-          className='h-4 w-full text-white bg-linear-to-b from-white/60 from-0% via-surface via-5% to-90% to-white/60  ms-auto z-20'
+          className='h-4 w-full  bg-linear-to-b from-white/60 from-0% via-surface via-5% to-90% to-white/60  ms-auto z-20'
           style={{
             backgroundImage: `
       linear-gradient(
         to bottom,
         rgba(255,255,255,0.6) 0%,
-        var(--color-surface) 10%,
-        var(--color-surface) 90%,
+        var(--color-surface) 20%,
+        var(--color-surface) 80%,
         rgba(255,255,255,0.6) 100%
       )
     `
@@ -64,7 +64,7 @@ function LatestProducts({ scrollRef }) {
       {/* products list  */}
 
       <ul
-        className="flex items-center overflow-x-auto w-full gap-8 my-12 px-4 snap-mandatory snap-x sm:snap-none"
+        className="flex items-center md:justify-center overflow-x-auto w-full gap-8 my-12 px-4 snap-mandatory snap-x sm:snap-none"
       >
         {products.map(product => (
           <li key={product.id} className='snap-start'>
