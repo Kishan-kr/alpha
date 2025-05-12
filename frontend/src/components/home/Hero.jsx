@@ -8,7 +8,8 @@ export default function Hero({handleNewCollection}) {
   ));
 
   return (
-    <section className="bg-dark text-light relative pt-24 pb-24 overflow-hidden">
+    <section className="bg-dark text-light relative pt-24 pb-24 overflow-hidden z-0">
+      <div className='w-full absolute top-0 -left-8 h-[calc(200%)] bg-surface origin-top-left -rotate-45 -z-10 bg-gradient-to-r from-surface from-0% to-dark to-10%'></div>
       <div className="max-w-7xl mx-auto px-6 text-center mb-12">
         <p className="inline-block px-4 py-1 mb-4 text-xs font-medium border border-white/20 rounded-full uppercase tracking-widest text-subtext">
           New spring collection 2025
@@ -40,8 +41,8 @@ export default function Hero({handleNewCollection}) {
           />
         ))}
         radius={2440}
-        angleStep={6.4}
-        width={240}
+        angleStep={7.2}
+        width={260}
         height={390}
       />
     </section>

@@ -1,21 +1,49 @@
 import React from 'react'
+import { Star, Leaf, Users } from 'lucide-react'
 
-function Statement() {
+export default function Statement() {
   return (
-    <section className='text-[var(--color-black)]/90 py-28 px-4 sm:px-6 lg:px-20'>
+    <section className="relative bg-gradient-to-tr from-dark via-surface to-dark py-20 px-4 sm:px-6 lg:px-20 text-white">
       <div className="max-w-4xl mx-auto text-center">
-        <h2 className='text-3xl font-bold text-[var("--color-black")]'>TASHN — Not Just Style. It’s a Statement.</h2>
-        <p className='tracking-widest tex my-6 uppercase leading-relaxed'>At TASHN, we don’t just follow trends — we set them.</p>
-        <p className='md:max-w-lg tex mx-auto'>
-          Born for the bold and built for the streets, our mission is to redefine men’s casualwear with fits that speak louder than words. Every thread carries attitude. Every drop delivers edge.
-          <br />
-          From sharp silhouettes to standout essentials, TASHN is made for those who walk with intent, dress with purpose, and never settle for basic.
+        <h2 className="text-3xl sm:text-4xl font-extrabold">
+          About TASHN
+        </h2>
+        <p className="mt-4 text-lg sm:text-xl text-gray-400 leading-relaxed">
+          Born for the bold and built for the streets, TASHN is more than a label—it’s a mindset. We blend cutting-edge silhouettes with unapologetic attitude, so every piece you wear is a statement of who you are.
         </p>
-        <br />
-        <strong className='text-xl text-[var(--color-black)]/80 mt-6 p-1'>You bring the vibe. We bring the fit. Together, we bring the TASHN.</strong>
+      </div>
+
+      <div className="mt-16 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div className="flex flex-col items-center text-center">
+          <div className="bg-white text-black rounded-full p-3 mb-4">
+            <Star className="w-6 h-6" />
+          </div>
+          <h3 className="font-semibold text-lg">Bold Design</h3>
+          <p className="mt-2 text-gray-400">
+            Stand out in every room with fresh cuts and fearless styling.
+          </p>
+        </div>
+
+        <div className="flex flex-col items-center text-center">
+          <div className="bg-white text-black rounded-full p-3 mb-4">
+            <Leaf className="w-6 h-6" />
+          </div>
+          <h3 className="font-semibold text-lg">Conscious Craft</h3>
+          <p className="mt-2 text-gray-400">
+            Premium fabrics, ethical practices—fashion you can feel good about.
+          </p>
+        </div>
+
+        <div className="flex flex-col items-center text-center">
+          <div className="bg-white text-black rounded-full p-3 mb-4">
+            <Users className="w-6 h-6" />
+          </div>
+          <h3 className="font-semibold text-lg">Community First</h3>
+          <p className="mt-2 text-gray-400">
+            Built by and for street-style lovers. You bring the vibe—we bring the fit.
+          </p>
+        </div>
       </div>
     </section>
   )
 }
-
-export default Statement

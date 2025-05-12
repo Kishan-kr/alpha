@@ -20,3 +20,10 @@ body {
 .font-roboto {
   font-family: "Roboto", sans-serif;
 }
+
+.patter-bg-1 {
+  background: radial-gradient(#ffffff 15%, transparent 16%, transparent 49%, #ffffff 50%, transparent 51%),radial-gradient(circle at top left, #ffffff 10%, transparent 10%, transparent 39%, #ffffff 40%, transparent 41%),radial-gradient(circle at top right, #ffffff 10%, transparent 10%, transparent 39%, #ffffff 40%, transparent 41%),radial-gradient(circle at bottom left, #ffffff 10%, transparent 10%, transparent 39%, #ffffff 40%, transparent 41%),radial-gradient(circle at bottom right, #ffffff 10%, transparent 10%, transparent 39%, #ffffff 40%, transparent 41%);
+        background-size: 4em 4em;
+        background-color: #0E0E0E;
+        opacity: 1
+}

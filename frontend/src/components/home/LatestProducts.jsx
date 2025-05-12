@@ -3,7 +3,9 @@ import oversizedTshirt from '../../assets/ProductCategories/oversizedTshirt.jpg'
 import printedTshirt from '../../assets/ProductCategories/printedTshirt.jpg'
 import product3 from '../../assets/ProductCategories/product3.jpg'
 import product4 from '../../assets/ProductCategories/product4.jpg'
+import newArrivalCharacter from '../../assets/photos/newArrivalCharacter.png'
 import { Link } from 'react-router-dom'
+import { ArrowRight } from 'lucide-react'
 
 const products = [
   {
@@ -36,41 +38,99 @@ const products = [
   }
 ];
 
-function LatestProducts({scrollRef}) {
+function LatestProducts({ scrollRef }) {
   return (
-    <section ref={scrollRef} id='latest-product' style={{scrollMarginTop: "8rem"}} className='w-full pt-2 pb-12 flex flex-col items-center'>
-      <h3 className='text-xl tracking-widest font-bold text-center uppercase'>Latest Products</h3>
+    <section ref={scrollRef} id='latest-product' style={{ scrollMarginTop: "8rem" }} className='w-full py-16 flex flex-col'>
+      <div className='px-4 w-full flex items-center gap-4 relative mt-8'>
+        <h3 className='text-xl md:text-6xl text-nowrap text-white tracking-widest font-thin text-center uppercase'>New Arrivals</h3>
+
+        <hr
+          className='h-4 w-full text-white bg-linear-to-b from-white/60 from-0% via-surface via-5% to-90% to-white/60  ms-auto z-20'
+          style={{
+            backgroundImage: `
+      linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.6) 0%,
+        var(--color-surface) 10%,
+        var(--color-surface) 90%,
+        rgba(255,255,255,0.6) 100%
+      )
+    `
+          }}
+        />
+
+        <img src={newArrivalCharacter} alt="" className='absolute h-36 md:h-60 right-0 md:right-4 -top-[90px] md:-top-[124px] z-30' />
+      </div>
       {/* products list  */}
-      <ul className='flex gap-8 my-12 px-4 w-full  items-center overflow-x-auto'>{products.map(product =>
-        (Product({ product })))}
+
+      <ul
+        className="flex items-center overflow-x-auto w-full gap-8 my-12 px-4 snap-mandatory snap-x sm:snap-none"
+      >
+        {products.map(product => (
+          <li key={product.id} className='snap-start'>
+            <Product {...product} />
+          </li>
+        ))}
       </ul>
 
       {/* view all products link  */}
       <Link
-        to="/products"
-        className="relative group overflow-hidden inline-block py-3 px-6 text-sm font-semibold text-white uppercase border border-[var(--olive-green)] tracking-widest transition-all duration-300"
+        // to="/products"
+        className="relative inline-block w-fit mx-auto overflow-hidden py-3 px-6 text-sm font-semibold uppercase tracking-widest text-white border border-white bg-dark group"
       >
-        <span className="relative z-10 transition-colors duration-300 group-hover:text-[var(--olive-green)]">
+        {/* Text + Arrow stays on top */}
+        <span className="relative z-10 flex items-center transition-colors duration-300 group-hover:text-dark">
           View All Products
+          <ArrowRight className="w-4 h-4 ml-2 transition group-hover:translate-x-2" />
         </span>
-        <span className="absolute inset-0 bg-[var(--olive-green)] transition-transform duration-300 group-hover:translate-x-full "></span>
-      </Link>
 
+        {/* Sliding white panel */}
+        <span className="absolute inset-0 bg-white transform -translate-x-full transition-transform duration-300 group-hover:translate-x-0 z-0" />
+      </Link>
     </section>
   )
 }
 
-function Product({ product }) {
+function Product({
+  id,
+  image,
+  title,
+  discountedPrice,
+  originalPrice,
+}) {
   return (
-    <li key={product?.id} className='text-center'>
-      <img src={product.image} alt="Oversized T-shirts" className='w-270 min-w-[280px]'/>
-      <p className='text-[var(--color-black)]/90 text-lg tracking-wider mt-2'>{product?.title}</p>
-      <div className='flex gap-4 justify-center'>
-        <span className='text-[#E4572E] text-lg tracking-widest'>₹{product.discountedPrice}</span>
-        <span className='text-[var(--color-black)]/90 line-through text-lg'>₹{product.originalPrice}</span>
+    <article
+      key={id}
+      className="h-full group border border-border rounded-lg overflow-hidden transition-colors duration-300 hover:bg-hoverTint flex flex-col cursor-pointer"
+    >
+      {/* Product Image */}
+      <div className="relative bg-surface w-[290px] md:w-[280px] overflow-hidden">
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-auto object-cover transition duration-300 group-hover:scale-125"
+        />
       </div>
-    </li>
-  )
+
+      {/* Product Info */}
+      <div className="p-4 bg-surface h-fit flex flex-col">
+        <h3 className="text-light text-lg font-semibold">
+          {title}
+        </h3>
+
+        {/* Price */}
+        <div className="mt-4 flex items-baseline space-x-2">
+          <span className="text-light font-bold text-xl">
+            ₹{discountedPrice}
+          </span>
+          <span className="text-subtext line-through text-sm">
+            ₹{originalPrice}
+          </span>
+        </div>
+      </div>
+    </article>
+  );
 }
+
 
 export default LatestProducts

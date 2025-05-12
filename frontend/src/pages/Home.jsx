@@ -14,7 +14,7 @@ export default function Home() {
   return (
     <div className="">
       <Hero handleNewCollection={scrollToProductsSection}/>
-      <Statement />
+      {/* <Statement /> */}
       <LatestProducts scrollRef={latestProductsSection}/>
       <Testimonials />
     </div>

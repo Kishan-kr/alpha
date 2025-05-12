@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-white px-6 md:px-16 py-14">
+    <footer className="bg-surface text-white px-6 md:px-16 py-14 pb-2">
       <div className="grid md:grid-cols-4 gap-10 text-sm">
         {/* About */}
         <div className="md:col-span-1">
@@ -85,6 +85,7 @@ export default function Footer() {
           </form>
         </div>
       </div>
+      <h3 className="text-[7rem] md:text-[18rem] text-white/70 uppercase overflow-y-hidden py-0 leading-52 italic text-right mt-8">Tashn</h3>
     </footer>
   );
 }

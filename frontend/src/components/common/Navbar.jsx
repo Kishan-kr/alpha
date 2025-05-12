@@ -22,7 +22,7 @@ export default function Navbar() {
             <div key={name} className="relative group">
               <Link
                 to={path}
-                className={`px-4 py-1 rounded-full text-sm font-medium transition-all duration-200 ${currentPath === path ? 'bg-light text-dark' : 'hover:bg-white/10'
+                className={`px-4 py-2 rounded-full text-base font-medium transition-all duration-200 ${currentPath === path ? 'bg-light text-dark' : 'hover:bg-white/10'
                   }`}
               >
                 {name}

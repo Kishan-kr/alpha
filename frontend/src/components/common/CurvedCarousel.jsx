@@ -68,7 +68,7 @@ export default function CurvedCarousel({
               className="absolute"
             >
               <div
-                className="rounded-full bg-surface overflow-hidden"
+                className="rounded-tl-full rounded-tr-full rounded-bl-2xl rounded-br-2xl bg-surface overflow-hidden"
                 style={{ width, height }}
               >
                 {item}
