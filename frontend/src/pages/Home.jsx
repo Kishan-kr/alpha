@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import Hero from '../components/home/Hero';
 import LatestProducts from '../components/home/LatestProducts';
 import CustomerDiaries from '../components/home/CustomerDiaries';
+import Categories from '../components/home/Categories';
 
 export default function Home() {
   const latestProductsSection = useRef(null);
@@ -15,6 +16,7 @@ export default function Home() {
       <Hero handleNewCollection={scrollToProductsSection}/>
       <LatestProducts scrollRef={latestProductsSection}/>
       <CustomerDiaries />
+      <Categories />
     </div>
   );
 }

@@ -54,9 +54,9 @@ export default function CustomerDiaries() {
   }, [controls, shiftPercent]);
 
   return (
-    <section className="bg-dark text-white py-20 px-6 md:px-12 lg:px-24">
+    <section className="bg-dark text-white py-20 pb-28 px-6 md:px-12 lg:px-24">
       <div className="max-w-6xl mx-auto">
-        <div className="relative max-w-6xl mx-auto text-center mb-12">
+        <div className="relative max-w-6xl mx-auto text-center mb-16">
           <div className="relative w-fit mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold uppercase">Loved by Many</h2>
             <img src={customerDiariesCharacter} alt="" className='absolute h-36 md:h-50 right-[calc(100%-56px)] md:right-[calc(100%-76px)] -top-[90px] md:-top-[126px] z-30' />

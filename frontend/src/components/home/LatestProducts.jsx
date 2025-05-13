@@ -40,7 +40,7 @@ const products = [
 
 function LatestProducts({ scrollRef }) {
   return (
-    <section ref={scrollRef} id='latest-product' style={{ scrollMarginTop: "8rem" }} className='w-full py-16 flex flex-col'>
+    <section ref={scrollRef} id='latest-product' style={{ scrollMarginTop: "8rem" }} className='bg-dark bg-radial from-surface from-40% to-dark to-90% w-full py-16 flex flex-col'>
       <div className='px-4 w-full flex items-center gap-4 relative mt-8'>
         <h3 className='text-xl md:text-6xl text-nowrap text-white tracking-widest font-thin text-center uppercase'>New Arrivals</h3>
 
