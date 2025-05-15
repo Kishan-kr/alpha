@@ -85,7 +85,7 @@ export default function Footer() {
           </form>
         </div>
       </div>
-      <h3 className="text-[7rem] md:text-[18rem] text-white/70 uppercase overflow-y-hidden py-0 leading-52 italic text-right mt-8">Tashn</h3>
+      <h3 className="text-[5.5rem] sm:text-[6rem] md:text-[18rem] text-white/70 uppercase overflow-y-hidden py-0 leading-52 italic text-right mt-8">Tashn</h3>
     </footer>
   );
 }

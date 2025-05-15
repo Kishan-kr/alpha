@@ -18,11 +18,11 @@ const Categories = () => {
       <div className='flex justify-center text-center'>
         <StaticGlitch
           text={'Explore Our Collections'}
-          className='text-2xl md:text-4xl uppercase font-semibold mx-auto text-white tracking-widest'
+          className='text-xl sm:text-2xl md:text-4xl uppercase font-semibold mx-auto text-white tracking-widest'
         />
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8 md:gap-x-36 justify-center w-full h-full text-white my-12">
+      <div className="flex flex-col md:flex-row gap-8 md:gap-x-16 lg:gap-x-36 items-center justify-center w-full h-full text-white my-12">
         {/* Left Panel */}
         <ul className="w-full md:w-1/3 p-8 select-none flex flex-col items-center md:items-start justify-center gap-4">
           {categories.map((cat) => (
@@ -40,9 +40,9 @@ const Categories = () => {
         </ul>
 
         {/* Right Panel */}
-        <div className="relative px-4 sm:px-3">
+        <div className="relative min-w-72 sm:min-w-xs h-[390px] sm:h-[420px] sm:px-3">
           {/* glitched image  */}
-          <div key={glitchKey} className="glitch imgloaded min-w-[280px] sm:min-w-xs h-[390px] sm:h-[420px] w-full">
+          <div key={glitchKey} className="glitch imgloaded">
             {[...Array(5)].map((_, i) => (
               <div
                 key={i}
