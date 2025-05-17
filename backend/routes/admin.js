@@ -20,7 +20,7 @@ router.post("/create-admin", [
         .not().isLowercase().withMessage('Password must contain a uppercase letter')
 ], authenticateAdmin, checkAdminRole, addAdmin)
 
-//login admin\
+//login admin
 router.post("/login-admin" , loginAdmin )
 
 //get admin details
