@@ -21,10 +21,9 @@ const productSchema = new mongoose.Schema({
         required: true,
         minlength: [2, 'Product name must be at least 2 characters'],
     },
-    category: {
-        type: String,
-        required: true,
-        enum: ['tshirt', 'hoodie', 'jacket', 'pants', 'accessories'], // customize your categories
+    categoryId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref:"CATEGORY"
     },
     images: {
         type: [String],

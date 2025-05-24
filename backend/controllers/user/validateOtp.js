@@ -16,7 +16,7 @@ const validateOtp = async (req, res) => {
         //if user exists already then will only generate a token for authentication
         const isUserExists = await user.findOne({ number: isNumberValid.number })
         if (!isUserExists) {
-            const newUser = new user({ number: isNumberValid.number })
+            const newUser = new user({ phone:isNumberValid.number })
             const saveUser = await newUser.save()
             if (!saveUser) {
                 throw new Error("Error occured while creating new user")

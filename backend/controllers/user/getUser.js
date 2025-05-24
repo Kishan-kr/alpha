@@ -5,7 +5,7 @@ const getUser = async(req,res)=>{
         if(!req.user.id){
             throw new Error("UserId not found")
         }
-        const fetchUserByID = await user.findById({_id:req.user.id}).select("-password")
+        const fetchUserByID = await user.findById({_id:req.user.id}).select("-createdAt -updatedAt")
         if(!fetchUserByID){
              throw new Error("user not found")
         }

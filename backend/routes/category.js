@@ -22,4 +22,5 @@ router.get("/get-AllCategory"  , getAllCategory)
 
 //delete category by ID
 router.delete("/delete-category/:id"  , authenticateAdmin , isRoleExists, deleteCategory)
+
 module.exports=router

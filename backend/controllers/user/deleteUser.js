@@ -5,6 +5,9 @@ const deleteUser = async (req, res) => {
         if (!req.params.id) {
             throw new Error("User ID not provided");
         }
+        if(req.user.id!==req.params.id){
+            throw new Error("Invalid Action")
+        }
         const deleteUserById = await user.findByIdAndDelete(req.params.id)
         if (!deleteUserById) {
             return res.status(404).json({ status: false, error: "User not found" });
