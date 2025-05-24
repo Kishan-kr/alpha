@@ -9,6 +9,7 @@ const add_userAddress = require("../controllers/user/add_Address")
 const update_Address = require("../controllers/user/update_Address")
 const deleteAddress = require("../controllers/user/delete_address")
 const deleteUser = require("../controllers/user/deleteUser")
+const checkDefaultAddress = require("../middlwares/checkDefaultAddress")
 const router = express.Router()
 
 
@@ -33,35 +34,7 @@ router.patch("/personal-info/:id", authenticateUser, [
 
 
 //adding user address
-router.patch("/user-address/:id", authenticateUser, [
-     body('pincode')
-          .isLength({ min: 6, max: 6 }).withMessage('Pincode must be exactly 6 digits')
-          .isNumeric().withMessage('Pincode must contain only numbers'),
-
-     // Address Type: only "Home" or "Office"
-     body('addressType')
-          .isIn(['Home', 'Office']).withMessage('Address type must be either "Home" or "Office"'),
-
-     // Required string fields
-     body('area')
-          .notEmpty().withMessage('Area is required'),
-
-     body('landmark')
-          .notEmpty().withMessage('Landmark is required'),
-
-     body('state')
-          .notEmpty().withMessage('State is required'),
-
-     body('city')
-          .notEmpty().withMessage('City is required'),
-
-     body('houseNo')
-          .notEmpty().withMessage('House number is required')
-], add_userAddress)
-
-
-//update address
-router.put("/update_UserAddress/:id", authenticateUser,
+router.patch("/user-address/:userId", authenticateUser,
      [
           body('pincode')
                .isLength({ min: 6, max: 6 }).withMessage('Pincode must be exactly 6 digits')
@@ -72,27 +45,56 @@ router.put("/update_UserAddress/:id", authenticateUser,
                .isIn(['Home', 'Office']).withMessage('Address type must be either "Home" or "Office"'),
 
           // Required string fields
-          body('area')
-               .notEmpty().withMessage('Area is required'),
 
           body('landmark')
-               .notEmpty().withMessage('Landmark is required'),
+               .notEmpty().withMessage('Required*'),
 
           body('state')
-               .notEmpty().withMessage('State is required'),
+               .notEmpty().withMessage('Required*'),
 
           body('city')
-               .notEmpty().withMessage('City is required'),
+               .notEmpty().withMessage('Required*'),
+          body('line1')
+               .notEmpty().withMessage('Required*'),
 
-          body('houseNo')
-               .notEmpty().withMessage('House number is required')
-     ] , update_Address)
+          body('line2')
+               .notEmpty().withMessage('Required*')
+     ], checkDefaultAddress ,  add_userAddress)
 
- 
+
+//update address
+router.put("/update_UserAddress/:userId", authenticateUser,
+     [
+          body('pincode')
+               .isLength({ min: 6, max: 6 }).withMessage('Pincode must be exactly 6 digits')
+               .isNumeric().withMessage('Pincode must contain only numbers'),
+
+          // Address Type: only "Home" or "Office"
+          body('addressType')
+               .isIn(['Home', 'Office']).withMessage('Address type must be either "Home" or "Office"'),
+
+          // Required string fields
+          body('line1')
+               .notEmpty().withMessage('Required*'),
+
+          body('landmark')
+               .notEmpty().withMessage('Required*'),
+
+          body('state')
+               .notEmpty().withMessage('Required*'),
+
+          body('city')
+               .notEmpty().withMessage('Required*'),
+
+          body('line2')
+               .notEmpty().withMessage('Required*')
+     ], checkDefaultAddress ,update_Address)
+
+
 //delete address     
-router.delete("/delete_address/:id/:addressId" , authenticateUser , deleteAddress )
+router.delete("/delete_address/:addressId", authenticateUser, deleteAddress)
 
 //delete user
-router.delete("/delete_user/:id" , authenticateUser , deleteUser)
+router.delete("/delete_user/:id", authenticateUser, deleteUser)
 
 module.exports = router

@@ -11,7 +11,7 @@ const userSchema = mongoose.Schema(
         email: {
             type: String,
         },
-        number: {
+        phone: {
             type: String,
         },
 
@@ -31,10 +31,10 @@ const userSchema = mongoose.Schema(
                 pincode: {
                     type: String,
                 },
-                area: {
+                line1: {
                     type: String,
                 },
-                houseNo: {
+                line2: {
                     type: String,
                 },
                 landmark: {
@@ -44,6 +44,10 @@ const userSchema = mongoose.Schema(
                     type: String,
                     enum: ['Home', 'Office'],
                 },
+                isDefault:{
+                    type:Boolean,
+                    default:false
+                }
             }
         ]
     },
