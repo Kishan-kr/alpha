@@ -11,6 +11,9 @@
   --color-subtext: #A1A1AA;
   --color-light: #FFFFFF;
   --color-hover-tint: #1F1F1F;
+
+  --breakpoint-xs: 360px;
+  --breakpoint-slg: 912px;
 }
 
 body {
@@ -19,4 +22,8 @@ body {
 
 .font-roboto {
   font-family: "Roboto", sans-serif;
+}
+
+.input-field {
+  @apply bg-dark text-light border border-border p-3 rounded-lg w-full placeholder:text-subtext focus:outline-none focus:border-primary;
 }

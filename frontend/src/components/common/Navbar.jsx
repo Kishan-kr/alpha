@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { ShoppingBag, User, Search, Menu } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
+import { useSelector } from 'react-redux'
 import navItems from '../../utils/navItems';
 import MobileMenu from './MobileMenu';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  // get user state from redux slice 
+  const {isLoggedIn} = useSelector(state => state.user)
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-dark text-light shadow-sm">
@@ -56,19 +59,19 @@ export default function Navbar() {
             <Search className="w-5 h-5" />
           </button>
 
-          <button
-            type="button"
+          <Link
+            to={isLoggedIn ? '/profile' : '/signup'}
             className="hidden md:block cursor-pointer hover:text-white p-1"
           >
             <User className="w-5 h-5" />
-          </button>
+          </Link>
 
-          <button
-            type="button"
+          <Link
+            to="/bag"
             className="cursor-pointer hover:text-white p-1"
           >
             <ShoppingBag className="w-5 h-5" />
-          </button>
+          </Link>
 
 
           {/* Hamburger (Mobile Only) */}

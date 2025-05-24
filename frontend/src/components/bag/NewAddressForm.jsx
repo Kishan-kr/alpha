@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { X, Plus } from 'lucide-react';
-import EmailUpdateModal from '../components/userProfile/EmailUpdateModal';
 import { useSearchParams } from 'react-router-dom';
 
 // dummy data of user 
@@ -214,14 +213,6 @@ export default function UserProfile() {
           Save Changes
         </button>
       </div>
-
-      {showModal && (
-        <EmailUpdateModal
-          email={userData.email}
-          onClose={closeModal}
-          onUpdate={updateEmail}
-        />
-      )}
     </form>
   );
 }
