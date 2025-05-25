@@ -23,7 +23,3 @@ body {
 .font-roboto {
   font-family: "Roboto", sans-serif;
 }
-
-.input-field {
-  @apply bg-dark text-light border border-border p-3 rounded-lg w-full placeholder:text-subtext focus:outline-none focus:border-primary;
-}

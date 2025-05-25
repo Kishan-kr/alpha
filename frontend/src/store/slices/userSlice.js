@@ -9,12 +9,24 @@ const initialState = {
   phone: '+91 9876543210',
   addresses: [
     {
+      id: 1,
       addressLine: '123 MG Road',
       landmark: 'Near Gandhi Maidan',
       city: 'North Delhi',
       state: 'Delhi',
       pincode: '110006',
       country: 'India',
+      isDefault: true
+    },
+    {
+      id: 2,
+      addressLine: '123 MG Road',
+      landmark: 'Gandhi Maidan',
+      city: 'North Delhi',
+      state: 'Delhi',
+      pincode: '110006',
+      country: 'India',
+      isDefault: false
     },
   ],
 }

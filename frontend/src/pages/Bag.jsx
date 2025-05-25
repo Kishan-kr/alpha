@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ShoppingBag from '../components/bag/ShoppingBag';
 import Checkout from '../components/bag/Checkout';
-import Address from '../components/bag/Address';
+import DeliverySection from '../components/bag/DeliverySection';
 
 // dummy data
 const initialProducts = [
@@ -46,7 +46,7 @@ const initialProducts = [
 const Bag = () => {
   const [products, setProducts] = useState(initialProducts);
   const steps = ["Bag", "Delivery", "Payment"];
-  const [activeStep, setActiveStep] = useState(1)
+  const [activeStep, setActiveStep] = useState(0)
 
   const subtotal = products.reduce((sum, product) => sum + product.originalPrice * product.quantity, 0);
   const discount = subtotal * 0.2;
@@ -100,7 +100,7 @@ const Bag = () => {
           updateProducts={updateProducts}
           handleCheckout={nextStep}
         />}
-      {activeStep === 1 && <Address handleNext={nextStep}/>}
+      {activeStep === 1 && <DeliverySection handleNext={nextStep}/>}
       {activeStep === 2 && 
         <Checkout 
           products={products} 
