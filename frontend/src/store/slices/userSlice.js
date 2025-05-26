@@ -6,7 +6,7 @@ const initialState = {
   firstName: 'John',
   lastName: 'Doe',
   email: 'john@example.com',
-  phone: '+91 9876543210',
+  phone: '9876543210',
   addresses: [
     {
       id: 1,
@@ -20,11 +20,11 @@ const initialState = {
     },
     {
       id: 2,
-      addressLine: '123 MG Road',
-      landmark: 'Gandhi Maidan',
+      addressLine: 'WZ-456, Sector 1',
+      landmark: 'Rajendra Place',
       city: 'North Delhi',
       state: 'Delhi',
-      pincode: '110006',
+      pincode: '110008',
       country: 'India',
       isDefault: false
     },

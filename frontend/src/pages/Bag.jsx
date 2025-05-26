@@ -100,7 +100,11 @@ const Bag = () => {
           updateProducts={updateProducts}
           handleCheckout={nextStep}
         />}
-      {activeStep === 1 && <DeliverySection handleNext={nextStep}/>}
+      {activeStep === 1 && 
+        <DeliverySection 
+          handleNext={nextStep} 
+          handleBack={prevStep}
+        />}
       {activeStep === 2 && 
         <Checkout 
           products={products} 
@@ -109,6 +113,7 @@ const Bag = () => {
           delivery={delivery}
           total={total} 
           updateProducts={updateProducts}
+          handleBack={prevStep}
         />}
     </div>
   );

@@ -6,13 +6,13 @@ const NewAddressModal = ({ isOpen, onClose, onSave, formData, onChange }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 overscroll-y-auto bg-black/60 flex items-center justify-center z-50">
-      <div className="bg-dark p-6 my-8 rounded-lg w-full max-w-3xl relative">
+    <div className="fixed inset-0 z-50 bg-surface/90 backdrop-blur-[2px] flex justify-center overflow-y-auto sm:py-16">
+      <div className="relative bg-dark p-6 rounded-lg w-full h-max max-w-3xl shadow-2xl shadow-dark">
         <button
           onClick={onClose}
           className="absolute top-2 right-2 p-1 text-subtext text-xl hover:text-light cursor-pointer"
         >
-          <X className='w-6 h-6'/>
+          <X className="w-6 h-6" />
         </button>
         <h2 className="text-white mb-4 text-lg font-semibold">Add New Address</h2>
         <AddressForm

@@ -2,13 +2,13 @@ import React from 'react';
 
 const SavedAddresses = ({ addresses, selectedId, onSelect, handleNewAddress }) => {
   const nearby = (landmark) => {
-    if(!landmark) return ''
+    if (!landmark) return ''
 
     let firstWord = landmark.split(' ')[0].toLowerCase();
-    if(['near', 'nearby'].includes(firstWord)) {
+    if (['near', 'nearby'].includes(firstWord)) {
       return landmark;
     }
-    return `near ${landmark}`;
+    return `Near ${landmark}`;
   }
 
   return (
@@ -18,24 +18,36 @@ const SavedAddresses = ({ addresses, selectedId, onSelect, handleNewAddress }) =
       {addresses.map((addr) => (
         <div
           key={addr.id}
-          className={`relative cursor-pointer px-4 py-3 rounded-md text-sm text-white border ${
-            selectedId === addr.id ? 'bg-green-950/50 border-green-700' : 'bg-surface border-light/10'
-          }`}
           onClick={() => onSelect(addr.id)}
+          className={`relative cursor-pointer px-5 py-4 rounded-lg border transition-all duration-200 shadow-sm ${selectedId === addr.id
+              ? 'bg-green-900/30 border-green-600 ring-1 ring-green-500'
+              : 'bg-dark border-light/10 hover:border-white/20 hover:bg-white/5'
+            }`}
         >
-          <div>{addr.addressLine}, {nearby(addr.landmark)}</div>
-          <div>{`${addr.city}, ${addr.state} - ${addr.pincode}`}</div>
-          <div>{addr.country}</div>
+          {/* Top Row: Address + Default */}
+          <div className="flex justify-between items-start mb-2">
+            <div className="text-white font-semibold text-sm">
+              {addr.addressLine}, {nearby(addr.landmark)}
+            </div>
+            {addr.isDefault && (
+              <span className="text-xs font-semibold text-dark bg-[#5DB7DE] px-2 py-0.5 rounded-full">
+                Default
+              </span>
+            )}
+          </div>
 
-          {/* label to show default mark  */}
-          {addr.isDefault && (<span className='absolute top-1 right-1 text-xs text-dark bg-[#5DB7DE] rounded p-1 py-px'>Default</span>)}
+          {/* Second Row: City/State/Pincode/Country */}
+          <div className="text-sm text-white/80 flex flex-wrap gap-x-2 gap-y-1">
+            <div>{addr.city}, {addr.state} - {addr.pincode}</div>
+            <div className="bg-white/10 text-white px-2 py-0.5 rounded">{addr.country}</div>
+          </div>
         </div>
       ))}
 
       <div>
-      <p className='text-center text-subtext mt-4'>OR</p>
+        <p className='text-center text-sm text-subtext mt-4'>OR</p>
       </div>
-      <button onClick={handleNewAddress} className='w-full cursor-pointer px-4 py-4 mt-4 rounded-md text-sm text-white text-center border-2 border-dashed border-border'>
+      <button onClick={handleNewAddress} className='w-full cursor-pointer px-4 py-4 mt-4 rounded-md text-sm text-white text-center border-2 border-dashed border-border hover:border-white/20 hover:bg-white/5'>
         Deliver to new address
       </button>
     </div>

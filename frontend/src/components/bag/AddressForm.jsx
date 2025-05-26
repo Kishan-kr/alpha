@@ -1,6 +1,12 @@
 import React from 'react';
 
 const AddressForm = ({ formData, onChange, onSubmit, buttonText = "Save and Continue" }) => {
+  const handlePhoneChange = (e) => {
+    const digitsOnly = e.target.value.replace(/\D/g, '');
+    e.target.value = digitsOnly
+    onChange(e)
+  }
+
   return (
     <form className="rounded-md py-3 w-full max-w-3xl space-y-4" onSubmit={onSubmit}>
       <div className="flex flex-col sm:flex-row gap-6">
@@ -19,14 +25,18 @@ const AddressForm = ({ formData, onChange, onSubmit, buttonText = "Save and Cont
         {/* phone */}
         <div className='w-full'>
           <label className="block text-subtext mb-1 text-sm">Phone</label>
-          <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={onChange}
-            required
-            className="bg-surface text-white px-4 py-2 rounded w-full"
-          />
+          <div className='flex items-center bg-surface text-white px-4 rounded w-full focus-within:ring'>
+            <span>+91</span>
+            <input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handlePhoneChange}
+              maxLength={10}
+              required
+              className="bg-surface ps-1 pe-3 py-[11.5px] h-full rounded outline-none w-full"
+            />
+          </div>
         </div>
       </div>
 

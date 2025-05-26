@@ -1,6 +1,7 @@
 import React from 'react';
 import CheckoutProductCard from "./CheckoutProductCard";
 import { Lock } from 'lucide-react';
+import BackButton from './BackButton';
 
 // dummy data of products 
 const products = [
@@ -24,7 +25,7 @@ const products = [
   },
 ];
 
-const Checkout = ({products, subtotal, total, delivery, discount, updateProducts}) => {
+const Checkout = ({ products, subtotal, total, delivery, discount, updateProducts, handleBack }) => {
   // const subtotal = products.reduce((sum, p) => sum + p.price, 0);
   // const tax = 10.0;
   // const total = subtotal + tax;
@@ -37,12 +38,16 @@ const Checkout = ({products, subtotal, total, delivery, discount, updateProducts
     <div className="p-4 md:p-10 gap-8 text-light grid grid-cols-1 lg:grid-cols-2">
       {/* Left: Order Summary */}
       <div>
-        <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+        <div className='flex gap-x-2'>
+          <BackButton handleClick={handleBack} className='-mt-1' />
+          <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+        </div>
+
         <div className="flex flex-col gap-4">
           {products.map(product => (
-            <CheckoutProductCard 
-              key={product.id} 
-              product={product} 
+            <CheckoutProductCard
+              key={product.id}
+              product={product}
               onRemove={() => handleRemove(product.id)}
             />
           ))}
