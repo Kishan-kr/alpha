@@ -1,17 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ShoppingBag, User, Search, Menu } from 'lucide-react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux'
 import navItems from '../../utils/navItems';
 import MobileMenu from './MobileMenu';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
+    
   // get user state from redux slice 
   const {isLoggedIn} = useSelector(state => state.user)
+  const isHome = location.pathname === '/';
+
+  useEffect(() => {
+    if (!isHome) {
+      setIsScrolled(true); // Force background on other pages
+      return;
+    }
+
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isHome]);
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 bg-dark text-light shadow-sm">
+    <header className={`fixed top-0 left-0 w-full z-50 text-light transition-colors duration-500 ${isScrolled ? 'bg-dark shadow-sm' : 'bg-transparent'}`}>
       <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
         {/* Left: Logo */}
         <Link to="/" className="text-xl font-extrabold tracking-wider uppercase">
