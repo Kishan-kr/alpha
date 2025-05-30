@@ -41,8 +41,8 @@ router.patch("/user-address/:userId", authenticateUser,
                .isNumeric().withMessage('Pincode must contain only numbers'),
 
           // Address Type: only "Home" or "Office"
-          body('addressType')
-               .isIn(['Home', 'Office']).withMessage('Address type must be either "Home" or "Office"'),
+          body('label')
+               .isIn(['home', 'office', 'other']).withMessage('Address type must be either "Home" or "Office"'),
 
           // Required string fields
 
@@ -57,8 +57,6 @@ router.patch("/user-address/:userId", authenticateUser,
           body('line1')
                .notEmpty().withMessage('Required*'),
 
-          body('line2')
-               .notEmpty().withMessage('Required*')
      ], checkDefaultAddress ,  add_userAddress)
 
 
@@ -70,8 +68,8 @@ router.put("/update_UserAddress/:userId", authenticateUser,
                .isNumeric().withMessage('Pincode must contain only numbers'),
 
           // Address Type: only "Home" or "Office"
-          body('addressType')
-               .isIn(['Home', 'Office']).withMessage('Address type must be either "Home" or "Office"'),
+          body('label')
+               .isIn(['home', 'office', 'other']).withMessage('Address type must be either "Home" or "Office"'),
 
           // Required string fields
           body('line1')
@@ -86,8 +84,6 @@ router.put("/update_UserAddress/:userId", authenticateUser,
           body('city')
                .notEmpty().withMessage('Required*'),
 
-          body('line2')
-               .notEmpty().withMessage('Required*')
      ], checkDefaultAddress ,update_Address)
 
 

@@ -1,4 +1,12 @@
 const mongoose = require("mongoose")
+const { countries } = require("../utilis/enums")
+const addressSchema = require("./address")
+
+const extendedAddressSchema = new mongoose.Schema({
+    ...addressSchema.obj,
+    label: {type: String, enum: ['home', 'office', 'other']},
+    isDefault: {type: Boolean, default: false}
+});
 
 const userSchema = mongoose.Schema(
     {
@@ -15,41 +23,7 @@ const userSchema = mongoose.Schema(
             type: String,
         },
 
-        addresses: [
-            {
-                country: {
-                    type: String,
-                    enum: ['India'], // Restricts to only "India"
-                    default: "India"
-                },
-                city: {
-                    type: String
-                },
-                state: {
-                    type: String,
-                },
-                pincode: {
-                    type: String,
-                },
-                line1: {
-                    type: String,
-                },
-                line2: {
-                    type: String,
-                },
-                landmark: {
-                    type: String
-                },
-                addressType: {
-                    type: String,
-                    enum: ['Home', 'Office'],
-                },
-                isDefault:{
-                    type:Boolean,
-                    default:false
-                }
-            }
-        ]
+        addresses: [extendedAddressSchema]
     },
     {
         timestamps: true
