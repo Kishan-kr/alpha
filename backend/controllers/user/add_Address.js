@@ -22,6 +22,7 @@ const add_userAddress = async (req, res) => {
             return { ...acc, [erritem.path]: erritem.msg }
         }, {})
         return res.status(422).json({ status: false, error: err })
+        
     } catch (error) {
         return res.status(500).json({ status: false, error: error.message })
     }

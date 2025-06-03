@@ -1,9 +1,17 @@
+const { validationResult } = require("express-validator")
 const otp = require("../../models/otp")
 const user = require("../../models/user")
 const jwt = require("jsonwebtoken")
 
 const validateOtp = async (req, res) => {
     try {
+        const result = validationResult(req)
+        if (result.errors.length) {
+            const err = result.errors.reduce(function (acc, erritem) {
+                return { ...acc, [erritem.path]: erritem.msg }
+            }, {})
+            return res.status(422).json({ status: false, error: err })
+        }
         const isNumberValid = await otp.findOne({ number: req.body.number })
         if (!isNumberValid) {
             throw new Number("Something went wrong")
@@ -16,7 +24,7 @@ const validateOtp = async (req, res) => {
         //if user exists already then will only generate a token for authentication
         const isUserExists = await user.findOne({ number: isNumberValid.number })
         if (!isUserExists) {
-            const newUser = new user({ phone:isNumberValid.number })
+            const newUser = new user({ phone: isNumberValid.number })
             const saveUser = await newUser.save()
             if (!saveUser) {
                 throw new Error("Error occured while creating new user")

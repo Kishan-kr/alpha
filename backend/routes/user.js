@@ -20,7 +20,10 @@ router.post("/sending-otp", [
 
 
 //validating otp
-router.post("/validate-otp", validateOtp)
+router.post("/validate-otp", [
+     body('otp')
+         .matches(/^\d{6}$/).withMessage('Enter a valid OTP')
+], validateOtp)
 
 //get user details
 router.get("/get-User", authenticateUser, getUser)
@@ -28,7 +31,6 @@ router.get("/get-User", authenticateUser, getUser)
 //adding personal details
 router.patch("/personal-info/:id", authenticateUser, [
      body("firstName").isLength({ min: 1 }).withMessage("Required*"),
-     body("lastName").isLength({ min: 1 }).withMessage("Required*"),
      body("email").isEmail().withMessage("Invalid Email")
 ], add_Update_PersonalInfo)
 
@@ -40,24 +42,26 @@ router.patch("/user-address/:userId", authenticateUser,
                .isLength({ min: 6, max: 6 }).withMessage('Pincode must be exactly 6 digits')
                .isNumeric().withMessage('Pincode must contain only numbers'),
 
-          // Address Type: only "Home" or "Office"
-          body('label')
-               .isIn(['home', 'office', 'other']).withMessage('Address type must be either "Home" or "Office"'),
-
           // Required string fields
+          body("fullName").notEmpty().withMessage("Required*"),
 
-          body('landmark')
-               .notEmpty().withMessage('Required*'),
+          body('phone')
+               .notEmpty().withMessage('Phone number is required')
+               .isLength({ min: 10, max: 10 }).withMessage('Phone number must be exactly 10 digits')
+               .isNumeric().withMessage('Phone number must contain only numbers'),
+
 
           body('state')
                .notEmpty().withMessage('Required*'),
 
           body('city')
                .notEmpty().withMessage('Required*'),
+
           body('line1')
                .notEmpty().withMessage('Required*'),
-
-     ], checkDefaultAddress ,  add_userAddress)
+          body('line2')
+               .notEmpty().withMessage('Required*'),
+     ], checkDefaultAddress, add_userAddress)
 
 
 //update address
@@ -67,16 +71,13 @@ router.put("/update_UserAddress/:userId", authenticateUser,
                .isLength({ min: 6, max: 6 }).withMessage('Pincode must be exactly 6 digits')
                .isNumeric().withMessage('Pincode must contain only numbers'),
 
-          // Address Type: only "Home" or "Office"
-          body('label')
-               .isIn(['home', 'office', 'other']).withMessage('Address type must be either "Home" or "Office"'),
-
           // Required string fields
-          body('line1')
-               .notEmpty().withMessage('Required*'),
+          body("fullName").notEmpty().withMessage("Required*"),
 
-          body('landmark')
-               .notEmpty().withMessage('Required*'),
+          body('phone')
+               .notEmpty().withMessage('Phone number is required')
+               .isLength({ min: 10, max: 10 }).withMessage('Phone number must be exactly 10 digits')
+               .isNumeric().withMessage('Phone number must contain only numbers'),
 
           body('state')
                .notEmpty().withMessage('Required*'),
@@ -84,7 +85,11 @@ router.put("/update_UserAddress/:userId", authenticateUser,
           body('city')
                .notEmpty().withMessage('Required*'),
 
-     ], checkDefaultAddress ,update_Address)
+          body('line1')
+               .notEmpty().withMessage('Required*'),
+          body('line2')
+               .notEmpty().withMessage('Required*'),
+     ], checkDefaultAddress, update_Address)
 
 
 //delete address     

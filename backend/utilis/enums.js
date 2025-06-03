@@ -34,7 +34,6 @@ const paymentGateways = [
 ]
 
 const paymentStatuses = [
-  'initiated', 
   'successful', 
   'failed'
 ]

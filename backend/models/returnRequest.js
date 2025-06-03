@@ -32,11 +32,16 @@ const returnRequestSchema = new mongoose.Schema({
     default: 'requested'
   },
 
-  approvedBy: {
+  reviewedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'ADMIN',
   },        // admin who approved the return request
-
+  reviewedAt: {
+    type: Date
+  },
+  rejectionReason: {
+    type: String
+  },
   pickupScheduledAt: {
     type: Date
   },
@@ -56,10 +61,6 @@ const returnRequestSchema = new mongoose.Schema({
     default: false // Whether the return is opened/damaged
   },
 
-  initiatedAt: {
-    type: Date,
-    default: Date.now
-  }
 }, {
   timestamps: true
 });
