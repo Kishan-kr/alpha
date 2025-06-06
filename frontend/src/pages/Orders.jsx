@@ -1,18 +1,25 @@
-import React from "react";
-import OrderCard from "../components/orders/OrderCard"; // Make sure this path matches
-import { orders } from "../utils/orders"; // Dummy orders array
+import React, { useEffect, useState } from 'react';
+import OrderGroup from '../components/orders/OrderGroup';
+import orders from '../utils/orders'
 
-const Orders = () => {
+export default function OrdersPage() {
+  // const [orders, setOrders] = useState([]);
+
+  // useEffect(() => {
+  //   // Simulate fetching orders
+  //   fetch('/api/mock-orders') // replace with real API route
+  //     .then(res => res.json())
+  //     .then(data => setOrders(data));
+  // }, []);
+
   return (
-    <div className="bg-dark min-h-screen p-4 md:p-8">
-      <h2 className="text-light text-2xl font-semibold mb-6">My Orders</h2>
-      <div className="space-y-4">
-        {orders.map((order) => (
-          <OrderCard key={order.id} order={order} />
-        ))}
-      </div>
+    <div className="max-w-3xl mx-auto py-20 md:px-8 md:py-24 px-4 text-light">
+      <h1 className="text-2xl font-bold mb-6">My Orders</h1>
+      {orders.length === 0 ? (
+        <p>No orders found.</p>
+      ) : (
+        orders.map(order => <OrderGroup key={order._id} order={order} />)
+      )}
     </div>
   );
-};
-
-export default Orders;
+}
