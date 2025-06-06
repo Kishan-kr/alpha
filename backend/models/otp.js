@@ -2,10 +2,12 @@ const mongoose = require("mongoose")
 
 const otpSchema = mongoose.Schema({
     number: {
-        type: String
+        type:String,
+        required:true
     },
     otp: {
-        type: Number
+        type: String,
+        required:true
     },
     createdAt: {
         type: Date,

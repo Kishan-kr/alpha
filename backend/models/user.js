@@ -1,12 +1,5 @@
 const mongoose = require("mongoose")
-const { countries } = require("../utilis/enums")
 const addressSchema = require("./address")
-
-const extendedAddressSchema = new mongoose.Schema({
-    ...addressSchema.obj,
-    label: {type: String, enum: ['home', 'office', 'other']},
-    isDefault: {type: Boolean, default: false}
-});
 
 const userSchema = mongoose.Schema(
     {
@@ -23,7 +16,7 @@ const userSchema = mongoose.Schema(
             type: String,
         },
 
-        addresses: [extendedAddressSchema]
+        addresses: [addressSchema]
     },
     {
         timestamps: true

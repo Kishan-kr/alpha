@@ -18,7 +18,7 @@ const transactionSchema = new mongoose.Schema({
     ref: 'USER',
     required: true
   },
-  type: {
+  transactionType: {
     type: String,
     enum: transactionTypes,
     required: true
@@ -31,7 +31,8 @@ const transactionSchema = new mongoose.Schema({
   gateway: {
     type: String,
     enum: paymentGateways,
-    required: true
+    required: true,
+    default:"*"
   },
   transactionId: {
     type: String,

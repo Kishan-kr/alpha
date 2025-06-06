@@ -29,6 +29,10 @@ const orderSchema = mongoose.Schema({
     type: String,
     enum: orderStatuses,
     default: 'pending'
+  },
+  orderNumber:{
+    type:Number,
+    required:true
   }
 }, { timestamps: true });
 

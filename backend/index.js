@@ -18,6 +18,7 @@ app.use(require("./routes/category"))
 app.use(require("./routes/user"))
 app.use(require("./routes/review"))
 app.use(require("./routes/cart"))
+app.use(require("./routes/order"))
 
 
 app.get("/",  (req,res)=>{
