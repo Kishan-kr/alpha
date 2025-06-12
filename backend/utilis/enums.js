@@ -1,9 +1,17 @@
 const orderStatuses = [
   "pending", 
   "shipped", 
+  "out_for_delivery", 
   "delivered",
-  "cancelled"
-]
+  "cancelled",
+  "returned"
+];
+
+const productOrderStatuses = [
+  "pending",  
+  "delivered",
+  "returned"
+];
 
 const countries = [
   "India"
@@ -34,6 +42,7 @@ const paymentGateways = [
 ]
 
 const paymentStatuses = [
+  'pending',
   'successful', 
   'failed'
 ]
@@ -55,5 +64,6 @@ module.exports = {
   paymentMethods,
   paymentGateways,
   paymentStatuses,
-  returnStatuses
+  returnStatuses,
+  productOrderStatuses
 };

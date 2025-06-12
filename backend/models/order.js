@@ -13,13 +13,14 @@ const orderSchema = mongoose.Schema({
     required: true
   },
 
-  totalAmount: {
+  subtotal: {
     type: Number,
     required: true
   },        // Before discount/tax
   discount: Number,
   tax: Number,
-  finalAmount: Number,  // total - discount + tax
+  totalAmount: Number,  // subtotal - discount + tax
+  deliveryFee: Number,
   currency: { 
     type: String, 
     enum: currencies, 
@@ -33,7 +34,8 @@ const orderSchema = mongoose.Schema({
   orderNumber:{
     type:Number,
     required:true
-  }
+  },
+  cancelledAt: Date,  // required only if status is cancelled
 }, { timestamps: true });
 
 const Order = mongoose.model("Order", orderSchema);

@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
-const { orderStatuses } = require('../utilis/enums');
+const { productOrderStatuses } = require('../utilis/enums');
 
 const orderedProductSchema = mongoose.Schema({
   orderId: {
-    type: mongoose.Schema.Types.ObjectId, 
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Order',
     required: true
   },
   productId: {
-    type: mongoose.Schema.Types.ObjectId, 
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'PRODUCT',
     required: true
   },
@@ -24,10 +24,14 @@ const orderedProductSchema = mongoose.Schema({
   discountedPrice: Number,
   status: {
     type: String,
-    enum: orderStatuses,
+    enum: productOrderStatuses,
     default: 'pending'
   },
-  cancelledAt: Date,  // required only if status is cancelled
+  isExchangeItem: { type: Boolean, default: false },
+  exchangedFrom: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'ExchangeRequest' 
+  }     // this is for exchange item only
 }, { timestamps: true });
 
 const OrderedProduct = mongoose.model("OrderedProduct", orderedProductSchema);
