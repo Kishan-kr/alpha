@@ -19,7 +19,7 @@ const createCategory = async (req, res) => {
         if (!saveCategory) {
             throw new Error("Error occured while creating category")
         }
-        return res.status(200).json({ status: true, msg: "Category Added Successfully", category: saveCategory })
+        return res.status(200).json({ status: true, message: "Category Added Successfully", category: saveCategory })
     } catch (error) {
         return res.status(500).json({ status: false, error: error.message })
     }

@@ -16,7 +16,7 @@ const addCart = async (req, res) => {
             if (!saveCart) {
                 throw new Error("Error occured while saving item to cart")
             }
-            return res.status(200).json({ status: true, msg: "Item Added to Cart" })
+            return res.status(200).json({ status: true, message: "Item Added to Cart" })
         }
         throw new Error("Item exists")
 

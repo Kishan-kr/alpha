@@ -6,7 +6,7 @@ const getOrdersByUserId = async (req, res) => {
 
         const orders = await Order.find({ userId });
         if (!orders.length) {
-            return res.status(200).json({ msg: 'no orders' });
+            return res.status(200).json({ message: 'no orders' });
         }
 
         const orderIds = orders.map(order => order._id);

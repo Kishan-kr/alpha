@@ -1,21 +1,56 @@
-const product = require("../../models/product")
+const Product = require('../../models/product');
 
 const addProduct = async (req, res) => {
-    try {
-        const isProductTitleExists = await product.findOne({ title: { $regex: req.body.title, $options: 'i' } })
-        if (isProductTitleExists) {
-            throw new Error("Product with this title already exists")
-        }
-        const newproduct = new product({...req.body , adminId:req.admin.id})
-        const saveproduct = await newproduct.save()
-        if (!saveproduct) {
-            throw new Error("Error occured while saving product")
-        }
-        return res.status(200).json({ status: true, msg: "product saved" })
-    } catch (error) {
-        return res.status(500).json({ status: false, error: error.message })
+  try {
+    const {
+        categoryId,
+        images,
+        thumbnail,
+        originalPrice,
+        discountedPrice,
+        sizes,
+        colors,
+        tags,
+        description,
+        story,
+    } = req.body;
+
+    const title = req.body.title?.toLowerCase();
+    const adminId = req.admin.id;
+
+    const titleExists = await Product.findOne({title});
+
+    if (titleExists) {
+        return res.status(409).json({ error: 'Product with this title already exists' });
     }
-}
 
+    // Basic validation (optional if schema already handles this)
+    if (!title || !images || !thumbnail || !originalPrice || !sizes || !colors || !description || !story) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
 
-module.exports = addProduct
+    // Create and save product
+    const product = new Product({
+      title,
+      categoryId,
+      images,
+      thumbnail,
+      originalPrice,
+      discountedPrice,
+      sizes,
+      colors,
+      tags,
+      description,
+      story,
+      adminId,
+    });
+
+    await product.save();
+    return res.status(201).json({ message: 'Product added successfully', product });
+  } catch (error) {
+    console.error('Error adding product:', error);
+    return res.status(500).json({ error: error.message || 'Internal Server Error' });
+  }
+};
+
+module.exports = addProduct;

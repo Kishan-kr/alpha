@@ -6,7 +6,7 @@ const getCartItemsByUserId = async (req, res) => {
             status: true,
             cartItems: await cart.find({ userId: req.user.id }).populate({
                 path: "productId",
-                select: "title thumbnailImg discountPrice"
+                select: "title thumbnail discountedPrice"
             }).select("-userId")
         })
     } catch (error) {

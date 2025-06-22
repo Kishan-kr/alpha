@@ -6,23 +6,21 @@ const updateProduct = require("../controllers/Product/updateProduct")
 const deleteProduct = require("../controllers/Product/deleteProduct")
 const getAllProducts = require("../controllers/Product/getAllProducts")
 const isRoleExists = require("../middlwares/isRoleExists")
-const getProductsByCategoryId = require("../controllers/Product/getProductsByCategoryId")
+const getProductById = require("../controllers/Product/getProductById")
 
+// POST /api/product             → Create product
+router.post("/", authenticateAdmin, isRoleExists, addProduct);
 
-//create product
-router.post("/add-product" , authenticateAdmin, isRoleExists, addProduct)
+// GET /api/product              → Get all products
+router.get("/", getAllProducts);
 
-//get all products
-router.get("/get-products" , getAllProducts)
+// GET /api/product/:categoryId → Get products by category
+router.get("/:id", getProductById);
 
-//get all products by categoryId
-router.get("/get-Products/:categoryId" , getProductsByCategoryId)
+// PATCH /api/product/:id       → Update product
+router.patch("/:id", authenticateAdmin, isRoleExists, updateProduct);
 
-//update product
-router.patch("/update-product/:id" , authenticateAdmin , isRoleExists, updateProduct )
-
-//delete product
-router.delete("/delete-product/:id" , authenticateAdmin , isRoleExists, deleteProduct)
-
+// DELETE /api/product/:id      → Delete product
+router.delete("/:id", authenticateAdmin, isRoleExists, deleteProduct);
 
 module.exports = router

@@ -9,7 +9,7 @@ const deleteCategory = async(req,res)=>{
         if(!deleteCategoryById){
             throw new Error(`Category not found with Id ${req.params.id}`)
         }
-        return res.status(200).json({status:true , msg:"Category Deleted" , deletedCategoryId:deleteCategoryById._id})
+        return res.status(200).json({status:true , message:"Category Deleted" , deletedCategoryId:deleteCategoryById._id})
     } catch (error) {
         return res.status(500).json({ status: false, error: error.message })
     }

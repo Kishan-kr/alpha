@@ -16,7 +16,7 @@ const loginAdmin = async (req, res) => {
         if(!adminToken){
             throw new Error("Error occured while generating token")
         }
-        return res.status(200).json({ status: true , msg:"Login Successfull" , token:adminToken })
+        return res.status(200).json({ status: true , message:"Login Successfull" , token:adminToken })
     } catch (error) {
         return res.status(500).json({ status: false, error: error.message })
     }

@@ -13,7 +13,7 @@ const sendingOtp = async (req, res) => {
         const newotp = new otp({number:req.body.number , otp:123456})
         const saveotp = await newotp.save()
         if(saveotp){
-            return res.status(200).json({msg:"OTP sent"})
+            return res.status(200).json({message:"OTP sent"})
         }
     } catch (error) {
         return res.status(500).json({ status: false, error: error.message })

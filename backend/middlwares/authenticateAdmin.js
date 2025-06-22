@@ -2,10 +2,16 @@ const jwt = require("jsonwebtoken")
 
 const authenticateAdmin = async (req, res, next) => {
     try {
-        const token = req.headers['token'];
-        
+        const authHeader = req.headers['authorization'];
+
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            throw new Error('Unauthorized request! Missing or invalid token format.');
+        }
+
+        const token = authHeader.split(' ')[1];
+
         if (!token || token === 'null' || token === 'undefined') {
-            throw new Error("Token not found")
+            throw new Error('Unauthorized request! Token is empty or invalid.');
         }
 
         // Verify the token
@@ -13,21 +19,21 @@ const authenticateAdmin = async (req, res, next) => {
             if (err) {
                 // Check if the error is due to an expired token
                 if (err.name === 'TokenExpiredError') {
-                    throw new Error("Session expired")
+                    throw new Error("Session expired!")
 
                 }
                 // Handle other possible token verification errors
-                throw new Error("Invalid token")
+                throw new Error("Invalid session!")
 
             }
 
             // Token is verified, attach user info to request object and proceed
-            
+
             req.admin = admin;
             next();
         });
     } catch (error) {
-          return res.status(500).json({status:false , error:error.message})
+        return res.status(500).json({ status: false, error: error.message })
     }
 
 

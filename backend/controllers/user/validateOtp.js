@@ -17,7 +17,7 @@ const validateOtp = async (req, res) => {
             throw new Number("Something went wrong")
         }
         if (isNumberValid.otp !== req.body.otp) {
-            return res.status(401).json({ status: false, msg: "Invalid OTP" })
+            return res.status(401).json({ status: false, message: "Invalid OTP" })
         }
         //check user exists or not 
         //if not then we will register a new user with their number and generate token for authentication

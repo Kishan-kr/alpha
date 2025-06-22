@@ -13,8 +13,7 @@ const addressSchema = new mongoose.Schema(
       required: true
     },
     line2: {
-      type: String,
-      required:true
+      type: String
     },
     landmark: {
       type: String

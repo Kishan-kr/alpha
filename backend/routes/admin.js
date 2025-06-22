@@ -11,7 +11,7 @@ const getAllAdmins = require("../controllers/Admin/getAllAdmins")
 
 
 //add admin route
-router.post("/create-admin", [
+router.post("/", [
     body("email").matches(`@tashn.in`, 'gi').withMessage("Invalid Email"), body("name").isLength({ min: 3 }).withMessage("Name must have at least 3 characters"), body('password')
         .isLength({ min: 8 }).withMessage('Minimum length of password must be 8')
         .not().isNumeric().withMessage('Password must contain an alphabet')
@@ -21,17 +21,17 @@ router.post("/create-admin", [
 ], authenticateAdmin, checkAdminRole, addAdmin)
 
 //login admin
-router.post("/login-admin" , loginAdmin )
+router.post("/login" , loginAdmin )
 
 //get admin details
 router.get("/admin-details" , authenticateAdmin  , getAdminDetails)
 
 
 //get all admins
-router.get("/all-admins" , authenticateAdmin , checkAdminRole, getAllAdmins)
+router.get("/" , authenticateAdmin , checkAdminRole, getAllAdmins)
 
 //delete admin
-router.delete("/delete-admin/:id" , authenticateAdmin , checkAdminRole, removeAdmin)
+router.delete("/:id" , authenticateAdmin , checkAdminRole, removeAdmin)
 
 
 module.exports= router

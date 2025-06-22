@@ -52,10 +52,10 @@ const transactionSchema = new mongoose.Schema({
     required: true
   },
 
-  refundedItemId: {
+  refundedItemId: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'OrderedProduct'
-  }      // optional
+  }]      // optional
 }, {
   timestamps: true
 });

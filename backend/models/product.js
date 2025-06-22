@@ -35,7 +35,7 @@ const productSchema = new mongoose.Schema({
         ],
         required: true,
     },
-    thumbnailImg: {
+    thumbnail: {
         type: String,
         required: true,
     },
@@ -49,7 +49,7 @@ const productSchema = new mongoose.Schema({
             message: 'Original price must be greater than 0',
         },
     },
-    discountPrice: {
+    discountedPrice: {
         type: Number,
         required: true,
         validate: {
@@ -58,6 +58,9 @@ const productSchema = new mongoose.Schema({
             },
             message: 'Discount price must be greater than 0 and less than the original price',
         },
+    },
+    effectivePrice: { 
+        type: Number 
     },
     sizes: {
         type: [sizeSchema],
@@ -87,7 +90,7 @@ const productSchema = new mongoose.Schema({
         type: [String],
         required: true,
     },
-    Story: {
+    story: {
         type: String,
         required: true,
         minlength: [20, 'Story must have at least 20 characters'],
@@ -100,10 +103,30 @@ const productSchema = new mongoose.Schema({
     {
         timestamps: true
     }
-
-
 );
 
+// ✅ Pre-save hook to compute effectivePrice
+productSchema.pre('save', function (next) {
+  this.effectivePrice = this.discountedPrice != null
+    ? this.discountedPrice
+    : this.originalPrice;
+  next();
+});
+
+
+// ✅ Pre-update hook for findOneAndUpdate
+productSchema.pre('findOneAndUpdate', function (next) {
+  const update = this.getUpdate();
+
+  const discount = update.discountedPrice ?? undefined;
+  const original = update.originalPrice ?? undefined;
+
+  if (discount != null || original != null) {
+    update.effectivePrice = discount != null ? discount : original;
+  }
+
+  next();
+});
 
 // Helper function for image array limit
 function arrayLimit(val) {

@@ -13,7 +13,7 @@ const addAdmin = async(req,res)=>{
             const newAdmin = new Admin({ ...req.body, email:req.body.email.toLowerCase() , password: await bcrypt.hash(req.body.password, 10) })
             const saveNewAdmin = await newAdmin.save()
             if (saveNewAdmin) {
-                return res.status(201).json({ status: true, msg: "Admin added Successfully" })
+                return res.status(201).json({ status: true, message: "Admin added Successfully" })
             }
             throw new Error("Error occured while adding newadmin")
         }

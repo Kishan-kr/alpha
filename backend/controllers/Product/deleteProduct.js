@@ -1,18 +1,44 @@
-const product = require("../../models/product")
+const product = require("../../models/product");
+const { getFileKeyFromUrl, deleteMultipleFromR2 } = require("../../services/configR2");
 
-const deleteProduct = async(req,res)=>{
-    try {
-        if(!req.params.id){
-            throw new Error("Invalid Product id")
-        }
-        const deleteProductById = await product.findByIdAndDelete(req.params.id)
-        if(!deleteProductById){
-            throw new Error(`Error occured while deleting Product with Id ${req.params.id}`)
-        }
-        return res.status(200).json({status:true , deletedItemId:deleteProductById._id , msg:"Product Deleted Successfully"})
-    } catch (error) {
-        return res.status(500).json({atatus:false , error:error.message})
+const deleteProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ status: false, error: 'Invalid product ID' });
     }
-}
 
-module.exports= deleteProduct
+    // Step 1: Find the product first
+    const productToDelete = await product.findById(id);
+
+    if (!productToDelete) {
+      return res.status(404).json({ status: false, error: `No product found with ID ${id}` });
+    }
+
+    // Step 2: Extract all R2 keys (images + thumbnail)
+    const imageKeys = [
+      ...productToDelete.images.map(getFileKeyFromUrl),
+      getFileKeyFromUrl(productToDelete.thumbnail)
+    ].filter(Boolean); // remove nulls
+
+    // Step 3: Delete files from R2
+    const { deleted, errors } = await deleteMultipleFromR2(imageKeys);
+
+    // Step 4: Delete product from DB
+    const deletedProduct = await product.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      status: true,
+      deletedItemId: deletedProduct._id,
+      deletedFiles: deleted,
+      failedToDelete: errors,
+      message: 'Product and images deleted successfully',
+    });
+  } catch (error) {
+    console.error('Error deleting product:', error);
+    return res.status(500).json({ status: false, error: error.message });
+  }
+};
+
+module.exports = deleteProduct

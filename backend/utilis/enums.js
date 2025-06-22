@@ -9,6 +9,7 @@ const orderStatuses = [
 
 const productOrderStatuses = [
   "pending",  
+  "cancelled",
   "delivered",
   "returned"
 ];

@@ -6,7 +6,7 @@ const removeAdmin = async(req,res)=>{
         if(!deleteAdminById){
             throw new Error(`standardAdmin not found with id ${req.params.id}`)
         }
-        return res.status(200).json({status:true , deletedAdminId:deleteAdminById._id , msg:`standardAdminbdeleted successfully`})
+        return res.status(200).json({status:true , deletedAdminId:deleteAdminById._id , message:`standardAdminbdeleted successfully`})
     } catch (error) {
         return res.status(500).json({ status: false, error: error.message })
     }

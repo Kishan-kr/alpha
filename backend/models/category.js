@@ -2,14 +2,16 @@ const mongoose = require("mongoose")
 
 const categorySchema = mongoose.Schema(
     {
-        title: {
+        name: {
             type: String,
             required: true,
         },
-        description:{
-            type:String,
-            required:true
-        }
+        slug: {
+            type: String,
+            required: true
+        },
+        description: String,
+        thumbnail: String
     },
     {
         timeStamps: true

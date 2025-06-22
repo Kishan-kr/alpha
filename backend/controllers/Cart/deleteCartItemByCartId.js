@@ -19,7 +19,7 @@ const deleteCartItemByCartId = async (req, res) => {
         if(!deleteCartItem){
             throw new Error("Deleted Cart item not found")
         }
-        return res.status(200).json({status:true , deleteCartItem:deleteCartItem._id , msg:"Item Removed"})
+        return res.status(200).json({status:true , deleteCartItem:deleteCartItem._id , message:"Item Removed"})
     } catch (error) {
         return res.status(500).json({ status: false, error: error.message })
     }
