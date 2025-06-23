@@ -20,7 +20,7 @@ router.post(
   authenticateAdmin,
   upload.fields([
     { name: 'thumbnail', maxCount: 1 },
-    { name: 'images', maxCount: 4 }
+    { name: 'images', maxCount: 5 }
   ]),
   uploadImages
 );

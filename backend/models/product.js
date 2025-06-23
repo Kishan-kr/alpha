@@ -29,8 +29,8 @@ const productSchema = new mongoose.Schema({
         type: [String],
         validate: [
             {
-                validator: (val) => val.length >= 1 && val.length <= 4,
-                message: 'Images must contain between 1 and 4 items',
+                validator: (val) => val.length >= 1 && val.length <= 5,
+                message: 'Images must contain between 1 and 5 items',
             },
         ],
         required: true,
