@@ -3,25 +3,28 @@ const Product = require('../../models/product');
 const addProduct = async (req, res) => {
   try {
     const {
-        categoryId,
-        images,
-        thumbnail,
-        originalPrice,
-        discountedPrice,
-        sizes,
-        colors,
-        tags,
-        description,
-        story,
+      categoryId,
+      images,
+      thumbnail,
+      originalPrice,
+      discountedPrice,
+      sizes,
+      colors,
+      tags,
+      description,
+      story,
+      metaTitle,
+      metaDescription,
+      metaKeywords
     } = req.body;
 
-    const title = req.body.title?.toLowerCase();
+    const title = req.body.title?.trim().toLowerCase();
     const adminId = req.admin.id;
 
-    const titleExists = await Product.findOne({title});
+    const titleExists = await Product.findOne({ title });
 
     if (titleExists) {
-        return res.status(409).json({ error: 'Product with this title already exists' });
+      return res.status(409).json({ error: 'Another product with this title already exists' });
     }
 
     // Basic validation (optional if schema already handles this)
@@ -43,6 +46,9 @@ const addProduct = async (req, res) => {
       description,
       story,
       adminId,
+      metaTitle,
+      metaDescription,
+      metaKeywords
     });
 
     await product.save();

@@ -23,7 +23,7 @@ const productSchema = new mongoose.Schema({
     },
     categoryId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"CATEGORY"
+        ref: "CATEGORY"
     },
     images: {
         type: [String],
@@ -51,16 +51,15 @@ const productSchema = new mongoose.Schema({
     },
     discountedPrice: {
         type: Number,
-        required: true,
         validate: {
             validator: function (value) {
-                return value > 0 && value < this.originalPrice;
+                return value >= 0 && value < this.originalPrice;
             },
-            message: 'Discount price must be greater than 0 and less than the original price',
+            message: `Discounted price must be greater than or equals to 0 and less than the original price`,
         },
     },
-    effectivePrice: { 
-        type: Number 
+    effectivePrice: {
+        type: Number
     },
     sizes: {
         type: [sizeSchema],
@@ -98,7 +97,27 @@ const productSchema = new mongoose.Schema({
     adminId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "ADMIN"
-    }
+    },
+    metaTitle: {
+        type: String,
+        maxlength: [60, 'Meta title should not exceed 60 characters'],
+        default: '', // Optional
+    },
+    metaDescription: {
+        type: String,
+        maxlength: [160, 'Meta description should not exceed 160 characters'],
+        default: '',
+    },
+    metaKeywords: {
+        type: [String],
+        default: [],
+        validate: {
+            validator: function (arr) {
+                return arr.every(kw => typeof kw === 'string' && kw.length <= 30);
+            },
+            message: 'Each meta keyword must be a string of max 30 characters',
+        },
+    },
 },
     {
         timestamps: true
@@ -107,25 +126,25 @@ const productSchema = new mongoose.Schema({
 
 // ✅ Pre-save hook to compute effectivePrice
 productSchema.pre('save', function (next) {
-  this.effectivePrice = this.discountedPrice != null
-    ? this.discountedPrice
-    : this.originalPrice;
-  next();
+    this.effectivePrice = this.discountedPrice != null
+        ? this.discountedPrice
+        : this.originalPrice;
+    next();
 });
 
 
 // ✅ Pre-update hook for findOneAndUpdate
 productSchema.pre('findOneAndUpdate', function (next) {
-  const update = this.getUpdate();
+    const update = this.getUpdate();
 
-  const discount = update.discountedPrice ?? undefined;
-  const original = update.originalPrice ?? undefined;
+    const discount = update.discountedPrice ?? undefined;
+    const original = update.originalPrice ?? undefined;
 
-  if (discount != null || original != null) {
-    update.effectivePrice = discount != null ? discount : original;
-  }
+    if (discount != null || original != null) {
+        update.effectivePrice = discount != null ? discount : original;
+    }
 
-  next();
+    next();
 });
 
 // Helper function for image array limit
