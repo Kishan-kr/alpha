@@ -9,7 +9,7 @@ const getUser = async(req,res)=>{
         if(!fetchUserByID){
              throw new Error("user not found")
         }
-        return res.status(200).json({status:true , userDetails:fetchUserByID})
+        return res.status(200).json({status:true , user:fetchUserByID})
     } catch (error) {
         return res.status(500).json({ status: false, error: error.message })
     }

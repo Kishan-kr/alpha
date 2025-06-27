@@ -1,36 +1,60 @@
-const { validationResult } = require("express-validator")
-const cart = require("../../models/cart")
+const Cart = require('../../models/cart');
+const { INTERNAL_SERVER_ERROR } = require('../../utilis/constants');
+const CustomError = require('../../utilis/customError');
 
 const updateCartByCartId = async (req, res) => {
-    try {
-        if (!req.user.id) {
-            throw new Error("User Id not provided")
-        }
-        if (!req.params.cartId) {
-            throw new Error("Cart Id not provided")
-        }
-        const result = validationResult(req)
-        if (result.errors.length) {
-            const err = result.errors.reduce(function (acc, erritem) {
-                return { ...acc, [erritem.path]: erritem.msg }
-            }, {})
-            return res.status(422).json({ status: false, error: err })
-        }
-        const findCartByCartId = await cart.findById(req.params.cartId)
-        if (!findCartByCartId) {
-            throw new Error(`Cart Item not found with Id ${req.params.reviewId}`)
-        }
-        if (req.user.id !== String(findCartByCartId.userId)) {
-            throw new Error("Invalid Action")
-        }
-        const updateCartDetails = await cart.findByIdAndUpdate(req.params.cartId, req.body, { new: true })
-        if (!updateCartDetails) {
-            throw new Error("Updated cart not found")
-        }
-        return res.status(200).json({ status: true, updateCart: updateCartDetails })
-    } catch (error) {
-        return res.status(500).json({ status: false, error: error.message })
-    }
-}
+  try {
+    const { itemId } = req.params;
+    const { quantity, size, color } = req.body;
 
-module.exports = updateCartByCartId
+    if (!itemId) {
+      throw new CustomError("Item ID is required", 400);
+    }
+
+    const updates = {};
+
+    if (quantity !== undefined) {
+      if (typeof quantity !== 'number' || quantity < 1) {
+        throw new CustomError("Quantity must be a number greater than 0", 400);
+      }
+      updates.quantity = quantity;
+    }
+
+    if (size) {
+      updates.size = size.trim();
+    }
+
+    if (color) {
+      updates.color = color.trim();
+    }
+
+    if (Object.keys(updates).length === 0) {
+      throw new CustomError("No valid fields provided for update", 400);
+    }
+
+    const updatedCart = await Cart.findByIdAndUpdate(
+      itemId,
+      { $set: updates },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedCart) {
+      throw new CustomError("Cart item not found", 404);
+    }
+
+    return res.status(200).json({
+      status: true,
+      message: "Cart item updated successfully",
+      cartItem: updatedCart
+    });
+
+  } catch (error) {
+    const status = error.statusCode || 500;
+    return res.status(status).json({
+      status: false,
+      error: error.message || INTERNAL_SERVER_ERROR
+    });
+  }
+};
+
+module.exports = updateCartByCartId;

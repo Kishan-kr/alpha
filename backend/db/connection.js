@@ -1,5 +1,5 @@
 const mongooose = require("mongoose")
-const adminfunc = require("../utilis/admincheck")
+const seedSuperAdmin = require("../utilis/seedSuperAdmin")
 const admin = require("../models/admin")
 const seedDatabase = require("../temp/seeders/seedDummyData")
 
@@ -9,14 +9,13 @@ const connect = async () => {
         const connection = await mongooose.connect(process.env.DATABASE_URI)
         if (connection) {
             console.log("Successfully connected to database");
-            adminfunc()
+            seedSuperAdmin()
 
             // seed dummy data 
             // seedDatabase();
         }
     } catch (error) {
         console.log(error);
-
     }
 }
 

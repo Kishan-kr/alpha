@@ -1,6 +1,7 @@
 const Admin = require("../../models/admin")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const { ADMIN_SESSION_EXPIRATION_TIME } = require("../../utilis/constants")
 
 const loginAdmin = async (req, res) => {
     try {
@@ -12,7 +13,7 @@ const loginAdmin = async (req, res) => {
         if(!checkPassword){
             return res.status(401).json({ status: false, error: "Invalid Credentails" })
         }
-        const adminToken = jwt.sign({id:isEmailRegistered._id }, process.env.JWT_SECRET , {expiresIn:"1d"})
+        const adminToken = jwt.sign({id:isEmailRegistered._id }, process.env.JWT_SECRET , {expiresIn : ADMIN_SESSION_EXPIRATION_TIME})
         if(!adminToken){
             throw new Error("Error occured while generating token")
         }

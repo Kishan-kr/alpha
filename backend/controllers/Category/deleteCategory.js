@@ -1,19 +1,50 @@
-const category = require("../../models/category")
+const category = require("../../models/category");
+const { getFileKeyFromUrl, deleteFromR2 } = require("../../services/configR2");
+const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
+const CustomError = require("../../utilis/customError");
 
-const deleteCategory = async(req,res)=>{
+const deleteCategory = async (req, res) => {
+    const id = req.params.id;
+
     try {
-        if(!req.params.id){
-            throw new Error(`Category ID not found ${req.params.id}`)
+        if (!id) {
+            throw new CustomError(`Category ID is required`, 400);
         }
-        const deleteCategoryById = await category.findByIdAndDelete(req.params.id)        
-        if(!deleteCategoryById){
-            throw new Error(`Category not found with Id ${req.params.id}`)
+
+        const deletedCategory = await category.findByIdAndDelete(id);
+        if (!deletedCategory) {
+            throw new CustomError(`Category not found`, 404);
         }
-        return res.status(200).json({status:true , message:"Category Deleted" , deletedCategoryId:deleteCategoryById._id})
+
+        let failedToDelete = null;
+
+        // Delete thumbnail if exists
+        if (deletedCategory.thumbnail) {
+            const key = getFileKeyFromUrl(deletedCategory.thumbnail);
+            if (!key) {
+                failedToDelete = 'Failed to remove thumbnail: Invalid file URL';
+            } else {
+                const deletedFile = await deleteFromR2(key);
+                if (!deletedFile) {
+                    failedToDelete = 'Failed to remove thumbnail';
+                }
+            }
+        }
+
+        return res.status(200).json({ 
+            status: true, 
+            message: "Category Deleted", 
+            deletedCategoryId: deletedCategory._id,
+            thumbnailDeletion: failedToDelete ? { success: false, message: failedToDelete } : { success: true }
+        });
+
     } catch (error) {
-        return res.status(500).json({ status: false, error: error.message })
+        const status = error.statusCode || 500;
+        return res.status(status).json({
+            status: false,
+            error: error.message || INTERNAL_SERVER_ERROR
+        });
     }
-}
+};
 
-
-module.exports=deleteCategory
+module.exports = deleteCategory

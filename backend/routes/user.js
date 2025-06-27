@@ -1,49 +1,66 @@
 const express = require("express")
 const { body } = require("express-validator")
-const sendingOtp = require("../controllers/user/sendingOtp")
-const validateOtp = require("../controllers/user/validateOtp")
-const add_Update_PersonalInfo = require("../controllers/user/add_Update_Personalnfo")
+const sendPhoneOtp = require("../controllers/user/sendPhoneOtp")
+const validatePhone = require("../controllers/user/validatePhone")
+const updatePersonalInfo = require("../controllers/user/updatePersonalInfo")
 const authenticateUser = require("../middlwares/authenticateUser")
 const getUser = require("../controllers/user/getUser")
-const add_userAddress = require("../controllers/user/add_Address")
-const update_Address = require("../controllers/user/update_Address")
-const deleteAddress = require("../controllers/user/delete_address")
+const addUserAddress = require("../controllers/user/addUserAddress")
+const updateAddress = require("../controllers/user/updateAddress")
+const deleteAddress = require("../controllers/user/deleteAddress")
 const deleteUser = require("../controllers/user/deleteUser")
 const checkDefaultAddress = require("../middlwares/checkDefaultAddress")
+const sendEmailOtp = require("../controllers/user/sendEmailOtp")
+const validateEmail = require("../controllers/user/validateEmail")
 const router = express.Router()
 
+// Auth 
+// POST /api/users/auth/send-otp        → Send OTP to mobile number
+router.post("/auth/send-otp", [
+  body("phone").matches(/^[6-9]\d{9}$/).withMessage("Enter a valid Mobile Number")
+], sendPhoneOtp);
 
-//sending OTP 
-router.post("/sending-otp", [
-     body("number").matches(/^[6-9]\d{9}$/).withMessage("Enter a valid Mobile Number")
-], sendingOtp)
-
-
-//validating otp
-router.post("/validate-otp", [
-     body('otp')
-         .matches(/^\d{6}$/).withMessage('Enter a valid OTP')
-], validateOtp)
-
-//get user details
-router.get("/get-User", authenticateUser, getUser)
-
-//adding personal details
-router.patch("/personal-info/:id", authenticateUser, [
-     body("firstName").isLength({ min: 1 }).withMessage("Required*"),
-     body("email").isEmail().withMessage("Invalid Email")
-], add_Update_PersonalInfo)
+// POST /api/users/auth/validate-otp    → Validate OTP
+router.post("/auth/validate-otp", validatePhone);
 
 
-//adding user address
-router.patch("/user-address/:userId", authenticateUser,
+// Email updation 
+// POST /api/users/me/email/send-otp    Get email OTP
+router.post(
+    '/me/email/send-otp',
+    authenticateUser,
+    body('email')
+        .isEmail().withMessage('Invalid email address')
+        .normalizeEmail(),
+    sendEmailOtp
+);
+
+// POST /api/users/me/email/validate-otp    → Validate OTP
+router.post("/me/email/validate-otp",
+     body('email')
+        .isEmail().withMessage('Invalid email address')
+        .normalizeEmail(),
+     authenticateUser, 
+     validateEmail
+);
+
+
+// GET /api/users/me           → Get logged-in user's details
+router.get("/me", authenticateUser, getUser);
+
+// PATCH /api/users/me         → Add or update name and gender for logged-in user
+router.patch("/me", authenticateUser, updatePersonalInfo)
+
+
+// POST /api/users/me/addresses         → Add new address for logged-in user
+router.post("/me/addresses", authenticateUser,
      [
           body('pincode')
                .isLength({ min: 6, max: 6 }).withMessage('Pincode must be exactly 6 digits')
                .isNumeric().withMessage('Pincode must contain only numbers'),
 
           // Required string fields
-          body("fullName").notEmpty().withMessage("Required*"),
+          body("fullName").notEmpty().withMessage("Please fill in the required fields"),
 
           body('phone')
                .notEmpty().withMessage('Phone number is required')
@@ -52,27 +69,27 @@ router.patch("/user-address/:userId", authenticateUser,
 
 
           body('state')
-               .notEmpty().withMessage('Required*'),
+               .notEmpty().withMessage('Please fill in the required fields'),
 
           body('city')
-               .notEmpty().withMessage('Required*'),
+               .notEmpty().withMessage('Please fill in the required fields'),
 
           body('line1')
-               .notEmpty().withMessage('Required*'),
+               .notEmpty().withMessage('Please fill in the required fields'),
           body('line2')
-               .notEmpty().withMessage('Required*'),
-     ], checkDefaultAddress, add_userAddress)
+               .notEmpty().withMessage('Please fill in the required fields'),
+     ], checkDefaultAddress, addUserAddress)
 
 
-//update address
-router.put("/update_UserAddress/:userId", authenticateUser,
+// PATCH /api/users/me/addresses        → UPDATE address for logged-in user
+router.patch("/me/addresses/:addressId", authenticateUser,
      [
           body('pincode')
                .isLength({ min: 6, max: 6 }).withMessage('Pincode must be exactly 6 digits')
                .isNumeric().withMessage('Pincode must contain only numbers'),
 
           // Required string fields
-          body("fullName").notEmpty().withMessage("Required*"),
+          body("fullName").notEmpty().withMessage("Please fill in the required fields"),
 
           body('phone')
                .notEmpty().withMessage('Phone number is required')
@@ -80,22 +97,22 @@ router.put("/update_UserAddress/:userId", authenticateUser,
                .isNumeric().withMessage('Phone number must contain only numbers'),
 
           body('state')
-               .notEmpty().withMessage('Required*'),
+               .notEmpty().withMessage('Please fill in the required fields'),
 
           body('city')
-               .notEmpty().withMessage('Required*'),
+               .notEmpty().withMessage('Please fill in the required fields'),
 
           body('line1')
-               .notEmpty().withMessage('Required*'),
+               .notEmpty().withMessage('Please fill in the required fields'),
           body('line2')
-               .notEmpty().withMessage('Required*'),
-     ], checkDefaultAddress, update_Address)
+               .notEmpty().withMessage('Please fill in the required fields'),
+     ], checkDefaultAddress, updateAddress)
 
 
-//delete address     
-router.delete("/delete_address/:addressId", authenticateUser, deleteAddress)
+// DELETE /api/users/me/addresses/:addressId       → Delete a specific address
+router.delete("/me/addresses/:addressId", authenticateUser, deleteAddress)
 
-//delete user
-router.delete("/delete_user/:id", authenticateUser, deleteUser)
+// DELETE /api/users/me         → Delete logged-in user's account
+router.delete("/me", authenticateUser, deleteUser)
 
 module.exports = router

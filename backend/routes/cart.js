@@ -1,23 +1,25 @@
 const express = require("express")
-const addCart = require("../controllers/Cart/addCart")
+const addItemToCart = require("../controllers/Cart/addItemToCart")
 const authenticateUser = require("../middlwares/authenticateUser")
 const getCartItemsByUserId = require("../controllers/Cart/getCartItemByUserId")
 const updateCartByCartId = require("../controllers/Cart/updateCartByCartId")
-const { body } = require("express-validator")
-const deleteCartItemByCartId = require("../controllers/Cart/deleteCartItemByCartId")
+const removeCartItemById = require("../controllers/Cart/removeCartItemById")
+const removeAllItemsFromCart = require("../controllers/Cart/removeAllItemsFromCart")
 const router= express.Router()
 
-//add cart
-router.post("/add-cart/:productId" , authenticateUser , addCart)
+// POST /api/carts/:productId        add item to cart
+router.post("/:productId" , authenticateUser , addItemToCart)
 
-//get cartitem by UserId
-router.get("/get-cartItem" , authenticateUser , getCartItemsByUserId)
+// GET /api/carts        Get cart items of logged in user
+router.get("/" , authenticateUser , getCartItemsByUserId)
 
-//update cart by cart Id
-router.patch("/update-cart/:cartId" , authenticateUser , [
-   body("quantity").notEmpty().withMessage('Quantity is required')
-] ,updateCartByCartId)
+// PATCH /api/carts        Update cart items of logged in user
+router.patch("/:itemId" , authenticateUser, updateCartByCartId)
 
-router.delete("/delete-cart/:cartId" , authenticateUser , deleteCartItemByCartId)
+// DELETE /api/carts/:itemId        Remove an item from cart
+router.delete("/:itemId" , authenticateUser , removeCartItemById)
 
-module.exports=router
+// DELETE /api/carts/:itemId        Remove all items from cart
+router.delete("/" , authenticateUser , removeAllItemsFromCart)
+
+module.exports = router;

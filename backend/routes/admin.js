@@ -6,11 +6,11 @@ const loginAdmin = require("../controllers/Admin/loginAdmin")
 const authenticateAdmin = require("../middlwares/authenticateAdmin")
 const getAdminDetails = require("../controllers/Admin/getAdminDetails")
 const removeAdmin = require("../controllers/Admin/removeAdmin")
-const checkAdminRole = require("../middlwares/checkAdminRole")
+const isSuperAdmin = require("../middlwares/isSuperAdmin")
 const getAllAdmins = require("../controllers/Admin/getAllAdmins")
 
 
-//add admin route
+// add admin route
 router.post("/", [
     body("email").matches(`@tashn.in`, 'gi').withMessage("Invalid Email"), body("name").isLength({ min: 3 }).withMessage("Name must have at least 3 characters"), body('password')
         .isLength({ min: 8 }).withMessage('Minimum length of password must be 8')
@@ -18,20 +18,20 @@ router.post("/", [
         .not().isAlpha().withMessage('Password must contain a number')
         .not().isUppercase().withMessage('Password must contain a lowercase letter')
         .not().isLowercase().withMessage('Password must contain a uppercase letter')
-], authenticateAdmin, checkAdminRole, addAdmin)
+], authenticateAdmin, isSuperAdmin, addAdmin)
 
-//login admin
+// login admin
 router.post("/login" , loginAdmin )
 
-//get admin details
-router.get("/admin-details" , authenticateAdmin  , getAdminDetails)
+// get details of logged-in admin 
+router.get("/me" , authenticateAdmin  , getAdminDetails)
 
 
-//get all admins
-router.get("/" , authenticateAdmin , checkAdminRole, getAllAdmins)
+// get all admins
+router.get("/" , authenticateAdmin, isSuperAdmin, getAllAdmins)
 
-//delete admin
-router.delete("/:id" , authenticateAdmin , checkAdminRole, removeAdmin)
+// delete admin
+router.delete("/:id" , authenticateAdmin , isSuperAdmin, removeAdmin)
 
 
 module.exports= router

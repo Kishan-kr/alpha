@@ -1,4 +1,5 @@
 const Product = require('../../models/product');
+const { INTERNAL_SERVER_ERROR } = require('../../utilis/constants');
 
 const addProduct = async (req, res) => {
   try {
@@ -54,8 +55,8 @@ const addProduct = async (req, res) => {
     await product.save();
     return res.status(201).json({ message: 'Product added successfully', product });
   } catch (error) {
-    console.error('Error adding product:', error);
-    return res.status(500).json({ error: error.message || 'Internal Server Error' });
+    console.error('Error adding product:', error.message);
+    return res.status(500).json({ error: error.message || INTERNAL_SERVER_ERROR });
   }
 };
 

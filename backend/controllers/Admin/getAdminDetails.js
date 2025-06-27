@@ -1,17 +1,23 @@
-const Admin = require("../../models/admin")
+const Admin = require("../../models/admin");
+const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
+const CustomError = require("../../utilis/customError")
 
 const getAdminDetails = async (req, res) => {
-    try {        
-        if(!req.admin.id){
-            throw new Error("AdminId not found")
+    try {
+        if (!req.admin.id) {
+            throw new CustomError("Unauthorized request", 401);
         }
-        const fetchAdminByAminID = await Admin.findById({_id:req.admin.id}).select("-password")
-        if(!fetchAdminByAminID){
-             throw new Error("Admin not found")
+        const fetchAdminByAminID = await Admin.findById(req.admin.id).select("-password")
+        if (!fetchAdminByAminID) {
+            throw new CustomError("Admin not found", 404);
         }
-        return res.status(200).json({status:true , adminDetails:fetchAdminByAminID})
+        return res.status(200).json({ status: true, admin: fetchAdminByAminID })
     } catch (error) {
-        return res.status(500).json({ status: false, error: error.message })
+        const status = error.statusCode || 500;
+        return res.status(status).json({
+            status: false,
+            error: error.message || INTERNAL_SERVER_ERROR
+        });
     }
 }
 

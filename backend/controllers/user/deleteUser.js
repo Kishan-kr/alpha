@@ -1,20 +1,23 @@
 const user = require("../../models/user");
+const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
+const CustomError = require("../../utilis/customError");
 
 const deleteUser = async (req, res) => {
     try {
-        if (!req.params.id) {
-            throw new Error("User ID not provided");
+        if (!req.user.id) {
+            throw new CustomError("User ID not provided", 400);
         }
-        if(req.user.id!==req.params.id){
-            throw new Error("Invalid Action")
-        }
-        const deleteUserById = await user.findByIdAndDelete(req.params.id)
+        const deleteUserById = await user.findByIdAndDelete(req.user.id)
         if (!deleteUserById) {
-            return res.status(404).json({ status: false, error: "User not found" });
+            throw new CustomError("User not found", 404);
         }
         return res.status(200).json({status:true , message:"User deleted Successfully" , deletedUserId:deleteUserById._id})
     } catch (error) {
-        return res.status(500).json({ status: false, error: error.message })
+        const status = error.statusCode || 500;
+        return res.status(status).json({ 
+            status: false, 
+            error: error.message || INTERNAL_SERVER_ERROR
+        })
     }
 }
 

@@ -1,4 +1,5 @@
 const { getFileKeyFromUrl, deleteFromR2 } = require("../../services/configR2");
+const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
 
 const deleteImage = async (req, res) => {
   const fileUrl = req.body.fileUrl;
@@ -24,7 +25,7 @@ const deleteImage = async (req, res) => {
   } catch (error) {
     console.error('Error deleting file from R2:', error);
     return res.status(500).json({
-      error: error.message || 'Internal server error',
+      error: error.message || INTERNAL_SERVER_ERROR,
     });
   }
 };

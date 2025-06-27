@@ -1,35 +1,38 @@
-const user = require("../models/user")
+const User = require("../models/user");
+const { INTERNAL_SERVER_ERROR } = require("../utilis/constants");
+const CustomError = require("../utilis/customError");
 
 const checkDefaultAddress = async (req, res , next) => {
     try {
-        if (!req.params.userId || !req.user.id) {
-            throw new Error("User Id not found")
+        const userId = req.user.id;
+
+        if (!userId) {
+            throw new CustomError("Invalid Action", 403)
         }
-        if (req.user.id !== req.params.userId) {
-            throw new Error("Invalid Action")
+        const foundUser = await User.findById({ _id: userId })
+        if (!foundUser) {
+            throw new CustomError("User not found", 400)
         }
-        const getUserById = await user.findById({ _id: req.user.id })
-        if (!getUserById) {
-            throw new Error("User not found")
-        }
-        else if (!getUserById.addresses.length) {
+        else if (foundUser.addresses?.length === 0) {
             req.isDefault = true
-            next()
         }
         else if (req.body.isDefault) {
-            await user.updateOne(
-                { _id: req.user.id },
+            await User.updateOne(
+                { _id: userId },
                 { $set: { "addresses.$[].isDefault": false } }
             );
-            req.isDefault=true
-            next()
+            req.isDefault = true
         }
         else{
-            req.isDefault=false
-            next()
+            req.isDefault = false
         }
+        next()
     } catch (error) {
-        return res.status(500).json({ status: false, error: error.message })
+        const status = error.statusCode || 500;
+        return res.status(status).json({ 
+            status: false, 
+            error: error.message || INTERNAL_SERVER_ERROR
+        })
     }
 }
 

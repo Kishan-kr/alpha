@@ -1,29 +1,55 @@
 const { validationResult } = require("express-validator")
-const category = require("../../models/category")
+const category = require("../../models/category");
+const CustomError = require("../../utilis/customError");
+const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
+const generateSlug = require("../../utilis/generateSlug");
 
 const createCategory = async (req, res) => {
-    try {
-        const result = validationResult(req)
-        if (result.errors.length) {
-            const err = result.errors.reduce(function (acc, erritem) {
-                return { ...acc, [erritem.path]: erritem.msg }
-            }, {})
-            return res.status(422).json({ status: false, error: err })
-        }
-        const checkCategoryExists = await category.findOne({ title: {$regex:req.body.title , $options:"i"} })                
-        if (checkCategoryExists) {
-            throw new Error("Category already exists")
-        }
-        const newCategory = new category(req.body)
-        const saveCategory = await newCategory.save()
-        if (!saveCategory) {
-            throw new Error("Error occured while creating category")
-        }
-        return res.status(200).json({ status: true, message: "Category Added Successfully", category: saveCategory })
-    } catch (error) {
-        return res.status(500).json({ status: false, error: error.message })
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      // Return the first validation error
+      return res.status(400).json({ status: false, error: errors.array()[0]?.msg });
     }
-}
 
+    const { name, description, thumbnail } = req.body;
+
+    // Normalize name
+    const normalizedName = name.trim().toLowerCase();
+
+    // Check for duplicates
+    const existing = await category.findOne({ name: normalizedName });
+    if (existing) {
+      throw new CustomError("Category already exists", 409);
+    }
+
+    // Build the category object
+    const newCategoryData = {
+      name: normalizedName,
+      description,
+      slug: generateSlug(normalizedName)
+    };
+
+    if (thumbnail) {
+      newCategoryData.thumbnail = thumbnail;
+    }
+
+    const newCategory = new category(newCategoryData);
+    await newCategory.save();
+
+    return res.status(201).json({
+      status: true,
+      message: "Category created successfully",
+      category: newCategory
+    });
+
+  } catch (error) {
+    const status = error.statusCode || 500;
+    return res.status(status).json({
+      status: false,
+      error: error.message || INTERNAL_SERVER_ERROR
+    });
+  }
+};
 
 module.exports = createCategory
