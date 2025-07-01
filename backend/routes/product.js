@@ -5,11 +5,10 @@ const authenticateAdmin = require("../middlwares/authenticateAdmin")
 const updateProduct = require("../controllers/Product/updateProduct")
 const deleteProduct = require("../controllers/Product/deleteProduct")
 const getAllProducts = require("../controllers/Product/getAllProducts")
-const isRoleExists = require("../middlwares/isRoleExists")
 const getProductById = require("../controllers/Product/getProductById")
 
 // POST /api/product             → Create product
-router.post("/", authenticateAdmin, isRoleExists, addProduct);
+router.post("/", authenticateAdmin, addProduct);
 
 // GET /api/product              → Get all products
 router.get("/", getAllProducts);
@@ -18,9 +17,9 @@ router.get("/", getAllProducts);
 router.get("/:id", getProductById);
 
 // PATCH /api/product/:id       → Update product
-router.patch("/:id", authenticateAdmin, isRoleExists, updateProduct);
+router.patch("/:id", authenticateAdmin, updateProduct);
 
 // DELETE /api/product/:id      → Delete product
-router.delete("/:id", authenticateAdmin, isRoleExists, deleteProduct);
+router.delete("/:id", authenticateAdmin, deleteProduct);
 
 module.exports = router
