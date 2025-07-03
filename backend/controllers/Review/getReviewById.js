@@ -2,20 +2,24 @@ const review = require("../../models/review");
 const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
 const CustomError = require("../../utilis/customError")
 
-const getReviewByProductId = async (req, res) => {
+const getReviewById = async (req, res) => {
     try {
-        const { productId } = req.params;
+        const { reviewId } = req.params;
 
-        if (!productId) {
-            throw new CustomError("Product Id is required", 400);
+        if (!reviewId) {
+            throw new CustomError("Review ID is required", 400);
         }
 
-        const reviews = await review.find({ productId }).populate({
+        const foundReview = await review.findById(reviewId).populate({
             path: "userId",
             select: "_id firstName lastName"
         }).select("-productId");
 
-        return res.status(200).json({ status: true, reviews });
+         if (!foundReview) {
+            throw new CustomError("Review not found", 404);
+        }
+
+        return res.status(200).json({ status: true, review: foundReview });
     } catch (error) {
         const statusCode = error.statusCode || 500;
         return res.status(statusCode).json({
@@ -25,4 +29,4 @@ const getReviewByProductId = async (req, res) => {
     }
 }
 
-module.exports = getReviewByProductId
+module.exports = getReviewById

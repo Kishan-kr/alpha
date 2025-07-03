@@ -40,6 +40,10 @@ CATEGORIES routes:
   delete category by id [done]
 
 REVIEW routes:
-
+  post or add a review [done]
+  update a review [done]
+  get review by id [done]
+  get reviews of a product [done]
+  delete a review [done]
 
 ORDERS routes:

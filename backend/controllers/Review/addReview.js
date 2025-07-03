@@ -1,30 +1,74 @@
 const { validationResult } = require("express-validator")
-const review = require("../../models/review")
+const review = require("../../models/review");
+const CustomError = require("../../utilis/customError");
+const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
+const Order = require("../../models/order");
+const OrderedProduct = require("../../models/orderedProduct");
 
 const addReview = async (req, res) => {
     try {
-        if (!req.user.id) {
-            throw new Error("User Id not provided")
+        const userId = req.user.id;
+        const productId = req.params.productId;
+
+        if (!userId) {
+            throw new CustomError("Unauthorized action", 401);
         }
-        if (!req.params.productId) {
-            throw new Error("product Id not provided")
+        if (!productId) {
+            throw new CustomError("Product ID is required", 400);
         }
-        const result = validationResult(req)
-        if (result.errors.length) {
-            const err = result.errors.reduce(function (acc, erritem) {
-                return { ...acc, [erritem.path]: erritem.msg }
-            }, {})
-            return res.status(422).json({ status: false, error: err })
+
+        // Step 1: Check if user has an order with this product
+        const userOrders = await Order.find({ userId }).select('_id'); // get all orderIds of the user
+        const orderIds = userOrders.map(order => order._id);
+
+        // Step 2: Check if any of those orders contain this product
+        const hasPurchased = await OrderedProduct.exists({
+            orderId: { $in: orderIds },
+            productId: productId
+        });
+
+        if (!hasPurchased) {
+            throw new CustomError("Only buyers can post reviews for this product.", 403);
         }
-        const newReview = new review({ ...req.body, productId: req.params.productId, userId: req.user.id })
-        const saveReview = await newReview.save()
-        if (saveReview) {
-           return res.status(200).json({status:true , review:saveReview})
+
+        const { comment, images } = req.body;
+        const rating = Number(req.body.rating);
+
+        
+        // check for validation errors 
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ status: false, error: errors.array()[0]?.msg });
         }
-        throw new Error("Error occured while saving Review")
+        
+        console.log('rating: ', rating);
+        // Check for duplicates
+        const existingReview = await review.findOne({ productId, userId });
+        if (existingReview) {
+            throw new CustomError("Review already exists for this product", 409);
+        }
+
+        const newReview = new review({
+            productId,
+            userId,
+            rating,
+            comment,
+            images: images || []
+        });
+        await newReview.save()
+        if (!newReview) {
+            throw new CustomError("Unabled to add the review");
+        }
+
+        res.status(201).json({ status: true, message: "Review added successfully", review: newReview });
 
     } catch (error) {
-        return res.status(500).json({ status: false, error: error.message })
+        console.error("Add to cart error:", error.message);
+        const statusCode = error.statusCode || 500;
+        return res.status(statusCode).json({
+            status: false,
+            error: error.message || INTERNAL_SERVER_ERROR
+        });
     }
 }
 

@@ -1,28 +1,48 @@
-const review = require("../../models/review")
+const review = require("../../models/review");
+const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
+const CustomError = require("../../utilis/customError");
 
 const deleteReview = async (req, res) => {
     try {
-        if (!req.user.id) {
-            throw new Error("User Id not provided")
+        const { id: userId } = req.user || {};
+        const { reviewId } = req.params;
+
+        if (!userId) {
+            throw new CustomError("Unauthorized action", 401);
         }
-        if (!req.params.reviewId) {
-            throw new Error("Review Id not provided")
+
+        if (!reviewId) {
+            throw new CustomError("Review ID is required", 400);
         }
-        const findReviewById = await review.findById(req.params.reviewId)
-        if (!findReviewById) {
-            throw new Error(`Review not found with Id ${req.params.reviewId}`)
+
+        const existingReview = await review.findById(reviewId);
+
+        if (!existingReview) {
+            throw new CustomError(`Review not found`, 404);
         }
-        if (req.user.id !== String(findReviewById.userId)) {
-            throw new Error("Invalid Action")
+
+        if (String(existingReview.userId) !== userId) {
+            throw new CustomError("You are not authorized to delete this review", 403);
         }
-        const deleteReviewbyID = await review.findByIdAndDelete(req.params.reviewId)
-        if (!deleteReviewbyID) {
-            throw new Error("Deleted Review not found")
+
+        const deletedReview = await review.findByIdAndDelete(reviewId);
+
+        if (!deletedReview) {
+            throw new CustomError("Failed to delete the review", 500);
         }
-        return res.status(200).json({ status: true, deleteReviewbyID: deleteReviewbyID._id })
+
+        return res.status(200).json({
+            status: true,
+            deletedReviewId: deletedReview._id
+        });
     } catch (error) {
-        return res.status(500).json({ status: false, error: error.message })
+        const statusCode = error.statusCode || 500;
+        return res.status(statusCode).json({
+            status: false,
+            error: error.message || INTERNAL_SERVER_ERROR
+        });
     }
-}
+};
+
 
 module.exports = deleteReview

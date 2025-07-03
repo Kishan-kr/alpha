@@ -11,7 +11,6 @@ const upload = multer({
 });
 
 const uploadCategoryThumbnail = async (req, res, next) => {
-  console.log('reached to middleware...' );
   try {
     const file = req.file;
     
@@ -27,4 +26,25 @@ const uploadCategoryThumbnail = async (req, res, next) => {
   }
 }
 
-module.exports = { uploadCategoryThumbnail, upload };
+const uploadImagesIfPresent = async (req, res, next) => {
+  try {
+    const files = req.files;
+
+    if (files && files.length > 0) {
+      // Upload all files and collect URLs
+      const imageUrls = await Promise.all(
+        files.map(file => uploadToR2(file.buffer, file.originalname))
+      );
+  
+      // Attach to request body or wherever you need
+      req.body.images = imageUrls;
+    }
+
+    next();
+  } catch (error) {
+    console.error('Error uploading review images:', error.message);
+    return res.status(500).json({ status: false, error: 'Failed to upload review images' });
+  }
+};
+
+module.exports = { uploadCategoryThumbnail, upload, uploadImagesIfPresent };

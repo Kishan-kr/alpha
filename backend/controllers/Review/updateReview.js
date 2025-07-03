@@ -1,36 +1,67 @@
 const { validationResult } = require("express-validator")
-const review = require("../../models/review")
+const review = require("../../models/review");
+const CustomError = require("../../utilis/customError");
+const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
 
 const updateReview = async (req, res) => {
     try {
-        if (!req.user.id) {
-            throw new Error("User Id not provided")
+        const { id: userId } = req.user || {};
+        const { reviewId } = req.params;
+
+        if (!userId) {
+            throw new CustomError("Unauthorized action", 401);
         }
-        if (!req.params.reviewId) {
-            throw new Error("Review Id not provided")
+
+        if (!reviewId) {
+            throw new CustomError("Review ID is required", 400);
         }
-        const findReviewById = await review.findById(req.params.reviewId)        
-        if (!findReviewById) {
-            throw new Error(`Review not found with Id ${req.params.reviewId}`)
+
+        const existingReview = await review.findById(reviewId);
+
+        if (!existingReview) {
+            throw new CustomError(`Review not found`, 404);
         }
-        if (req.user.id !== String(findReviewById.userId)) {
-            throw new Error("Invalid Action")
+
+        if (String(existingReview.userId) !== userId) {
+            throw new CustomError("You are not authorized to update this review", 403);
         }
-        const result = validationResult(req)
-        if (result.errors.length) {
-            const err = result.errors.reduce(function (acc, erritem) {
-                return { ...acc, [erritem.path]: erritem.msg }
-            }, {})
-            return res.status(422).json({ status: false, error: err })
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ status: false, error: errors.array()[0]?.msg });
         }
-        const updatedReview = await review.findByIdAndUpdate(req.params.reviewId , req.body , {new:true}).select("-productId")
-        if(!updatedReview){
-            throw new Error("Updated Review not found")
+
+        const { rating, comment, images } = req.body;
+        const updates = {};
+        if (rating) {
+            updates.rating = rating;
         }
-        return res.status(200).json({status:true , updatedReview:updatedReview})
+        if (comment) {
+            updates.comment = comment;
+        }
+        if (images) {
+            updates.images = images;
+        }
+
+        const updatedReview = await review
+            .findByIdAndUpdate(reviewId, updates, { new: true })
+            .select("-productId");
+
+        if (!updatedReview) {
+            throw new CustomError("Failed to update the review", 500);
+        }
+
+        return res.status(200).json({
+            status: true,
+            review: updatedReview,
+        });
     } catch (error) {
-        return res.status(500).json({ status: false, error: error.message })
+        const statusCode = error.statusCode || 500;
+        return res.status(statusCode).json({
+            status: false,
+            error: error.message || INTERNAL_SERVER_ERROR,
+        });
     }
-}
+};
 
 module.exports = updateReview
