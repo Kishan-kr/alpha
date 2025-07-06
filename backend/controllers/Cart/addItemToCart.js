@@ -20,7 +20,7 @@ const addItemToCart = async (req, res) => {
       throw new CustomError("Quantity must be a number greater than 0", 400);
     }
 
-    const existingItem = await Cart.findOne({ userId, productId, color: item.color });
+    const existingItem = await Cart.findOne({ userId, productId, color: item.color, size: item.size });
     if (existingItem) {
       throw new CustomError("Item already exists in cart", 409);
     }
@@ -30,7 +30,8 @@ const addItemToCart = async (req, res) => {
       productId, 
       size: item.size, 
       color: item.color, 
-      quantity: item.quantity });
+      quantity: item.quantity 
+    });
     const savedCart = await newCart.save();
 
     return res.status(201).json({
