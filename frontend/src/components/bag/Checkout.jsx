@@ -35,7 +35,7 @@ const Checkout = ({ products, subtotal, total, delivery, discount, updateProduct
   };
 
   return (
-    <div className="p-4 md:p-10 gap-8 text-light grid grid-cols-1 lg:grid-cols-2">
+    <div className="p-4 md:p-10 gap-8 text-dark grid grid-cols-1 lg:grid-cols-2">
       {/* Left: Order Summary */}
       <div>
         <div className='flex gap-x-2'>
@@ -65,7 +65,7 @@ const Checkout = ({ products, subtotal, total, delivery, discount, updateProduct
             <span>Discount</span>
             <span>₹{discount.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-light font-semibold text-lg mt-2">
+          <div className="flex justify-between text-dark font-semibold text-lg mt-2">
             <span>Total</span>
             <span>₹{total.toFixed(2)}</span>
           </div>
@@ -79,50 +79,50 @@ const Checkout = ({ products, subtotal, total, delivery, discount, updateProduct
           <input
             type="email"
             placeholder="Email address"
-            className="bg-surface border border-border rounded px-4 py-2 text-light"
+            className="bg-surface border border-border rounded px-4 py-2 text-dark"
           />
           <input
             type="text"
             placeholder="Card number"
-            className="bg-surface border border-border rounded px-4 py-2 text-light"
+            className="bg-surface border border-border rounded px-4 py-2 text-dark"
           />
           <div className="flex gap-4">
             <input
               type="text"
               placeholder="MM/YY"
-              className="flex-1 bg-surface border border-border rounded px-4 py-2 text-light"
+              className="flex-1 bg-surface border border-border rounded px-4 py-2 text-dark"
             />
             <input
               type="text"
               placeholder="CVV"
-              className="flex-1 bg-surface border border-border rounded px-4 py-2 text-light"
+              className="flex-1 bg-surface border border-border rounded px-4 py-2 text-dark"
             />
           </div>
           <input
             type="text"
             placeholder="Cardholder name"
-            className="bg-surface border border-border rounded px-4 py-2 text-light"
+            className="bg-surface border border-border rounded px-4 py-2 text-dark"
           />
           <input
             type="text"
             placeholder="Street address"
-            className="bg-surface border border-border rounded px-4 py-2 text-light"
+            className="bg-surface border border-border rounded px-4 py-2 text-dark"
           />
           <div className="flex gap-4">
             <input
               type="text"
               placeholder="City"
-              className="flex-1 bg-surface border border-border rounded px-4 py-2 text-light"
+              className="flex-1 bg-surface border border-border rounded px-4 py-2 text-dark"
             />
             <input
               type="text"
               placeholder="ZIP Code"
-              className="flex-1 bg-surface border border-border rounded px-4 py-2 text-light"
+              className="flex-1 bg-surface border border-border rounded px-4 py-2 text-dark"
             />
           </div>
           <button
             type="submit"
-            className="bg-light text-dark font-semibold py-2 rounded hover:bg-subtext hover:text-light transition flex items-center justify-center gap-2 mt-4"
+            className="bg-dark text-light font-semibold py-2 rounded hover:bg-subtext hover:text-dark transition flex items-center justify-center gap-2 mt-4"
           >
             <Lock size={16} /> Pay ₹{total.toFixed(2)}
           </button>

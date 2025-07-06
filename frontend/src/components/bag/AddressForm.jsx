@@ -18,14 +18,14 @@ const AddressForm = ({ formData, onChange, onSubmit, buttonText = "Save and Cont
             value={formData.fullName}
             onChange={onChange}
             required
-            className="bg-surface text-white px-4 py-2 rounded w-full"
+            className="bg-surface text-dark px-4 py-2 rounded w-full"
           />
         </div>
 
         {/* phone */}
         <div className='w-full'>
           <label className="block text-subtext mb-1 text-sm">Phone</label>
-          <div className='flex items-center bg-surface text-white px-4 rounded w-full focus-within:ring'>
+          <div className='flex items-center bg-surface text-dark px-4 rounded w-full focus-within:ring'>
             <span>+91</span>
             <input
               type="text"
@@ -49,7 +49,7 @@ const AddressForm = ({ formData, onChange, onSubmit, buttonText = "Save and Cont
           value={formData.addressLine}
           onChange={onChange}
           required
-          className="bg-surface text-white px-4 py-2 rounded w-full"
+          className="bg-surface text-dark px-4 py-2 rounded w-full"
         />
       </div>
 
@@ -61,7 +61,7 @@ const AddressForm = ({ formData, onChange, onSubmit, buttonText = "Save and Cont
           name="landmark"
           value={formData.landmark}
           onChange={onChange}
-          className="bg-surface text-white px-4 py-2 rounded w-full"
+          className="bg-surface text-dark px-4 py-2 rounded w-full"
         />
       </div>
 
@@ -75,7 +75,7 @@ const AddressForm = ({ formData, onChange, onSubmit, buttonText = "Save and Cont
             value={formData.pincode}
             onChange={onChange}
             required
-            className="bg-surface text-white px-4 py-2 rounded w-full"
+            className="bg-surface text-dark px-4 py-2 rounded w-full"
           />
         </div>
 
@@ -88,7 +88,7 @@ const AddressForm = ({ formData, onChange, onSubmit, buttonText = "Save and Cont
             value={formData.city}
             onChange={onChange}
             required
-            className="bg-surface text-white px-4 py-2 rounded w-full"
+            className="bg-surface text-dark px-4 py-2 rounded w-full"
           />
         </div>
       </div>
@@ -103,7 +103,7 @@ const AddressForm = ({ formData, onChange, onSubmit, buttonText = "Save and Cont
             value={formData.state}
             onChange={onChange}
             required
-            className="bg-surface text-white px-4 py-2 rounded w-full"
+            className="bg-surface text-dark px-4 py-2 rounded w-full"
           />
         </div>
 
@@ -116,12 +116,12 @@ const AddressForm = ({ formData, onChange, onSubmit, buttonText = "Save and Cont
             value={formData.country || "India"}
             onChange={onChange}
             required
-            className="bg-surface text-white px-4 py-2 rounded w-full"
+            className="bg-surface text-dark px-4 py-2 rounded w-full"
           />
         </div>
       </div>
 
-      <button type="submit" className="w-full sm:w-fit bg-white text-black font-medium py-2 px-4 mt-4 rounded hover:bg-gray-200 enabled:cursor-pointer">
+      <button type="submit" className="w-full sm:w-fit bg-dark text-black font-medium py-2 px-4 mt-4 rounded hover:bg-gray-200 enabled:cursor-pointer">
         {buttonText}
       </button>
     </form>

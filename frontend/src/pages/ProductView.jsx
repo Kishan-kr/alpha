@@ -70,7 +70,7 @@ export default function ProductView() {
       <div className="hidden md:flex md:space-x-12 md:justify-between items-center">
         {/* Left: Title & Description */}
         <div className="md:w-1/4">
-          <h1 className="text-3xl font-bold mb-4 text-white">{title}</h1>
+          <h1 className="text-3xl font-bold mb-4 text-dark">{title}</h1>
           <p className="text-subtext">{description}</p>
         </div>
 
@@ -108,8 +108,8 @@ export default function ProductView() {
                 key={size}
                 onClick={() => setSelectedSize(size)}
                 className={`px-4 py-2 border rounded enabled:cursor-pointer ${selectedSize === size
-                    ? 'bg-light text-dark'
-                    : 'border-border text-light'
+                    ? 'bg-dark text-light'
+                    : 'border-border text-dark'
                   } transition`}
               >
                 {size}
@@ -117,15 +117,15 @@ export default function ProductView() {
             ))}
           </div>
           <button
-            className="relative inline-block w-full mx-auto overflow-hidden py-3 px-6 text-sm font-semibold uppercase tracking-widest text-white border border-white bg-dark group enabled:cursor-pointer"
+            className="relative inline-block w-full mx-auto overflow-hidden py-3 px-6 text-sm font-semibold uppercase tracking-widest text-dark border border-light bg-light group enabled:cursor-pointer"
           >
             {/* Text */}
-            <span className="relative z-10 transition-colors duration-300 group-hover:text-dark">
+            <span className="relative z-10 transition-colors duration-300 group-hover:text-light">
               Add to Bag
             </span>
 
             {/* Sliding white panel */}
-            <span className="absolute inset-0 bg-white transform -translate-x-full transition-transform duration-300 group-hover:translate-x-0 z-0" />
+            <span className="absolute inset-0 bg-dark transform -translate-x-full transition-transform duration-300 group-hover:translate-x-0 z-0" />
           </button>
         </div>
       </div>
@@ -148,7 +148,7 @@ export default function ProductView() {
         </div>
 
         {/* Title */}
-        <h1 className="text-2xl font-bold text-white">{title}</h1>
+        <h1 className="text-2xl font-bold text-dark">{title}</h1>
 
         {/* Sizes & Add to Cart */}
         <div>
@@ -159,8 +159,8 @@ export default function ProductView() {
                 key={size}
                 onClick={() => setSelectedSize(size)}
                 className={`px-4 py-2 border rounded ${selectedSize === size
-                    ? 'bg-light text-dark'
-                    : 'border-border text-light'
+                    ? 'bg-dark text-light'
+                    : 'border-border text-dark'
                   } transition`}
               >
                 {size}
@@ -168,15 +168,15 @@ export default function ProductView() {
             ))}
           </div>
           <button
-            className="relative inline-block w-full mx-auto overflow-hidden py-3 px-6 text-sm font-semibold uppercase tracking-widest text-white border border-white bg-dark group enabled:cursor-pointer"
+            className="relative inline-block w-full mx-auto overflow-hidden py-3 px-6 text-sm font-semibold uppercase tracking-widest text-dark border border-light bg-light group enabled:cursor-pointer"
           >
             {/* Text */}
-            <span className="relative z-10 transition-colors duration-300 group-hover:text-dark">
+            <span className="relative z-10 transition-colors duration-300 group-hover:text-light">
               Add to Bag
             </span>
 
             {/* Sliding white panel */}
-            <span className="absolute inset-0 bg-white transform -translate-x-full transition-transform duration-300 group-hover:translate-x-0 z-0" />
+            <span className="absolute inset-0 bg-dark transform -translate-x-full transition-transform duration-300 group-hover:translate-x-0 z-0" />
           </button>
         </div>
 

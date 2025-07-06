@@ -70,18 +70,18 @@ const Bag = () => {
   }
 
   return (
-    <div className=" bg-dark bg-gradient-to-bl from-surface to-dark/60 py-20 md:px-8 md:py-24">
+    <div className=" bg-light bg-gradient-to-bl from-surface to-dark/60 py-20 md:px-8 md:py-24">
       {/* Stepper */}
       <div className="w-full flex justify-center">
         <div className="flex gap-2 items-center">
           {steps.map((label, index) => (
             <div key={index} className="flex items-center gap-2">
               <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold
-          ${index === activeStep ? "bg-dark text-light" : "bg-accent text-subtext"}`}>
+          ${index === activeStep ? "bg-light text-dark" : "bg-accent text-subtext"}`}>
                 {index + 1}
               </div>
               {/* step label  */}
-              <span className={`text-sm ${index === activeStep ? "text-light" : "text-subtext"}`}>{label}</span>
+              <span className={`text-sm ${index === activeStep ? "text-dark" : "text-subtext"}`}>{label}</span>
               {/* line after step  */}
               {index < steps.length - 1 && <div className="w-5 xs:w-8 h-0.5 bg-border" />}
             </div>

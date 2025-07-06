@@ -42,9 +42,9 @@ export default function CurvedCarousel({
       {/* Left arrow */}
       <button
         onClick={prev}
-        className="absolute left-8 md:left-50 top-3/4 -translate-y-1/2 -rotate-[15deg] z-10 backdrop-blur-md bg-dark/40 hover:bg-white/10 p-4 rounded-full"
+        className="absolute left-8 md:left-50 top-3/4 -translate-y-1/2 -rotate-[15deg] z-10 backdrop-blur-md bg-light/40 hover:bg-dark/10 p-4 rounded-full"
       >
-        <ArrowLeft className="text-white w-6 h-6" />
+        <ArrowLeft className="text-dark w-6 h-6" />
       </button>
 
       {/* Carousel stage */}
@@ -81,9 +81,9 @@ export default function CurvedCarousel({
       {/* Right arrow */}
       <button
         onClick={next}
-        className="absolute right-8 md:right-50 top-3/4 -translate-y-1/2 rotate-[15deg] z-10 backdrop-blur-md bg-dark/40 hover:bg-white/10 p-4 rounded-full"
+        className="absolute right-8 md:right-50 top-3/4 -translate-y-1/2 rotate-[15deg] z-10 backdrop-blur-md bg-light/40 hover:bg-dark/10 p-4 rounded-full"
       >
-        <ArrowRight size={20} className="text-white" />
+        <ArrowRight size={20} className="text-dark" />
       </button>
     </div>
   );

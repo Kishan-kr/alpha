@@ -13,7 +13,7 @@ const BagProductCard = ({ product, onIncrease, onDecrease, onRemove, onSizeChang
           className="w-24 h-28 sm:w-24 sm:h-28 aspect-[4/5] rounded-md object-cover"
         />
         <div>
-          <h4 className="text-light font-semibold uppercase tracking-wider">{product.title}</h4>
+          <h4 className="text-dark font-semibold uppercase tracking-wider">{product.title}</h4>
 
           {/* <p className="text-sm text-subtext my-2 mt-1">{product.category} • {product.color}</p> */}
 
@@ -33,25 +33,25 @@ const BagProductCard = ({ product, onIncrease, onDecrease, onRemove, onSizeChang
           </div>
 
           {/* price visible in small mobile screen only  */}
-          <p className="sm:hidden text-light font-semibold mt-2">₹{product.originalPrice}</p>
+          <p className="sm:hidden text-dark font-semibold mt-2">₹{product.originalPrice}</p>
         </div>
       </div>
 
       <div className="flex items-center gap-4 sm:self-end">
         {/* price visible in medium and large screen only */}
-        <p className="text-light font-semibold hidden sm:block">₹{product.originalPrice}</p>
+        <p className="text-dark font-semibold hidden sm:block">₹{product.originalPrice}</p>
 
         <div className="flex flex-col-reverse w-9 sm:w-auto xs:scale-100 sm:scale-100 sm:flex-row items-center border border-border rounded-lg overflow-hidden">
           <button
             onClick={() => onDecrease(product.id)}
-            className="px-3 py-2 text-light enabled:hover:bg-border enabled:cursor-pointer"
+            className="px-3 py-2 text-dark enabled:hover:bg-border enabled:cursor-pointer"
           >
             <Minus size={16} />
           </button>
-          <span className="px-3 py-1 text-light">{product.quantity}</span>
+          <span className="px-3 py-1 text-dark">{product.quantity}</span>
           <button
             onClick={() => onIncrease(product.id)}
-            className="px-3 py-2 text-light enabled:hover:bg-border enabled:cursor-pointer"
+            className="px-3 py-2 text-dark enabled:hover:bg-border enabled:cursor-pointer"
           >
             <Plus size={16} />
           </button>
@@ -68,7 +68,7 @@ const BagProductCard = ({ product, onIncrease, onDecrease, onRemove, onSizeChang
         {/* delete button visible on small screen only at top right corner */}
         <button
           onClick={() => onRemove(product.id)}
-          className="absolute sm:hidden top-0 right-0 text-subtext hover:text-light"
+          className="absolute sm:hidden top-0 right-0 text-subtext hover:text-dark"
         >
           <X size={18} />
         </button>

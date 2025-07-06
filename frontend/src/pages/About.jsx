@@ -2,7 +2,7 @@ import React from 'react';
 
 const About = () => {
   return (
-    <section className="bg-white text-gray-900 px-6 md:px-20 py-20">
+    <section className="bg-dark text-gray-900 px-6 md:px-20 py-20">
       <div className="max-w-5xl mx-auto text-center">
         <h2 className="text-4xl md:text-5xl font-bold tracking-tight uppercase mb-8">
           More Than Style—It’s a Statement

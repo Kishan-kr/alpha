@@ -13,7 +13,7 @@ export default function OrdersPage() {
   // }, []);
 
   return (
-    <div className="max-w-3xl mx-auto py-20 md:px-8 md:py-24 px-4 text-light">
+    <div className="max-w-3xl mx-auto py-20 md:px-8 md:py-24 px-4 text-dark">
       <h1 className="text-2xl font-bold mb-6">My Orders</h1>
       {orders.length === 0 ? (
         <p>No orders found.</p>

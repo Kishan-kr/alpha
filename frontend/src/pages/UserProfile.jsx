@@ -78,7 +78,7 @@ export default function UserProfile() {
   };
 
   return (
-    <form onSubmit={handleSave} className="max-w-4xl mx-auto px-4 py-20 md:px-8 md:py-24 text-light">
+    <form onSubmit={handleSave} className="max-w-4xl mx-auto px-4 py-20 md:px-8 md:py-24 text-dark">
       <h1 className="text-3xl font-bold mb-8">Your Profile</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -125,7 +125,7 @@ export default function UserProfile() {
           onClick={handleAddAddress}
           type='button'
           disabled={userData?.addresses?.length >= 3}
-          className="flex items-center gap-2 text-sm bg-accent hover:bg-hover-tint text-light px-3 py-1 rounded disabled:bg-hover-tint disabled:text-subtext enabled:cursor-pointer"
+          className="flex items-center gap-2 text-sm bg-accent hover:bg-hover-tint text-dark px-3 py-1 rounded disabled:bg-hover-tint disabled:text-subtext enabled:cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Add Address
         </button>
@@ -138,7 +138,7 @@ export default function UserProfile() {
               <button
                 onClick={() => handleRemoveAddress(index)}
                 type='button'
-                className="absolute top-2 right-2 text-subtext hover:text-light enabled:cursor-pointer"
+                className="absolute top-2 right-2 text-subtext hover:text-dark enabled:cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -152,7 +152,7 @@ export default function UserProfile() {
 
                   value={addr.addressLine}
                   onChange={(e) => handleAddressChange(index, 'addressLine', e.target.value)}
-                  className="w-full p-2 bg-dark border border-border rounded-md"
+                  className="w-full p-2 bg-light border border-border rounded-md"
                 />
               </div>
               <div className="md:col-span-2">
@@ -160,7 +160,7 @@ export default function UserProfile() {
                 <input
                   value={addr.landmark}
                   onChange={(e) => handleAddressChange(index, 'landmark', e.target.value)}
-                  className="w-full p-2 bg-dark border border-border rounded-md"
+                  className="w-full p-2 bg-light border border-border rounded-md"
                 />
               </div>
               <div>
@@ -169,7 +169,7 @@ export default function UserProfile() {
                   required
                   value={addr.city}
                   onChange={(e) => handleAddressChange(index, 'city', e.target.value)}
-                  className="w-full p-2 bg-dark border border-border rounded-md"
+                  className="w-full p-2 bg-light border border-border rounded-md"
                 />
               </div>
               <div>
@@ -178,7 +178,7 @@ export default function UserProfile() {
                   required
                   value={addr.state}
                   onChange={(e) => handleAddressChange(index, 'state', e.target.value)}
-                  className="w-full p-2 bg-dark border border-border rounded-md"
+                  className="w-full p-2 bg-light border border-border rounded-md"
                 />
               </div>
               <div>
@@ -187,7 +187,7 @@ export default function UserProfile() {
                   required
                   value={addr.pincode}
                   onChange={(e) => handleAddressChange(index, 'pincode', e.target.value)}
-                  className="w-full p-2 bg-dark border border-border rounded-md"
+                  className="w-full p-2 bg-light border border-border rounded-md"
                 />
               </div>
               <div>
@@ -196,7 +196,7 @@ export default function UserProfile() {
                   required
                   value={addr.country}
                   onChange={(e) => handleAddressChange(index, 'country', e.target.value)}
-                  className="w-full p-2 bg-dark border border-border rounded-md"
+                  className="w-full p-2 bg-light border border-border rounded-md"
                 >
                   <option value="India">India</option>
                 </select>
@@ -209,7 +209,7 @@ export default function UserProfile() {
       <div className="mt-8">
         <button
           type='submit'
-          className="bg-light  text-dark px-6 py-2 rounded font-semibold hover:bg-light/80  transition cursor-pointer uppercase"
+          className="bg-dark  text-light px-6 py-2 rounded font-semibold hover:bg-dark/80  transition cursor-pointer uppercase"
         >
           Save Changes
         </button>

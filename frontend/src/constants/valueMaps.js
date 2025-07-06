@@ -3,4 +3,5 @@ export const orderStatusValues = {
   'shipped': "Shipped",
   'cancelled': "Cancelled",
   'pending': "Pending",
+  'exchanged': "Exchanged",
 };

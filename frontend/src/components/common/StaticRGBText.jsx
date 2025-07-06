@@ -29,7 +29,7 @@ export default function StaticRGBText({
       <span className="absolute top-0 left-0 text-blue-500" style={{ transform: translateB }}>
         {text}
       </span>
-      <span className="relative top-0 left-0 text-white">{text}</span>
+      <span className="relative top-0 left-0 text-dark">{text}</span>
     </div>
   )
 }

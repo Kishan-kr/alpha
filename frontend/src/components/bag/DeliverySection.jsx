@@ -68,10 +68,10 @@ const DeliverySection = ({ handleNext, handleBack }) => {
 
   return (
     <div className="p-4 mt-2 sm:mt-0 md:p-10 flex justify-center">
-      <div className="w-full max-w-3xl bg-dark sm:p-6 p-4 rounded-lg border border-border">
+      <div className="w-full max-w-3xl bg-light sm:p-6 p-4 rounded-lg border border-border">
         <div className='flex gap-x-2'>
           <BackButton handleClick={handleBack} className='-mt-px' />
-          <h2 className="text-white text-2xl mb-4">Delivery Address</h2>
+          <h2 className="text-dark text-2xl mb-4">Delivery Address</h2>
         </div>
 
         {!isLoggedIn ? (
@@ -87,10 +87,10 @@ const DeliverySection = ({ handleNext, handleBack }) => {
                 type="text"
                 value={defaultForm.fullName}
                 disabled
-                className="bg-surface text-white px-4 py-2 rounded w-full"
+                className="bg-surface text-dark px-4 py-2 rounded w-full"
               />
               {/* phone */}
-              <div className='flex items-center bg-surface text-white px-4 rounded w-full focus-within:ring'>
+              <div className='flex items-center bg-surface text-dark px-4 rounded w-full focus-within:ring'>
                 <span>+91</span>
                 <input
                   type="text"
@@ -115,7 +115,7 @@ const DeliverySection = ({ handleNext, handleBack }) => {
 
             <button
               onClick={handleFinalSubmit}
-              className="w-full sm:w-fit bg-white text-black font-medium mt-8 py-2 px-4 rounded hover:bg-gray-200 enabled:cursor-pointer"
+              className="w-full sm:w-fit bg-dark text-black font-medium mt-8 py-2 px-4 rounded hover:bg-gray-200 enabled:cursor-pointer"
             >
               Save and Continue
             </button>

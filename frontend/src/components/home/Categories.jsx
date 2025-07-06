@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../../styles/GlitchEffect.css';
-import categories from '../../utils/categoriesArray';
+import {VALID_CATEGORIES as categories} from '../../constants/categories';
 import StaticGlitch from '../common/StaticRGBText';
 
 const Categories = () => {
@@ -13,16 +13,16 @@ const Categories = () => {
   };
 
   return (
-    <section className='py-20 bg-surface bg-gradient-to-br from-dark from-0% to-surface to-95%'>
+    <section className='py-20'>
       {/* title of the section  */}
       <div className='flex justify-center text-center'>
         <StaticGlitch
           text={'Explore Our Collections'}
-          className='text-xl sm:text-2xl md:text-4xl uppercase font-semibold mx-auto text-white tracking-widest'
+          className='text-xl sm:text-2xl md:text-4xl uppercase font-semibold mx-auto text-dark tracking-widest'
         />
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8 md:gap-x-16 lg:gap-x-36 items-center justify-center w-full h-full text-white my-12">
+      <div className="flex flex-col md:flex-row gap-8 md:gap-x-16 lg:gap-x-36 items-center justify-center w-full h-full text-dark my-12">
         {/* Left Panel */}
         <ul className="w-full md:w-1/3 p-8 select-none flex flex-col items-center md:items-start justify-center gap-4">
           {categories.map((cat) => (
@@ -33,7 +33,7 @@ const Categories = () => {
             >
               {cat.name}
               <span
-                className="absolute bottom-0 left-0 h-px mt-1 w-full bg-white transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
+                className="absolute bottom-0 left-0 h-px mt-1 w-full bg-dark transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300"
               />
             </li>
           ))}
@@ -47,13 +47,13 @@ const Categories = () => {
               <div
                 key={i}
                 className={`glitch__img ${i === 1 ? 'glitch-1' : i === 2 ? 'glitch-2' : i === 3 ? 'glitch-3' : i === 4 ? 'glitch-flash' : ''}`}
-                style={{ backgroundImage: `url(${activeCat.image})` }}
+                style={{ backgroundImage: `url(${activeCat.thumbnail})` }}
               />
             ))}
           </div>
 
           {/* glitched text */}
-          <p key={glitchKey + "text"} className='content__title select-none absolute top-1/2 left-1/2 text-5xl sm:text-7xl text-center text-white -translate-1/2 text-shadow-lg overflow-visible'>{activeCat.name}</p>
+          <p key={glitchKey + "text"} className='content__title select-none absolute top-1/2 left-1/2 text-5xl sm:text-7xl font-gfs-didot text-center text-dark -translate-1/2 text-shadow-lg overflow-visible'>{activeCat.name}</p>
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
 import { X } from 'lucide-react';
 import React from 'react'
 
-// function CheckoutProductCard({title, category, thumbnail, originalPrice, discountPrice, size, qty}) {
+// function CheckoutProductCard({title, category, thumbnail, originalPrice, discountedPrice, size, qty}) {
 //   return (
 //     <div className="flex items-center gap-4 mb-4">
 //       <img src={thumbnail} alt="item" className="rounded" />
@@ -19,24 +19,24 @@ import React from 'react'
 // }
 
 const CheckoutProductCard = ({ product, onRemove }) => (
-  <div className="flex gap-4 items-center border border-border rounded-xl p-3 bg-muted text-light relative">
+  <div className="flex gap-4 items-center border border-border rounded-xl p-3 bg-muted text-dark relative">
     <img src={product.thumbnail} alt={product.title} className="w-16 h-16 rounded-lg object-cover" />
     <div className="flex justify-between flex-grow">
       <div className=''>
-        <h3 className="font-semibold text-base text-light">{product.title}</h3>
+        <h3 className="font-semibold text-base text-dark">{product.title}</h3>
         <p className="text-sm text-subtext">{product.category} • {product.color}</p>
         <div className='flex gap-x-2'>
-          <p className="text-xs text-light bg-surface w-fit rounded p-1 px-2 mt-1">
+          <p className="text-xs text-dark bg-surface w-fit rounded p-1 px-2 mt-1">
             <span className='text-subtext me-1'>Qty</span> {product.quantity}
           </p>
-          <p className="text-xs text-light bg-surface w-fit rounded p-1 px-2 mt-1">
+          <p className="text-xs text-dark bg-surface w-fit rounded p-1 px-2 mt-1">
             {product.selectedSize}
           </p>
         </div>
       </div>
-      <p className="text-light font-semibold self-end">${product.originalPrice.toFixed(2)}</p>
+      <p className="text-dark font-semibold self-end">${product.originalPrice.toFixed(2)}</p>
     </div>
-    <button onClick={onRemove} className="absolute top-2 right-2 text-subtext hover:text-light">
+    <button onClick={onRemove} className="absolute top-2 right-2 text-subtext hover:text-dark">
       <X size={16} />
     </button>
   </div>

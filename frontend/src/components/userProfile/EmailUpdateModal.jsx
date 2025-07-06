@@ -53,7 +53,7 @@ function EmailUpdateModal({ email, onClose, onUpdate }) {
       <div className="bg-surface p-6 rounded-xl w-full max-w-md relative shadow-xl animate-fade-in">
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-subtext hover:text-light"
+          className="absolute top-3 right-3 text-subtext hover:text-dark"
         >
           <X className="w-5 h-5" />
         </button>
@@ -72,7 +72,7 @@ function EmailUpdateModal({ email, onClose, onUpdate }) {
             />
             <button
               onClick={handleEmailSubmit}
-              className="bg-light text-dark px-4 py-2 rounded-md font-semibold w-full hover:bg-subtext hover:text-light transition"
+              className="bg-dark text-light px-4 py-2 rounded-md font-semibold w-full hover:bg-subtext hover:text-dark transition"
             >
               Send Code
             </button>
@@ -82,7 +82,7 @@ function EmailUpdateModal({ email, onClose, onUpdate }) {
         {step === 'otp' && (
           <>
             <h2 className="text-2xl font-bold mb-3">Verify Email</h2>
-            <p className="text-sm text-subtext mb-6">Enter the verification code sent to <span className="text-light font-medium">{newEmail}</span></p>
+            <p className="text-sm text-subtext mb-6">Enter the verification code sent to <span className="text-dark font-medium">{newEmail}</span></p>
             <OTPInput length={6} onChangeOTP={handlechangeOtp}/>
 
             <div className="text-sm text-subtext mt-3">
@@ -90,7 +90,7 @@ function EmailUpdateModal({ email, onClose, onUpdate }) {
               {canResend ? (
                 <button
                   onClick={handleResendOtp}
-                  className="text-light font-semibold hover:underline"
+                  className="text-dark font-semibold hover:underline"
                 >
                   Resend Code
                 </button>
@@ -107,7 +107,7 @@ function EmailUpdateModal({ email, onClose, onUpdate }) {
             /> */}
             <button
               onClick={handleOtpSubmit}
-              className="bg-light text-dark px-4 py-2 mt-6 rounded-md font-semibold w-full hover:bg-subtext hover:text-light transition"
+              className="bg-dark text-light px-4 py-2 mt-6 rounded-md font-semibold w-full hover:bg-subtext hover:text-dark transition"
             >
               Verify Code
             </button>

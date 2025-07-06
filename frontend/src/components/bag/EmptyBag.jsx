@@ -6,9 +6,9 @@ function EmptyBag() {
   return (
     <div className='w-full flex flex-col items-center text-center pb-12'>
       <img src={emptyBag} alt="" className='w-52 text-shadow-2xs text-shadow-surface' />
-      <h3 className='text-2xl text-light -mt-4'>Your bag is empty</h3>
+      <h3 className='text-2xl text-dark -mt-4'>Your bag is empty</h3>
       <p className='text-base text-subtext mt-1'>But your Tashn moment is just a click away.</p>
-      <Link to='/' className='p-2 rounded-full mt-6 bg-light text-dark font-semibold shadow-md px-8 hover:bg-light/80 transition'>Pick your style</Link>
+      <Link to='/' className='p-2 rounded-full mt-6 bg-dark text-light font-semibold shadow-md px-8 hover:bg-dark/80 transition'>Pick your style</Link>
     </div>
   )
 }

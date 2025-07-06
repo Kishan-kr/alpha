@@ -1,14 +1,30 @@
-import React from 'react';
-import { productStatusBgStyles, productStatusStyles } from '../../constants/styleMaps';
-import { orderStatusValues } from '../../constants/valueMaps';
+import React from "react";
+import { productStatusBgStyles, productStatusStyles } from "../../constants/styleMaps";
+import { orderStatusValues } from "../../constants/valueMaps";
 
-export default function ProductCard({ product, orderStatus }) {
-  const { productId, size, quantity, discountedPrice, originalPrice, status } = product;
+export default function ProductCard({ 
+  product, 
+  orderStatus, 
+  showReturn = false,
+  showExchange = false,
+  handleReturn = () => {}, 
+  handleExchange = () => {}, 
+ }) {
+  const {
+    productId,
+    size,
+    quantity,
+    discountedPrice,
+    originalPrice,
+    status,
+    isReturned,
+    returnInfo,
+    isExchangeItem,
+    exchangeStatus
+  } = product;
 
-  // Only show the status badge if this item is 'cancelled' or 'returned'
-  // AND the overall orderStatus is not already that same status.
   const shouldShowStatus =
-    ['cancelled', 'returned'].includes(status) &&
+    ['exchanged', 'returned'].includes(status) &&
     orderStatus !== status;
 
   return (
@@ -25,7 +41,7 @@ export default function ProductCard({ product, orderStatus }) {
           Size: {size} | Qty: {quantity}
         </p>
         <div className="flex items-center gap-2">
-          <span className="text-light font-bold">₹{discountedPrice}</span>
+          <span className="text-dark font-bold">₹{discountedPrice}</span>
           {originalPrice !== discountedPrice && (
             <span className="line-through text-subtext text-sm">
               ₹{originalPrice}
@@ -43,6 +59,19 @@ export default function ProductCard({ product, orderStatus }) {
           >
             {orderStatusValues[status]}
           </p>
+        )}
+
+        {(
+          <div className="mt-1 text-xs text-subtext">
+            {showReturn && (
+              <button className="">
+                Return
+              </button>
+            )}
+            {showExchange && (
+              <button className="">Exchange</button>
+            )}
+          </div>
         )}
       </div>
     </div>

@@ -1,25 +1,64 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Asap:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=GFS+Didot&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 
 @import "tailwindcss";
 
 @theme {
-  --color-dark: #0E0E0E;
+  /* --color-dark: #0E0E0E;
   --color-surface: #1A1A1A;
   --color-accent: #333333;
   --color-border: #2E2E2E;
   --color-subtext: #A1A1AA;
   --color-light: #FFFFFF;
   --color-hover-tint: #1F1F1F;
+  --color-pigment-green: #2BA84A; */
+
+/* lightblue -> dark */
+  /* light theme colors override  */
+  --color-light: #FFFFFF;
+  --color-surface: #F5F5F5;
+  --color-accent: #E980FC;
+  --color-border: #7D7D7D;
+  --color-subtext: #3D3D3D;
+  --color-dark: #000000;
+  --color-hover-tint: #BFBFBF;
+  --color-pigment-green: #2BA84A;
 
   --breakpoint-xs: 360px;
   --breakpoint-slg: 912px;
+
+  --default-font-family: 'Inter', sans-serif;
+  --font-montserrat: 'Montserrat', sans-serif;
+  --font-gfs-didot: 'GFS Didot', serif;
 }
 
-body {
-  font-family: "Asap", sans-serif;
+/* Light theme override */
+.light-theme {
+  --color-dark: #111111;
+  --color-surface: #E0E0E0;
+  --color-accent: #E980FC;
+  --color-border: #BFBFBF;
+  --color-subtext: #6B6B6B;
+  --color-light: #FAFAFA;
+  --color-hover-tint: #1F1F1F;
+  --color-pigment-green: #2BA84A;
 }
 
-.font-roboto {
-  font-family: "Roboto", sans-serif;
+/* body {
+  font-family: "Inter", sans-serif;
+} */
+
+.font-montserrat {
+  font-family: "Montserrat", sans-serif;
+}
+
+.font-montserrat {
+  font-family: "Montserrat", sans-serif;
+}
+
+button:focus {
+  outline: none;
+}
+
+button:focus-visible {
+  outline: 2px solid #3b82f6;
 }

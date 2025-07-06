@@ -8,7 +8,7 @@ import { ChevronRight } from 'lucide-react';
 
 export default function OrderGroup({ order }) {
   return (
-    <div className="mb-8 rounded-xl p-4 bg-dark border border-light/10 shadow-sm">
+    <div className="mb-8 rounded-xl p-4 bg-light border border-light/10 shadow-sm">
       <div className='flex gap-3 justify-between'>
         <div>
           {/* status  */}
@@ -38,7 +38,7 @@ export default function OrderGroup({ order }) {
       </div>
 
       {/* view details button  */}
-      <Link to={order._id} className='mt-4 flex gap-1 items-center justify-center w-fit ms-auto p-2 px-4 text-dark bg-light rounded-md group'>
+      <Link to={order._id} className='mt-4 flex gap-1 items-center justify-center w-fit ms-auto p-2 px-4 text-light bg-dark rounded-md group'>
         View Details 
         <ChevronRight className='w-5 h-5 group-hover:translate-x-1 transition-transform'/>
       </Link>

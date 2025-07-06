@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { motion, useAnimation } from "framer-motion";
-import { Star } from "lucide-react";
+import { easeInOut, motion, useAnimation } from "framer-motion";
+import star from '../../assets/icons/star.png';
+import starFilled from '../../assets/icons/star_filled.png';
 import useMediaQuery from "../../hooks/useMediaQuery";
 import reviews from "../../utils/reviews";
-import customerDiariesCharacter from '../../assets/photos/customerDiariesCharacter.png'
 
 // Duplicate so we can scroll infinitely without changing the original slot data
 const extended = [...reviews, ...reviews];
@@ -37,7 +37,7 @@ export default function CustomerDiaries() {
         // Animate left by one card
         await controls.start({
           x: `-${next * shiftPercent}%`,
-          transition: { duration: 0.8, ease: "easeInOut" },
+          transition: { duration: 0.8, ease: easeInOut },
         });
 
         if (next >= reviews.length) {
@@ -54,15 +54,13 @@ export default function CustomerDiaries() {
   }, [controls, shiftPercent]);
 
   return (
-    <section className="bg-dark text-white py-20 pb-28 px-6 md:px-12 lg:px-24">
+    <section className="bg-light text-dark py-20 pb-28 px-6 md:px-15">
       <div className="max-w-6xl mx-auto">
         <div className="relative max-w-6xl mx-auto text-center mb-16">
           <div className="relative w-fit mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold uppercase">Loved by Many</h2>
-            <img src={customerDiariesCharacter} alt="" className='absolute h-36 md:h-50 right-[calc(100%-56px)] md:right-[calc(100%-76px)] -top-[90px] md:-top-[126px] z-30' />
-
+            <h2 className="text-xl md:text-2xl font-gfs-didot font-bold uppercase">Loved by Many</h2>
           </div>
-          <p className="mt-2 text-gray-400">Real feedback from customers like you</p>
+          <p className="mt-2 text-subtext">Hear directly from those who made us a part of their lifestyle</p>
         </div>
 
         <div className="relative overflow-hidden">
@@ -74,27 +72,28 @@ export default function CustomerDiaries() {
           >
             {extended.map((r, idx) => (
               <div key={idx} className="flex-1 px-4">
-                <article className="bg-surface p-6 rounded-2xl shadow-md transition-shadow duration-300 border border-white/10 flex flex-col h-full">
+                <article className="p-6 duration-300 border border-dark flex flex-col h-full">
                   {/* Rating */}
-                  <div className="flex mb-4">
+                  <div className="flex mb-4 gap-x-1">
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <Star
+                      <img
                         key={i}
-                        className={`w-5 h-5 ${i < r.rating ? "text-[#5EF38C]" : "text-gray-600"
-                          }`}
+                        src={i < r.rating ? starFilled : star}
+                        alt="star"
+                        className="w-5 h-5 inline-block"
                       />
                     ))}
                   </div>
 
                   {/* Comment */}
-                  <p className="italic text-gray-300 mb-4 flex-1">
+                  <p className="italic font-light text-xl text-dark mb-4 flex-1">
                     “{r.comment}”
                   </p>
 
                   {/* Reviewer Info */}
-                  <h4 className="font-semibold text-lg mx-auto">{r.name}</h4>
-                  <span className="text-sm text-gray-400 mx-auto">{r.product}</span>
-                  <span className="text-xs border border-border w-fit p-1 px-3 rounded-full text-subtext mt-1 m-auto">
+                  <h4 className="text-base mx-auto">{r.name}</h4>
+                  <span className="text-[11px] text-border mx-auto uppercase mt-1">{r.product}</span>
+                  <span className="text-[11px] border border-border w-fit p-1 px-3 text-border mt-2 m-auto">
                     {r.date}
                   </span>
                 </article>

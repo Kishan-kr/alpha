@@ -1,132 +1,299 @@
 import React from 'react'
-import oversizedTshirt from '../../assets/ProductCategories/oversizedTshirt.jpg'
-import printedTshirt from '../../assets/ProductCategories/printedTshirt.jpg'
-import product3 from '../../assets/ProductCategories/product3.jpg'
-import product4 from '../../assets/ProductCategories/product4.jpg'
-import newArrivalCharacter from '../../assets/photos/newArrivalCharacter.png'
+import oversizedTshirt from '../../assets/ProductCategories/oversizedTshirt.png'
+import printedTshirt from '../../assets/ProductCategories/printedTshirt.png'
+import product3 from '../../assets/ProductCategories/product3.png'
+import product4 from '../../assets/ProductCategories/product4.png'
 import { Link } from 'react-router-dom'
-import { ArrowRight } from 'lucide-react'
+import SizeSelectMenu from '../common/SizeSelector'
+import { addToBagAndSync } from '../../utils/bagSync'
+import { useDispatch, useSelector } from 'react-redux'
+import toast from 'react-hot-toast'
+import { X } from 'lucide-react'
+import { toggleLogin } from "../../store/slices/userSlice";
 
+// dummy data
 const products = [
   {
-    id: 1,
-    image: oversizedTshirt,
-    title: "Black Oversized Tee",
-    discountedPrice: 799,
-    originalPrice: 1299
+    "_id": "684f9d9e1055fb21a6ac6ba1",
+    "title": "Denim Jacket",
+    "categoryId": {
+      "name": "Oversized Polo"
+    },
+    "images": [
+      "https://picsum.photos/seed/prod1-65/500/800",
+      "https://picsum.photos/seed/prod1-67/500/800"
+    ],
+    "thumbnail": product3,
+    "originalPrice": 1999,
+    "discountPrice": 1699,
+    "sizes": [
+      {
+        "size": "M",
+        "quantity": 4,
+        "_id": "684f9d9e1055fb21a6ac6ba2"
+      },
+      {
+        "size": "L",
+        "quantity": 4,
+        "_id": "684f9d9e1055fb21a6ac6ba3"
+      },
+      {
+        "size": "XL",
+        "quantity": 4,
+        "_id": "684f9d9e1055fb21a6ac6ba4"
+      }
+    ],
+    "colors": [
+      "blue"
+    ],
+    "tags": [],
+    "description": [
+      "Timeless denim with modern cuts."
+    ],
+    "story": "Walk in style with this all-season denim jacket.",
+    "adminId": {
+      "_id": "6857d8e25700c4fde79cfdc2",
+      "name": "Anuj",
+      "email": "anuj@tashn.in",
+      "role": "superAdmin",
+      "__v": 0
+    },
+    "__v": 0,
+    "createdAt": "2025-06-16T04:29:18.977Z",
+    "updatedAt": "2025-06-16T04:29:18.977Z"
   },
   {
-    id: 2,
-    image: printedTshirt,
-    title: "Streetwear Graphic Tee",
-    discountedPrice: 899,
-    originalPrice: 1399
+    "_id": "684f9d9e1055fb21a6ac6b9e",
+    "title": "Hooded Sweatshirt",
+    "categoryId": null,
+    "images": [
+      "https://picsum.photos/seed/prod1-73/500/800",
+      "https://picsum.photos/seed/prod1-75/500/800"
+    ],
+    "thumbnail": product4,
+    "originalPrice": 1599,
+    "discountPrice": 1399,
+    "sizes": [
+      {
+        "size": "L",
+        "quantity": 6,
+        "_id": "684f9d9e1055fb21a6ac6b9f"
+      },
+      {
+        "size": "XL",
+        "quantity": 5,
+        "_id": "684f9d9e1055fb21a6ac6ba0"
+      }
+    ],
+    "colors": [
+      "navy"
+    ],
+    "tags": [
+      "Oversized fit"
+    ],
+    "description": [
+      "Warm fleece hoodie for cool weather."
+    ],
+    "story": "Comfort meets warmth in this classic hoodie.",
+    "adminId": null,
+    "__v": 0,
+    "createdAt": "2025-06-16T04:29:18.977Z",
+    "updatedAt": "2025-06-16T04:29:18.977Z"
   },
   {
-    id: 3,
-    image: product3,
-    title: "Muted Sand T-shirt",
-    discountedPrice: 749,
-    originalPrice: 1199
+    "_id": "684f9d9e1055fb21a6ac6b98",
+    "title": "Classic Black Tee",
+    "categoryId": {
+      "name": "Oversized T-shirt"
+    },
+    "images": [
+      "https://picsum.photos/seed/prod1-90/500/800",
+      "https://picsum.photos/seed/prod1-91/500/800"
+    ],
+    "thumbnail": oversizedTshirt,
+    "originalPrice": 999,
+    "discountPrice": 799,
+    "sizes": [
+      {
+        "size": "M",
+        "quantity": 10,
+        "_id": "684f9d9e1055fb21a6ac6b99"
+      },
+      {
+        "size": "L",
+        "quantity": 8,
+        "_id": "684f9d9e1055fb21a6ac6b9a"
+      }
+    ],
+    "colors": [
+      "black"
+    ],
+    "tags": [
+      "Oversized fit"
+    ],
+    "description": [
+      "High-quality black cotton t-shirt"
+    ],
+    "story": "This black tee has a legacy of comfort and simplicity.",
+    "adminId": null,
+    "__v": 0,
+    "createdAt": "2025-06-16T04:29:18.976Z",
+    "updatedAt": "2025-06-16T04:29:18.976Z"
   },
   {
-    id: 4,
-    image: product4,
-    title: "White Minimal Tee",
-    discountedPrice: 699,
-    originalPrice: 1099
+    "_id": "684f9d9e1055fb21a6ac6b9b",
+    "title": "White Graphic Tee",
+    "categoryId": null,
+    "images": [
+      "https://picsum.photos/seed/prod1-80/500/800",
+      "https://picsum.photos/seed/prod1-81/500/800"
+    ],
+    "thumbnail": printedTshirt,
+    "originalPrice": 899,
+    "discountPrice": 699,
+    "sizes": [
+      {
+        "size": "S",
+        "quantity": 15,
+        "_id": "684f9d9e1055fb21a6ac6b9c"
+      },
+      {
+        "size": "M",
+        "quantity": 10,
+        "_id": "684f9d9e1055fb21a6ac6b9d"
+      }
+    ],
+    "colors": [
+      "white"
+    ],
+    "tags": [],
+    "description": [
+      "Artistic print for bold expression."
+    ],
+    "story": "Wear your thoughts with our expressive graphic tees.",
+    "adminId": null,
+    "__v": 0,
+    "createdAt": "2025-06-16T04:29:18.976Z",
+    "updatedAt": "2025-06-16T04:29:18.976Z"
   }
 ];
 
 function LatestProducts({ scrollRef }) {
+  const { isLoggedIn } = useSelector(state => state.user);
+  const dispatch = useDispatch();
+
+  const handleSizeSelect = (product, size) => {
+    addToBagAndSync({
+      ...product,
+      size,
+      quantity: 1,
+    }, dispatch, isLoggedIn);
+  }
+
   return (
-    <section ref={scrollRef} id='latest-product' style={{ scrollMarginTop: "8rem" }} className='bg-dark bg-radial from-surface from-40% to-dark to-90% w-full py-16 flex flex-col'>
-      <div className='px-4 w-full flex items-center gap-4 relative mt-8'>
-        <h3 className='text-xl md:text-6xl text-nowrap text-white tracking-widest font-thin text-center uppercase'>New Arrivals</h3>
-
-        <hr
-          className='h-4 w-full  bg-linear-to-b from-white/60 from-0% via-surface via-5% to-90% to-white/60  ms-auto z-20'
-          style={{
-            backgroundImage: `
-      linear-gradient(
-        to bottom,
-        rgba(255,255,255,0.6) 0%,
-        var(--color-surface) 20%,
-        var(--color-surface) 80%,
-        rgba(255,255,255,0.6) 100%
-      )
-    `
-          }}
-        />
-
-        <img src={newArrivalCharacter} alt="" className='absolute h-36 md:h-60 right-0 md:right-4 -top-[90px] md:-top-[124px] z-30' />
+    <section ref={scrollRef} id='latest-product' style={{ scrollMarginTop: "0rem" }} className='bg-light w-full py-16 px-5 md:px-15 flex flex-col'>
+      <div className='w-full flex items-center gap-4 relative mt-8'>
+        <h3 className='text-xl md:text-2xl text-nowrap text-dark font-gfs-didot text-center uppercase'>New Arrivals</h3>
       </div>
-      {/* products list  */}
 
+      {/* products list  */}
       <ul
-        className="flex items-center md:justify-center overflow-x-auto w-full gap-8 my-12 px-4 snap-mandatory snap-x sm:snap-none"
+        className="flex flex-wrap items-center justify-between w-full gap-5 sm:gap-8 md:gap-15 my-8 md:my-10 snap-mandatory snap-y sm:snap-none"
       >
         {products.map(product => (
-          <li key={product.id} className='snap-start'>
-            <Product {...product} />
-          </li>
+          <Product key={product._id} {...product} handleSizeSelect={handleSizeSelect} />
         ))}
       </ul>
 
-      {/* view all products link  */}
       <Link
-        // to="/products"
-        className="relative inline-block w-fit mx-auto overflow-hidden py-3 px-6 text-sm font-semibold uppercase tracking-widest text-white border border-white bg-dark group"
+        to="/products"
+        className="relative inline-block w-fit mx-auto overflow-hidden py-2 mt-8 text-sm font-light uppercase tracking-widest text-dark group"
       >
-        {/* Text + Arrow stays on top */}
-        <span className="relative z-10 flex items-center transition-colors duration-300 group-hover:text-dark">
+        {/* Text stays on top */}
+        <span className="relative z-10 flex items-center">
           View All Products
-          <ArrowRight className="w-4 h-4 ml-2 transition group-hover:translate-x-2" />
         </span>
 
-        {/* Sliding white panel */}
-        <span className="absolute inset-0 bg-white transform -translate-x-full transition-transform duration-300 group-hover:translate-x-0 z-0" />
+        {/* Expanding underline */}
+        <span className="absolute bottom-2 left-0 h-px w-0 bg-border origin-left group-hover:w-full transition-all duration-300 z-0" />
       </Link>
+
     </section>
   )
 }
 
 function Product({
-  id,
-  image,
+  _id,
+  thumbnail,
   title,
   discountedPrice,
   originalPrice,
+  effectivePrice,
+  tags,
+  sizes,
+  categoryId,
+  handleSizeSelect
 }) {
+
+  const product = {
+    productId: _id,
+    thumbnail,
+    title,
+    discountedPrice,
+    originalPrice,
+    effectivePrice
+  }
+
+  const availableSizes = sizes?.map(item => item.size);
+
   return (
     <article
-      key={id}
-      className="h-full group border border-border rounded-lg overflow-hidden transition-colors duration-300 hover:bg-hoverTint flex flex-col cursor-pointer"
+      className="h-full basis-52 mx-auto max-w-60 grow shrink flex flex-col"
     >
       {/* Product Image */}
-      <div className="relative bg-surface w-[290px] md:w-[280px] overflow-hidden">
+      <Link
+        to={`/product/${_id}`}
+        className="relative group bg-surface overflow-hidden aspect-[2/3] cursor-pointer">
         <img
-          src={image}
+          src={thumbnail}
           alt={title}
-          className="w-full h-auto object-cover transition duration-300 group-hover:scale-125"
+          className="w-full h-full object-cover transition duration-1000 group-hover:scale-105"
         />
-      </div>
+      </Link>
 
       {/* Product Info */}
-      <div className="p-4 bg-surface h-fit flex flex-col">
-        <h3 className="text-light text-lg font-semibold">
-          {title}
-        </h3>
+      <div className="h-fit flex justify-between mt-2">
+        <div className='flex flex-col'>
+          <Link
+            to={`/product/${_id}`}
+            className="text-dark text-xs font-light uppercase cursor-pointer hover:underline">
+            {title}
+          </Link>
 
-        {/* Price */}
-        <div className="mt-4 flex items-baseline space-x-2">
-          <span className="text-light font-bold text-xl">
-            ₹{discountedPrice}
-          </span>
-          <span className="text-subtext line-through text-sm">
-            ₹{originalPrice}
-          </span>
+          {/* Price */}
+          <div className="mt-1 flex items-baseline space-x-2">
+            <span className="text-dark text-xs font-light uppercase line-through">
+              ₹ {originalPrice?.toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </span>
+            <span className="text-dark bg-accent px-1 text-xs font-light uppercase">
+              ₹ {discountedPrice?.toLocaleString("en-IN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </span>
+          </div>
         </div>
+
+        {/* add to bag button */}
+        <SizeSelectMenu
+          sizes={availableSizes}
+          onChange={(size) => { handleSizeSelect(product, size) }}
+        >
+          <button className='bg-surface h-7 w-7 p-1 text-xl font-thin flex items-center justify-center hover:border-subtext cursor-pointer'>+</button>
+        </SizeSelectMenu>
       </div>
     </article>
   );

@@ -35,10 +35,9 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    increment: (state) => { state.value += 1; },
-    decrement: (state) => { state.value -= 1; },
+    toggleLogin: (state) => { state.isLoggedIn = !state.isLoggedIn; },
   },
 });
 
-export const { increment, decrement } = userSlice.actions;
+export const { toggleLogin } = userSlice.actions;
 export default userSlice.reducer;

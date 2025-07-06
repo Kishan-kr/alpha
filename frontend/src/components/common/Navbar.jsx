@@ -29,20 +29,20 @@ export default function Navbar() {
   }, [isHome]);
 
   return (
-    <header className={`fixed top-0 left-0 w-full z-50 text-light transition-colors duration-500 ${isScrolled ? 'bg-dark shadow-sm' : 'bg-transparent'}`}>
-      <div className="flex items-center justify-between px-6 py-4 max-w-7xl mx-auto">
+    <header className={`fixed top-0 left-0 w-full z-50 transition-colors duration-500 ${isScrolled ? 'shadow-sm text-dark bg-light' : 'bg-transparent text-light'}`}>
+      <div className="flex items-center justify-between px-5 md:px-15 py-4 max-w-7xl mx-auto">
         {/* Left: Logo */}
-        <Link to="/" className="text-xl font-extrabold tracking-wider uppercase">
+        <Link to="/" className="text-xl tracking-wider font-montserrat uppercase">
           TASHN
         </Link>
 
         {/* Center: Nav Links (Desktop) */}
-        <nav className="hidden md:flex items-center bg-surface p-1 rounded-full space-x-4">
+        <nav className="hidden md:flex items-center bg-surface py-1 px-1 rounded-full space-x-4">
           {navItems.map(({ name, path, children }) => (
             <div key={name} className="relative group">
               <NavLink
                 to={path}
-                className= {({isActive}) => `px-4 py-2 rounded-full text-base font-medium transition-all duration-200 ${isActive ? 'bg-light text-dark' : 'hover:bg-white/10'
+                className= {({isActive}) => `px-4 py-1 rounded-full text-base transition-all duration-200 ${isActive ? 'bg-light text-dark' : 'text-subtext hover:text-dark'
                   }`}
               >
                 {name}
@@ -54,7 +54,7 @@ export default function Navbar() {
                       <li key={child.name}>
                         <NavLink
                           to={child.path}
-                          className={({isActive}) => `block px-4 py-1 text-sm rounded-full hover:text-light hover:bg-white/10 whitespace-nowrap ${isActive ? 'bg-white/10 text-white': 'text-subtext'}`}
+                          className={({isActive}) => `block px-4 py-1 text-sm rounded-full whitespace-nowrap ${isActive ? 'bg-light text-dark': 'text-subtext hover:text-dark'}`}
                         >
                           {child.name}
                         </NavLink>
@@ -72,32 +72,32 @@ export default function Navbar() {
         <div className="flex items-center gap-x-6">
           <button
             type="button"
-            className="cursor-pointer hover:text-white p-1"
+            className="cursor-pointer p-1"
           >
-            <Search className="w-5 h-5" />
+            <Search className="w-5 h-5" strokeWidth={1} />
           </button>
 
           <Link
             to={isLoggedIn ? '/profile' : '/signup'}
-            className="hidden md:block cursor-pointer hover:text-white p-1"
+            className="hidden md:block cursor-pointer p-1"
           >
-            <User className="w-5 h-5" />
+            <User className="w-5 h-5" strokeWidth={1} />
           </Link>
 
           <Link
             to="/bag"
-            className="cursor-pointer hover:text-white p-1"
+            className="cursor-pointer p-1"
           >
-            <ShoppingBag className="w-5 h-5" />
+            <ShoppingBag className="w-5 h-5" strokeWidth={1} />
           </Link>
 
 
           {/* Hamburger (Mobile Only) */}
           <button
-            className="md:hidden text-light focus:outline-none"
+            className="md:hidden focus:outline-none"
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            <Menu />
+            <Menu strokeWidth={1}/>
           </button>
         </div>
       </div >

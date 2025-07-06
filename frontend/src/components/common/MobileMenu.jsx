@@ -21,15 +21,15 @@ export default function MobileMenu({ navItems, menuOpen, setMenuOpen }) {
       {/* Full-Width Drawer */}
       <aside
         className={`
-          fixed top-0 right-0 h-full w-full bg-dark
+          fixed top-0 right-0 h-full w-full bg-light
           shadow-xl z-50 transform transition-transform duration-300 ease-in-out
           ${menuOpen ? "translate-x-0" : "translate-x-full"}
           flex flex-col
         `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
-          <NavLink to="/" onClick={() => setMenuOpen(false)} className="text-xl font-extrabold tracking-wider uppercase">
+        <div className="flex items-center justify-between px-6 py-4">
+          <NavLink to="/" onClick={() => setMenuOpen(false)} className="text-xl text-dark font-montserrat tracking-wider uppercase">
             TASHN
           </NavLink>
           <button
@@ -42,20 +42,20 @@ export default function MobileMenu({ navItems, menuOpen, setMenuOpen }) {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 overflow-y-auto py-4">
-          <ul className="space-y-1 px-4">
+        <nav className="flex-1 overflow-y-auto py-4 px-5">
+          <ul className="space-y-1">
             {navItems.map(({ name, path, Icon, children }) => {
               const isOpen = openSections[name];
               return (
-                <li key={name} className="bg-surface rounded-md overflow-hidden">
-                  <div className="flex items-center justify-between px-6">
+                <li key={name} className=" uppercase rounded-md overflow-hidden">
+                  <div className="flex items-center justify-between">
                     <NavLink
                       to={path}
                       end={children ? false : true}
                       onClick={() => setMenuOpen(false)}
                       className={({ isActive }) =>
-                        `flex items-center py-2 text-lg transition-colors ${
-                          isActive ? "text-subtext" : "text-white"
+                        `flex items-center py-2 transition-colors ${
+                          isActive ? "text-dark" : "text-subtext"
                         }`
                       }
                     >
@@ -63,10 +63,11 @@ export default function MobileMenu({ navItems, menuOpen, setMenuOpen }) {
                       {name}
                     </NavLink>
 
+                    {/* toggle button  */}
                     {children && (
                       <button
                         onClick={() => toggleSection(name)}
-                        className="p-2 text-subtext hover:text-light transition"
+                        className="p-2 text-subtext hover:text-dark transition"
                       >
                         <ChevronDown
                           className={`w-5 h-5 transform transition-transform ${
@@ -77,6 +78,7 @@ export default function MobileMenu({ navItems, menuOpen, setMenuOpen }) {
                     )}
                   </div>
 
+                  {/* submenu  */}
                   {children && (
                     <div
                       className={`
@@ -85,7 +87,7 @@ export default function MobileMenu({ navItems, menuOpen, setMenuOpen }) {
                         ${isOpen ? "max-h-60" : "max-h-0"}
                       `}
                     >
-                      <ul className="border-t border-border mt-1">
+                      <ul className="mt-1">
                         {children.map((child) => (
                           <li key={child.name}>
                             <NavLink
@@ -94,7 +96,7 @@ export default function MobileMenu({ navItems, menuOpen, setMenuOpen }) {
                               onClick={() => setMenuOpen(false)}
                               className={({ isActive }) =>
                                 `block py-2 pl-12 pr-6 text-base transition-colors ${
-                                  isActive ? "text-subtext" : "text-light hover:text-white"
+                                  isActive ? "text-dark" : "text-subtext hover:text-dark"
                                 }`
                               }
                             >
@@ -119,7 +121,7 @@ export default function MobileMenu({ navItems, menuOpen, setMenuOpen }) {
                 href="https://instagram.com/tashn.in"
                 target="_blank"
                 rel="noreferrer"
-                className="text-subtext hover:text-light uppercase text-xs tracking-wide transition"
+                className="text-subtext hover:text-dark uppercase text-xs tracking-wide transition"
               >
                 Instagram
               </a>
@@ -129,7 +131,7 @@ export default function MobileMenu({ navItems, menuOpen, setMenuOpen }) {
                 href="https://facebook.com/tashn.co.in"
                 target="_blank"
                 rel="noreferrer"
-                className="text-subtext hover:text-light uppercase text-xs tracking-wide transition"
+                className="text-subtext hover:text-dark uppercase text-xs tracking-wide transition"
               >
                 Facebook
               </a>
@@ -139,7 +141,7 @@ export default function MobileMenu({ navItems, menuOpen, setMenuOpen }) {
                 href="https://twitter.com/tashn.in"
                 target="_blank"
                 rel="noreferrer"
-                className="text-subtext hover:text-light uppercase text-xs tracking-wide transition"
+                className="text-subtext hover:text-dark uppercase text-xs tracking-wide transition"
               >
                 X
               </a>
