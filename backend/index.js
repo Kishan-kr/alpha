@@ -1,6 +1,7 @@
 require("dotenv").config()
 const express = require("express")
 const app = express()
+const cors = require('cors')
 const conntectToDB = require("./db/connection")
 const port = process.env.PORT || 5000
 
@@ -13,7 +14,27 @@ const reviewRoutes = require('./routes/review');
 const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/order');
 const imageRoutes = require('./routes/images');
+const testimonialRoutes = require('./routes/testimonials');
+const lookbooksRoutes = require('./routes/lookbookVideo');
 const { MAX_IMAGE_SIZE } = require("./utilis/constants")
+
+// Get allowed origins from environment variable
+const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",") : [];
+
+// CORS configuration
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  exposedHeaders: ['Content-Disposition']
+};
+
+app.use(cors(corsOptions));
 
 //middlewares
 app.use(express.json())
@@ -27,6 +48,8 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/carts', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/images', imageRoutes);
+app.use('/api/testimonials', testimonialRoutes);
+app.use('/api/lookbooks', lookbooksRoutes);
 
 app.get("/", (req, res) => {
   res.send("Happy Hacking!")

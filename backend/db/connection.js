@@ -1,8 +1,6 @@
 const mongooose = require("mongoose")
 const seedSuperAdmin = require("../utilis/seedSuperAdmin")
-const admin = require("../models/admin")
-const seedDatabase = require("../temp/seeders/seedDummyData")
-
+const seedDatabase = require("../temp/seeders/seedDummyData");
 
 const connect = async () => {
     try {
@@ -10,7 +8,6 @@ const connect = async () => {
         if (connection) {
             console.log("Successfully connected to database");
             seedSuperAdmin()
-
             // seed dummy data 
             // seedDatabase();
         }
