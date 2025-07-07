@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
  * Props:
  *  - videos: string[] array of video URLs
  */
-export default function Lookbook({ videos }) {
+export default function Lookbook({ status, videos }) {
   const cardVariants = {
     hidden:  { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
@@ -26,7 +26,7 @@ export default function Lookbook({ videos }) {
 
         {/* Video grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-6 mb-4">
-          {videos.map((src, i) => (
+          {videos.map((item, i) => (
             <motion.div
               key={i}
               className="overflow-hidden shadow-lg bg-surface h-fit"
@@ -43,7 +43,7 @@ export default function Lookbook({ videos }) {
               }}
             >
               <video
-                src={src}
+                src={item.videoUrl}
                 className="w-full h-fit object-cover"
                 autoPlay
                 muted

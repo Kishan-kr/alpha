@@ -4,7 +4,7 @@ import React from "react";
 export default function Footer() {
   return (
     <footer className="text-dark px-5 md:px-15 py-14 pb-12">
-      <div className="grid md:grid-cols-4 gap-10 text-sm">
+      <div className="grid md:grid-cols-3 gap-10 text-sm">
         {/* About */}
         <div className="md:col-span-1">
           <h3 className="uppercase text-dark tracking-widest mb-4">
@@ -49,7 +49,7 @@ export default function Footer() {
         </div>
 
         {/* Our Commitment */}
-        <div>
+        {/* <div>
           <h3 className="uppercase text-dark tracking-widest mb-4">
             Our Commitment
           </h3>
@@ -59,7 +59,7 @@ export default function Footer() {
             <li>✔ Premium Quality Products</li>
             <li>✔ Secured Transactions</li>
           </ul>
-        </div>
+        </div> */}
 
         {/* Newsletter */}
         <div>

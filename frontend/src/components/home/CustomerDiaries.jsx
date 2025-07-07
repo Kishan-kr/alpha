@@ -3,12 +3,12 @@ import { easeInOut, motion, useAnimation } from "framer-motion";
 import star from '../../assets/icons/star.png';
 import starFilled from '../../assets/icons/star_filled.png';
 import useMediaQuery from "../../hooks/useMediaQuery";
-import reviews from "../../utils/reviews";
+import { formatToRelativeDate } from "../../utils/dateFormatter";
 
 // Duplicate so we can scroll infinitely without changing the original slot data
-const extended = [...reviews, ...reviews];
 
-export default function CustomerDiaries() {
+export default function CustomerDiaries({status, reviews}) {
+  const extended = [...reviews, ...reviews];
   const controls = useAnimation();
   const indexRef = useRef(0);
 
@@ -94,7 +94,7 @@ export default function CustomerDiaries() {
                   <h4 className="text-base mx-auto">{r.name}</h4>
                   <span className="text-[11px] text-border mx-auto uppercase mt-1">{r.product}</span>
                   <span className="text-[11px] border border-border w-fit p-1 px-3 text-border mt-2 m-auto">
-                    {r.date}
+                    {formatToRelativeDate(r.date)}
                   </span>
                 </article>
               </div>
