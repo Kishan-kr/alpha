@@ -54,7 +54,6 @@ const getAllProducts = async (req, res) => {
     const [productsList, totalCount] = await Promise.all([
       Product
         .find(query)
-        .populate({ path: 'adminId', select: '-password' })
         .populate({ path: 'categoryId', select: 'title' })
         .skip(skip)
         .limit(parseInt(limit))
@@ -63,10 +62,7 @@ const getAllProducts = async (req, res) => {
           path: 'categoryId',
           select: 'name -_id',
         })
-        .populate({
-          path: 'adminId',
-          select: '-password',
-        }),
+        .select('-description -story -adminId -metaDescription -updatedAt -images'),
 
       Product.countDocuments(query)
     ]);

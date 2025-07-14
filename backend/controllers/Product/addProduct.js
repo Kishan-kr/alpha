@@ -1,5 +1,6 @@
 const Product = require('../../models/product');
 const { INTERNAL_SERVER_ERROR } = require('../../utilis/constants');
+const { generateUniqueSlug } = require('../../utilis/generateSlug');
 
 const addProduct = async (req, res) => {
   try {
@@ -33,6 +34,8 @@ const addProduct = async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    const uniqueSlug = await generateUniqueSlug(title);
+
     // Create and save product
     const product = new Product({
       title,
@@ -47,7 +50,7 @@ const addProduct = async (req, res) => {
       description,
       story,
       adminId,
-      metaTitle,
+      metaTitle: uniqueSlug,
       metaDescription,
       metaKeywords
     });

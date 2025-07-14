@@ -2,7 +2,7 @@ const { validationResult } = require("express-validator")
 const category = require("../../models/category");
 const CustomError = require("../../utilis/customError");
 const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
-const generateSlug = require("../../utilis/generateSlug");
+const { slugify } = require("../../utilis/generateSlug");
 
 const createCategory = async (req, res) => {
   try {
@@ -27,7 +27,7 @@ const createCategory = async (req, res) => {
     const newCategoryData = {
       name: normalizedName,
       description,
-      slug: generateSlug(normalizedName)
+      slug: slugify(normalizedName)
     };
 
     if (thumbnail) {

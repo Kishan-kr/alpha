@@ -1,14 +1,14 @@
 const product = require('../../models/product');
 
-const getProductById = async (req, res) => {
+const getProductBySlug = async (req, res) => {
   try {
-    const productId = req.params.id;
+    const slug = req.params.slug;
 
-    if (!productId) {
-      return res.status(400).json({ status: false, error: 'Product ID is required' });
+    if (!slug) {
+      return res.status(400).json({ status: false, error: 'Product slug is required' });
     }
 
-    const foundProduct = await product.findById(productId)
+    const foundProduct = await product.findOne({metaTitle: slug})
       .populate({
         path: 'categoryId',
         select: 'name -_id',
@@ -29,4 +29,4 @@ const getProductById = async (req, res) => {
   }
 };
 
-module.exports = getProductById;
+module.exports = getProductBySlug;
