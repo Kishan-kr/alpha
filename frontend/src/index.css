@@ -23,7 +23,8 @@
   --color-hover-tint: #BFBFBF;
   --color-pigment-green: #2BA84A;
 
-  --breakpoint-xs: 360px;
+  --breakpoint-xxs: 360px;
+  --breakpoint-xs: 425px;
   --breakpoint-slg: 912px;
 
   --default-font-family: 'Inter', sans-serif;

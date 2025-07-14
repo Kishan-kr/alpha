@@ -1,18 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import getAuthHeaders from '../../utils/authHeaderHelper';
 
 // Global API base
 const BASE_URL = `${import.meta.env.VITE_API_URL}/carts`;
-
-// Auth header helper
-const getAuthHeaders = () => {
-  const token = localStorage.getItem('authToken');
-  return {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
-};
 
 // Add to bag
 export const addItemToBagThunk = createAsyncThunk(

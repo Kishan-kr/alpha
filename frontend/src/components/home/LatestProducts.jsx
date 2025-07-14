@@ -53,6 +53,7 @@ function Product({
   _id,
   thumbnail,
   title,
+  metaTitle,
   discountedPrice,
   originalPrice,
   effectivePrice,
@@ -79,7 +80,7 @@ function Product({
     >
       {/* Product Image */}
       <Link
-        to={`/product/${_id}`}
+        to={`/products/${metaTitle}`}
         className="relative group bg-surface overflow-hidden aspect-[2/3] cursor-pointer">
         <img
           src={thumbnail}
@@ -92,7 +93,7 @@ function Product({
       <div className="h-fit flex justify-between mt-2">
         <div className='flex flex-col'>
           <Link
-            to={`/product/${_id}`}
+            to={`/products/${metaTitle}`}
             className="text-dark text-xs font-light uppercase cursor-pointer hover:underline">
             {title}
           </Link>

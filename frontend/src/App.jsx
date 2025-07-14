@@ -10,7 +10,9 @@ import Orders from './pages/Orders';
 import OrderDetails from './pages/OrderDetails';
 import NotFound from './pages/NotFound';
 import ValidateCategory from './pages/ValidateCategory';
-import toast, { Toaster } from 'react-hot-toast'
+import { Toaster } from 'react-hot-toast'
+import Search from './pages/Search';
+import Products from './pages/Products';
 
 export default function App() {
 
@@ -30,12 +32,14 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/products/:id" element={<ProductView />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/products/:slug" element={<ProductView />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/bag" element={<Bag />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/orders/:orderId" element={<OrderDetails />} />
-          <Route path={`/:category`} element={<ValidateCategory />} />
+          <Route path={`/collections/:category`} element={<ValidateCategory />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>

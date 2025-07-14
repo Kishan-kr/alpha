@@ -1,12 +1,21 @@
-# React + Vite
+### Need to add category ID (from mongoDB) manually in constant/category file `IMP` ###
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### HOMEPAGE ###
+  - Hero section `done`. Need to replace video
+  - New Arrivals section `done`
+  - product categories section `done`
+  - search feature `done`
 
-Currently, two official plugins are available:
+  - happy customers section `done`. Need to replace with real reviews data in temp/reviews and mongoDB as well
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+  - Lookbook section `done`. Need to replace video URLs in temp/lookbookData and mongoDB as well
 
-## Expanding the ESLint configuration
+### FOOTER ###
+  - UI `done`. Need to add all pages 
+  - setup newsletter left
+  
+### COLLECTIONS ###
+  - collections page `done`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### SEARCH ###
+  - search page `done`

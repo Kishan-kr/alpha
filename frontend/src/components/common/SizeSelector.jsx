@@ -45,7 +45,7 @@ const SizeSelectMenu = ({ sizes, selectedSize, onChange, children }) => {
                   onChange(size);
                   setIsOpen(false);
                 }}
-                className={`px-4 py-2 text-sm transition 
+                className={`px-4 py-2 text-sm transition enabled:cursor-pointer 
                 ${selectedSize === size
                     ? 'bg-dark text-light'
                     : 'bg-surface text-dark'

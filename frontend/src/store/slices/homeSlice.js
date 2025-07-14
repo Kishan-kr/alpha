@@ -75,5 +75,5 @@ const homeSlice = createSlice({
   }
 });
 
-export const { addToBag, removeFromBag, updateQuantity, clearBag } = homeSlice.actions;
+// export const { } = homeSlice.actions;
 export default homeSlice.reducer;

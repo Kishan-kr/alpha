@@ -2,11 +2,11 @@ import { Home, Info, LayoutGrid, Truck, User } from "lucide-react";
 
 export default [
   { name: 'Home', path: '/', Icon: Home },
-  { name: 'Catalog', path: '/catalog', Icon: LayoutGrid,
+  { name: 'Collections', path: '/collections', Icon: LayoutGrid,
     children: [
-      { name: 'Oversized T-Shirt', path: '/catalog/oversized-tshirt' },
-      { name: 'Oversized Polos', path: '/catalog/oversized-polo' },
-    ], 
+      { name: 'Oversized T-Shirt', path: '/collections/oversized-t-shirt' },
+      // { name: 'Oversized Polos', path: '/collections/oversized-polo' },
+    ],
   },
   { name: 'About Us', path: '/about', Icon: Info },
   { name: 'Account', path: '/account', Icon: User },

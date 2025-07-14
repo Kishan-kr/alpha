@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 // dummy data of user 
 const initialState = {
-  isLoggedIn: true,
+  isLoggedIn: false,
   firstName: 'John',
   lastName: 'Doe',
   email: 'john@example.com',
@@ -29,15 +29,17 @@ const initialState = {
       isDefault: false
     },
   ],
+  searchQuery: ''
 }
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    setSearchQuery: (state, action) => { state.searchQuery = action.payload; },
     toggleLogin: (state) => { state.isLoggedIn = !state.isLoggedIn; },
   },
 });
 
-export const { toggleLogin } = userSlice.actions;
+export const { toggleLogin,setSearchQuery } = userSlice.actions;
 export default userSlice.reducer;
