@@ -19,3 +19,11 @@
 
 ### SEARCH ###
   - search page `done`
+
+### PRODUCT DETAILS ###
+  - product details page `done`
+  - fetching product by slug `done`
+  - fetching more products excluding the current `done`
+  - add to cart `done`
+  - size chart `done`
+  - need to update measurement guide image in size chart `IMP` 

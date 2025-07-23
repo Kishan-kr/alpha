@@ -30,6 +30,8 @@
   --default-font-family: 'Inter', sans-serif;
   --font-montserrat: 'Montserrat', sans-serif;
   --font-gfs-didot: 'GFS Didot', serif;
+
+  --text-xxs: 10px;
 }
 
 /* Light theme override */

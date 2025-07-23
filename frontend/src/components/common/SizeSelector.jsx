@@ -19,7 +19,7 @@ const SizeSelectMenu = ({ sizes, selectedSize, onChange, children }) => {
   }, []);
 
   return (
-    <div className="relative w-fit" ref={wrapperRef}>
+    <div className="relative w-[inherit]" ref={wrapperRef}>
       <div onClick={() => setIsOpen(!isOpen)} className="cursor-pointer">
         {children ? children : (
           <button className="w-fit flex items-center justify-between px-1 py-1 bg-surface border-border text-dark/70 hover:border-light hover:text-dark transition">

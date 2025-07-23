@@ -3,6 +3,7 @@ import userReducer from './slices/userSlice';
 import bagReducer from './slices/bagSlice';
 import homeReducer from './slices/homeSlice';
 import productsReducer from './slices/productSlice';
+import productDetailReducer from './slices/productDetailSlice';
 import { loadFromLocalStorage } from '../utils/manageLocalStorageBag';
 
 const preloadedState = {
@@ -15,6 +16,7 @@ export const store = configureStore({
     bag: bagReducer,
     home: homeReducer,
     products: productsReducer,
+    productDetail: productDetailReducer,
   },
   preloadedState
 });
