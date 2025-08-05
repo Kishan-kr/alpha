@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { LOADING, PRODUCTS_PER_PAGE } from '../constants/products';
+import { LOADING, PRODUCTS_PER_PAGE } from '../constants/appConstants';
 import ProductList from '../components/common/ProductList';
 import { useSearchParams } from 'react-router-dom';
 import { fetchProducts } from '../store/actions/productAction';

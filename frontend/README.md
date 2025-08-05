@@ -27,3 +27,12 @@
   - add to cart `done`
   - size chart `done`
   - need to update measurement guide image in size chart `IMP` 
+
+### PRODUCT DETAILS ###
+  - shopping bag page: fixing product color not rendering and actions like inc-dec, remove not working `working`
+
+
+- add loader and error element in new arrivals section
+- add use of getBagProduct utility function in search products page, all products page, and new arrivals section
+
+working on get latest stock inside increase quantitiy function in shopping bag

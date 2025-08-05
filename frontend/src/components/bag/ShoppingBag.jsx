@@ -1,73 +1,141 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import BagProductCard from './BagProductCard';
-import { ArrowRight } from 'lucide-react';
 import EmptyBag from './EmptyBag';
+import { useDispatch, useSelector } from 'react-redux';
+import { removeBagItemAndSync, updateBagItemQuantityAndSync } from '../../utils/bagSync';
+import { getStocksOfCartItems } from '../../store/actions/bagAction';
+import { showErrorToastWithIcon } from '../../utils/customToasts';
+import { 
+  MAX_ALLOWED_QUANTITY_PER_ITEM, 
+  MAX_ALLOWED_QUANTITY_REACH_MSG, 
+  STOCK_LIMIT_REACH_MSG 
+} from '../../constants/appConstants';
 
-const ShoppingBag = ({ products, subtotal, discount, delivery, total, updateProducts, handleCheckout }) => {
+const ShoppingBag = ({ products, subtotal, discount, delivery, total, handleCheckout }) => {
 
-  const handleIncrease = (id) => {
-    updateProducts(products.map(product => product.id === id ? { ...product, quantity: product.quantity + 1 } : product));
-  };
+  const { isLoggedIn } = useSelector(state => state.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getStocksOfCartItems(products))
+  }, []);
+
   
-  const handleDecrease = (id) => {
-    updateProducts(products.map(product => product.id === id && product.quantity > 1 ? { ...product, quantity: product.quantity - 1 } : product));
-  };
-  
-  const handleDelete = (id) => {
-    updateProducts(products.filter(product => product.id !== id));
+  const handleDelete = (item) => {
+    const itemData = { 
+      variantId: item.variantId, 
+      _id: item?._id,
+      title: item.title,
+      size: item.size,
+    }
+    removeBagItemAndSync(itemData, dispatch, isLoggedIn);
   };
 
-  const handleSizeChange = (id, selectedSize) => {
-    updateProducts(products.map(product => product.id === id ? { ...product, selectedSize } : product));
+  const handleIncrease = async (item) => {
+    let {maxStock, quantity, lastSynced} = item;
+
+    // five minutes ago 
+    // let fiveMinsAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    // if(lastSynced && lastSynced < fiveMinsAgo){
+    //   await dispatch(getStocksOfCartItems(products))
+    // }
+
+    if(quantity >= maxStock) {
+      showErrorToastWithIcon(STOCK_LIMIT_REACH_MSG)
+      return;
+    }
+
+    if(quantity >= MAX_ALLOWED_QUANTITY_PER_ITEM) {
+      showErrorToastWithIcon(MAX_ALLOWED_QUANTITY_REACH_MSG)
+      return;
+    }
+
+    const itemData = { 
+      variantId: item.variantId, 
+      _id: item?._id, 
+      quantity: item.quantity + 1
+    }
+    
+    updateBagItemQuantityAndSync(itemData, dispatch, isLoggedIn);
   };
+
+  const handleDecrease = (item) => {
+    const itemData = { 
+      variantId: item.variantId, 
+      _id: item?._id, 
+      quantity: item.quantity > 1 ? item.quantity - 1 : 1
+    }
+    
+    updateBagItemQuantityAndSync(itemData, dispatch, isLoggedIn);
+  };
+
+
+  // const handleSizeChange = (id, selectedSize) => {
+  //   updateProducts(products.map(product => product.id === id ? { ...product, selectedSize } : product));
+  // };
 
   return (
-    <div className='p-4 md:p-10 flex flex-col slg:flex-row gap-8'>
+    <div className='relative flex flex-col slg:flex-row gap-6 md:gap-20'>
       {/* main bag layout  */}
-      <section className='flex-1 sm:p-1 rounded-xl sm:border border-border'>
-        <div className=" bg-light rounded-lg p-4 space-y-4 border border-border">
-          <div className='flex gap-2'>
-            <h2 className="text-xl font-semibold text-dark mb-4">Your Bag</h2>
-            <small className='p-px px-1 mt-1 bg-surface rounded text-[10px] h-fit text-subtext'>{products.length} {products.length > 1 ? "items" : "item"}</small>
-          </div>
-          {products.length ? products.map(product => (
+      <section className='flex-1'>
+
+        {/* <button className='absolute -top-[31px] right-0 uppercase text-subtext underline text-xxs hover:text-dark'>Clear Bag</button> */}
+
+        <div className=" bg-light space-y-7 md:space-y-16">
+
+          {products.length ? products.map((product, idx) => (
             <BagProductCard
-              key={product.id}
+              key={product.productId + idx}
               product={product}
               onIncrease={handleIncrease}
               onDecrease={handleDecrease}
               onRemove={handleDelete}
-              onSizeChange={handleSizeChange}
+              // onSizeChange={handleSizeChange}
             />
+
+
           )) : <EmptyBag />}
+
         </div>
       </section>
+
       {/* right checkout section  */}
-      {products.length > 0 && <section className="w-full h-fit slg:w-1/3 sm:p-1 rounded-xl sm:border border-border text-dark shadow-2xl shadow-dark slg:sticky slg:top-24">
-        <div className='bg-light p-6 rounded-lg border border-border'>
-          <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
-          <div className="flex justify-between items-center mb-3">
+      {products.length > 0 && <section className="hidden slg:block bg-light w-full h-fit slg:w-[36%]  text-dark  slg:sticky slg:top-24 border border-hover-tint">
+        <div className='p-6 uppercase font-light'>
+          <h3 className="text-base text-dark">Order Summary</h3>
+          <div className="text-subtext text-xs flex justify-between items-center mt-9">
             <span>Subtotal</span>
-            <span>${subtotal}</span>
+            <span>₹ {subtotal}</span>
           </div>
-          <div className="flex justify-between items-center mb-3 text-red-500">
+          <div className="text-subtext text-xs flex justify-between items-center mt-4">
             <span>Discount (20%)</span>
-            <span>-${discount.toFixed(2)}</span>
+            <span>-₹ {discount.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between items-center mb-3">
+          <div className="text-subtext text-xs flex justify-between items-center mt-4">
             <span>Delivery Fee</span>
-            <span>${delivery}</span>
+            <span>₹ {delivery}</span>
           </div>
-          <div className="flex justify-between items-center font-bold text-lg mt-4">
+          <div className="text-dark text-base flex justify-between items-center mt-5">
             <span>Total</span>
-            <span>${total.toFixed(2)}</span>
+            <span>₹ {total.toFixed(2)}</span>
           </div>
-          <button onClick={handleCheckout} className="mt-6 w-full inline-flex group justify-center items-center px-6 py-3 bg-dark text-light font-semibold rounded-full shadow-md cursor-pointer">
+          <button onClick={handleCheckout} className="text-sm mt-9 uppercase w-full justify-center items-center px-6 py-2 bg-dark text-light cursor-pointer">
             Checkout
-            <ArrowRight className="ml-2 w-5 h-5 text-dark bg-light rounded-full p-1 transition-transform group-hover:translate-x-1" />
           </button>
         </div>
+
       </section>}
+
+      {products.length > 0 && <div className='bg-light grid grid-cols-2 gap-x-3 py-4.5 items-center sticky bottom-0 slg:hidden font-light'>
+        <div className="">
+          <p className='uppercase text-xs'>Total</p>
+          <p className='text-base mt-1'>₹ {total.toFixed(2)}</p>
+          <small className='text-subtext block text-xxs mt-0'>Including GST</small>
+        </div>
+        <button onClick={handleCheckout} className="w-full h-fit flex justify-center items-center uppercase px-6 py-3 bg-dark text-sm text-light font-light cursor-pointer">
+          Checkout
+        </button>
+      </div>}
     </div>
   );
 };

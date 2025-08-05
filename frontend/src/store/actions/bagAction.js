@@ -32,6 +32,7 @@ export const addItemToBagThunk = createAsyncThunk(
 export const updateBagItemThunk = createAsyncThunk(
   'bag/updateItem',
   async ({ _id, size, quantity }, {rejectWithValue}) => {
+    console.log("_id: ", _id) // temp
     try {
       await axios.patch(
         `${BASE_URL}/${_id}`,
@@ -78,6 +79,23 @@ export const fetchUserBagThunk = createAsyncThunk(
     try {
       const res = await axios.get(BASE_URL, getAuthHeaders());
       return res.data; // expected: array of items
+    } catch (err) {
+      return rejectWithValue(err.response?.data || err.message);
+    }
+  }
+);
+
+// Get stocks of all cart items in user's cart
+export const getStocksOfCartItems = createAsyncThunk(
+  'bag/getStocksOfCartItems',
+  async (products, {rejectWithValue}) => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/products/stocks`,
+        {products}, 
+        getAuthHeaders()
+      );
+      return res.data.stocks; // expected: "stocks": { "6849e_XL_navy": { "maxStock": 5}, ...}
     } catch (err) {
       return rejectWithValue(err.response?.data || err.message);
     }

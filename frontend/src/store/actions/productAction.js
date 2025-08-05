@@ -25,7 +25,19 @@ export const fetchProductDetail = createAsyncThunk(
   async (slug, { rejectWithValue }) => {
     try {
       const res = await axios.get(`${BASE_URL}/${slug}`, getAuthHeaders());
-      console.log(res.data);
+      return res.data.product || {};
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.error || err.message);
+    }
+  }
+);
+
+// Fetch product's latest stock
+export const fetchLatestStockById = createAsyncThunk(
+  'product/fetchLatestStockById',
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(`${BASE_URL}/stocks/${id}`, getAuthHeaders());
       return res.data.product || {};
     } catch (err) {
       return rejectWithValue(err.response?.data?.error || err.message);

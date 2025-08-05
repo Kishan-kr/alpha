@@ -2,6 +2,7 @@ import React from 'react'
 import ProductCard from './ProductCard';
 import { addToBagAndSync } from '../../utils/bagSync';
 import { useDispatch, useSelector } from 'react-redux';
+import getBagProductData from '../../utils/getBagProductData';
 
 // later we will add pagination here 
 function RelatedProducts({ title, products }) {
@@ -9,12 +10,9 @@ function RelatedProducts({ title, products }) {
   const dispatch = useDispatch();
 
   const handleSizeSelect = (product, size) => {
-    addToBagAndSync({
-      ...product,
-      size,
-      quantity: 1,
-    }, dispatch, isLoggedIn);
-  }
+    const bagItem = getBagProductData(product, size);
+    addToBagAndSync(bagItem, dispatch, isLoggedIn);
+  };
 
   return (
     <div className="bg-light text-dark">

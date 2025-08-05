@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import getBagProductData from "../utils/getBagProductData";
 import { useParams } from "react-router-dom";
 import { fetchProductDetail, fetchProducts } from "../store/actions/productAction";
-import { LOADING } from "../constants/products";
+import { LOADING } from "../constants/appConstants";
 import SizeChartModal from "../components/common/SizeChartModal";
 
 
@@ -61,18 +61,10 @@ const ProductView = () => {
   } = product;
 
   const availableSizes = sizes.map((item) => item.size);
-  const bagProductData = getBagProductData(product);
 
   const handleSizeSelect = (product, size) => {
-    addToBagAndSync(
-      {
-        ...product,
-        size,
-        quantity: 1,
-      },
-      dispatch,
-      isLoggedIn
-    );
+    const bagItem = getBagProductData(product, size);
+    addToBagAndSync(bagItem, dispatch, isLoggedIn);
   };
 
   // Replace with actual related products logic
@@ -142,7 +134,7 @@ const ProductView = () => {
             {/* add to bag button */}
             <SizeSelectMenu
               sizes={availableSizes}
-              onChange={(size) => { handleSizeSelect(bagProductData, size) }}
+              onChange={(size) => { handleSizeSelect(product, size) }}
             >
               <button className="text-dark block border border-border uppercase mt-4 md:mt-8 px-6 py-2 md:py-3 w-full text-sm font-medium enabled:cursor-pointer">
                 Add to bag

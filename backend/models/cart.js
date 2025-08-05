@@ -12,6 +12,7 @@ const cartSchema = mongoose.Schema(
       ref: "PRODUCT",
       required: true
     },
+    variantId: String,
     quantity: {
       type: Number,
       required: true,
@@ -24,7 +25,10 @@ const cartSchema = mongoose.Schema(
     color: {
       type: String,
       required: true
-    }
+    },
+    title: String,
+    maxStock: Number,
+    lasSynced: Date
   },
   {
     timestamps: true

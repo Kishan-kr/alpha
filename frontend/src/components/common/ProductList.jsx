@@ -2,6 +2,7 @@ import React from 'react'
 import ProductCard from './ProductCard';
 import { addToBagAndSync } from '../../utils/bagSync';
 import { useDispatch, useSelector } from 'react-redux';
+import getBagProductData from '../../utils/getBagProductData';
 
 // later we will add pagination here 
 function ProductList({ title, products, isLoading, error, productCount }) {
@@ -9,12 +10,9 @@ function ProductList({ title, products, isLoading, error, productCount }) {
   const dispatch = useDispatch();
 
   const handleSizeSelect = (product, size) => {
-    addToBagAndSync({
-      ...product,
-      size,
-      quantity: 1,
-    }, dispatch, isLoggedIn);
-  }
+    const bagItem = getBagProductData(product, size);
+    addToBagAndSync(bagItem, dispatch, isLoggedIn);
+  };
 
   return (
     <div className="bg-background text-dark px-6 sm:px-6 md:px-28 pt-20 pb-6 md:pt-26 md:pb-8">
@@ -38,7 +36,7 @@ function ProductList({ title, products, isLoading, error, productCount }) {
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 xs:gap-6 slg:gap-15 gap-y-15">
           {products?.map((product) => (
-            <ProductCard key={product._id} product={product} handleSizeSelect={handleSizeSelect}/>
+            <ProductCard key={product._id} product={product} handleSizeSelect={handleSizeSelect} />
           ))}
         </div>
       )}

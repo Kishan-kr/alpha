@@ -3,72 +3,63 @@ import React from "react";
 import SizeSelector from "../common/SizeSelector";
 
 
-const BagProductCard = ({ product, onIncrease, onDecrease, onRemove, onSizeChange }) => {
+const BagProductCard = ({ product, onIncrease, onDecrease, onRemove }) => {
+ 
   return (
-    <div className="relative flex sm:items-center justify-between last:border-none border-b border-border py-8 pt-4">
-      <div className="flex items-center sm:items-start gap-4 w-full">
-        <img
-          src={product.thumbnail}
-          alt={product.title}
-          className="w-24 h-28 sm:w-24 sm:h-28 aspect-[4/5] rounded-md object-cover"
-        />
-        <div>
-          <h4 className="text-dark font-semibold uppercase tracking-wider">{product.title}</h4>
+    <div className="relative flex sm:items-center justify-between">
+      <div className="flex items-center sm:items-start gap-4 xxs:gap-6 md:gap-16 w-full">
+        <figure className="w-48 min-w-36 md:min-w-44 md:w-44 overflow-hidden aspect-[2/3] bg-surface">
+          <img
+            src={product.thumbnail}
+            alt={product.title}
+            className="h-full object-cover"
+          />
+        </figure>
 
-          {/* <p className="text-sm text-subtext my-2 mt-1">{product.category} • {product.color}</p> */}
-
+        <div className="py-4 md:py-0 font-light relative">
+          <h4 title={product.title} className="text-dark uppercase font-light text-sm md:text-base max-w-48 md:max-w-fit md:pe-8 line-clamp-2">{product.title}</h4>
           {/* caategory and color together on small screens only */}
-          <p className="sm:hidden text-sm text-subtext my-2 mt-1">{product.category} • {product.color}</p>
+          <p className="text-xs text-subtext mt-3 uppercase">{product.category}</p>
 
-          {/* caategory and color in lines on large screens only */}
-          <p className="hidden sm:block text-sm text-subtext mt-1">{product.category}</p>
-          <p className="hidden sm:block text-sm text-subtext my-2 mt-1">{product.color}</p>
+          {/* size and color */}
+          <p className="text-xs text-subtext mt-3 uppercase">{product.size} | {product.color}</p>
 
-          <div className="text-subtext text-sm w-fit items-center">
-            <SizeSelector
-              selectedSize={product.selectedSize}
-              sizes={product.availableSizes}
-              onChange={(size) => onSizeChange(product.id, size)}
-            />
+          {/* price */}
+          <p className="text-dark text-base mt-8">₹ {product.originalPrice}</p>
+
+          {/* quantity manager  */}
+          <div className="bg-surface w-max flex items-center text-xs overflow-hidden mt-3">
+            <button
+              onClick={() => onDecrease(product)}
+              disabled={product.quantity <= 1}
+              className="px-2 py-1.5 text-subtext disabled:text-hover-tint enabled:hover:text-dark enabled:cursor-pointer"
+            >
+              <Minus size={12} />
+            </button>
+            <span className="px-3 py-1 text-dark min-w-10 text-center">{product.quantity}</span>
+            <button
+              onClick={() => onIncrease(product)}
+              className="px-2 py-1.5 text-subtext enabled:hover:text-dark enabled:cursor-pointer"
+            >
+              <Plus size={12} />
+            </button>
           </div>
 
-          {/* price visible in small mobile screen only  */}
-          <p className="sm:hidden text-dark font-semibold mt-2">₹{product.originalPrice}</p>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-4 sm:self-end">
-        {/* price visible in medium and large screen only */}
-        <p className="text-dark font-semibold hidden sm:block">₹{product.originalPrice}</p>
-
-        <div className="flex flex-col-reverse w-9 sm:w-auto xs:scale-100 sm:scale-100 sm:flex-row items-center border border-border rounded-lg overflow-hidden">
+          {/* delete button for small screens only  */}
           <button
-            onClick={() => onDecrease(product.id)}
-            className="px-3 py-2 text-dark enabled:hover:bg-border enabled:cursor-pointer"
-          >
-            <Minus size={16} />
+            onClick={() => onRemove(product)}
+            title="Remove"
+            className="sm:hidden mt-4 text-xs block underline text-subtext hover:text-dark enabled:cursor-pointer"
+          >Remove
           </button>
-          <span className="px-3 py-1 text-dark">{product.quantity}</span>
-          <button
-            onClick={() => onIncrease(product.id)}
-            className="px-3 py-2 text-dark enabled:hover:bg-border enabled:cursor-pointer"
-          >
-            <Plus size={16} />
-          </button>
+
         </div>
 
         {/* delete button visible on medium and large screen only */}
         <button
-          onClick={() => onRemove(product.id)}
-          className="hidden sm:block p-1 text-red-500 hover:text-red-400 enabled:cursor-pointer"
-        >
-          <Trash2 size={18} />
-        </button>
-
-        {/* delete button visible on small screen only at top right corner */}
-        <button
-          onClick={() => onRemove(product.id)}
-          className="absolute sm:hidden top-0 right-0 text-subtext hover:text-dark"
+          onClick={() => onRemove(product)}
+          title="Remove"
+          className="hidden sm:block absolute top-0 right-0 p-1 text-subtext hover:text-dark enabled:cursor-pointer"
         >
           <X size={18} />
         </button>

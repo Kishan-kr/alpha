@@ -1,14 +1,16 @@
 import React from 'react'
-import emptyBag from '../../assets/photos/emptyBag.png'
 import { Link } from "react-router-dom";
+import { ShoppingBag } from 'lucide-react';
 
 function EmptyBag() {
   return (
-    <div className='w-full flex flex-col items-center text-center pb-12'>
-      <img src={emptyBag} alt="" className='w-52 text-shadow-2xs text-shadow-surface' />
-      <h3 className='text-2xl text-dark -mt-4'>Your bag is empty</h3>
-      <p className='text-base text-subtext mt-1'>But your Tashn moment is just a click away.</p>
-      <Link to='/' className='p-2 rounded-full mt-6 bg-dark text-light font-semibold shadow-md px-8 hover:bg-dark/80 transition'>Pick your style</Link>
+    <div className='w-full sm:w-fit mx-auto flex flex-col items-center text-center py-6 xxs:px-6 mb-12 mt-9 md:mt-0 xxs:border xxs:border-hover-tint font-light'>
+      <figure className='mt-10'>
+        <ShoppingBag strokeWidth={1} size={24}/>
+      </figure>
+      <h3 className='text-sm text-dark uppercase mt-6'>Your bag is empty</h3>
+      <p className='text-xs text-subtext mt-3'>Items you add will show up here</p>
+      <Link to='/products' className='p-2 w-full sm:w-sm text-sm mt-11 bg-dark text-light px-12 uppercase'>Start shopping</Link>
     </div>
   )
 }

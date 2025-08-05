@@ -4,24 +4,13 @@ import { Link } from "react-router-dom";
 
 export default function ProductCard({ product, handleSizeSelect }) {
   const {
-    _id,
     thumbnail,
     title,
     metaTitle,
-    discountedPrice,
     originalPrice,
     effectivePrice,
     sizes
   } = product
-
-  const productDataForCart = {
-    productId: _id,
-    thumbnail,
-    title,
-    discountedPrice,
-    originalPrice,
-    effectivePrice
-  }
 
   const availableSizes = sizes?.map(item => item.size);
   
@@ -82,7 +71,7 @@ export default function ProductCard({ product, handleSizeSelect }) {
         {/* add to bag button */}
         <SizeSelectMenu
           sizes={availableSizes}
-          onChange={(size) => { handleSizeSelect(productDataForCart, size) }}
+          onChange={(size) => { handleSizeSelect(product, size) }}
         >
           <button className='bg-surface h-7 w-7 p-1 text-xl font-thin flex items-center justify-center hover:border-subtext cursor-pointer'>+</button>
         </SizeSelectMenu>

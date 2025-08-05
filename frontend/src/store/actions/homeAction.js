@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import getAuthHeaders from "../../utils/authHeaderHelper";
 import axios from "axios";
+import { NEW_ARRIVALS_COUNT } from "../../constants/appConstants";
 
 // Global API base
 const BASE_URL = `${import.meta.env.VITE_API_URL}`;
@@ -24,7 +25,7 @@ export const fetchNewArrivals = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const query = new URLSearchParams({
-        limit: 4,
+        limit: NEW_ARRIVALS_COUNT,
         sortBy: 'createdAt',
         order: 'desc',
       });

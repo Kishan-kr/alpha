@@ -30,7 +30,10 @@ const addItemToCart = async (req, res) => {
       productId, 
       size: item.size, 
       color: item.color, 
-      quantity: item.quantity 
+      quantity: item.quantity, 
+      maxStock: item.maxStock, 
+      variantId: item.variantId, 
+      title: item.title
     });
     const savedCart = await newCart.save();
 

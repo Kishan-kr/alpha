@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ProductList from '../components/common/ProductList';
-import { LOADING, PRODUCTS_PER_PAGE } from '../constants/products';
+import { LOADING, PRODUCTS_PER_PAGE } from '../constants/appConstants';
 import { fetchProducts } from '../store/actions/productAction';
 import { useDispatch, useSelector } from 'react-redux';
 
