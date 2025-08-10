@@ -13,6 +13,8 @@ import ValidateCategory from './pages/ValidateCategory';
 import { Toaster } from 'react-hot-toast'
 import Search from './pages/Search';
 import Products from './pages/Products';
+import Signup from './pages/Signup';
+import Login from './pages/Login';
 
 export default function App() {
 
@@ -31,6 +33,8 @@ export default function App() {
         }} />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/about" element={<About />} />
           <Route path="/search" element={<Search />} />
           <Route path="/products" element={<Products />} />

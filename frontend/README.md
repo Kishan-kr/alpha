@@ -28,11 +28,18 @@
   - size chart `done`
   - need to update measurement guide image in size chart `IMP` 
 
-### PRODUCT DETAILS ###
-  - shopping bag page: fixing product color not rendering and actions like inc-dec, remove not working `working`
+### SHOPPING BAG ###
+  - shopping bag page: done inc-dec and remove items from bag for all users `done`
+  - shopping bag page: tested inc-dec and remove items from bag for public users only `done`
+  - shopping bag page: test inc-dec and remove items from bag for logged in users `IMP`
 
 
 - add loader and error element in new arrivals section
 - add use of getBagProduct utility function in search products page, all products page, and new arrivals section
 
 working on get latest stock inside increase quantitiy function in shopping bag
+
+### USER ###
+- add login and signup page frontend as well as backend
+- created middleware to verify user but not tested yet
+- created logout route and controller but not used in frontend yet

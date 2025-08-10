@@ -1,42 +1,26 @@
-const jwt = require("jsonwebtoken")
+// middleware/authenticateUser.js
+const User = require("../models/user");
 
 const authenticateUser = async (req, res, next) => {
     try {
-        const authHeader = req.headers['authorization'];
-
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            throw new Error('Unauthorized request! Missing or invalid token format.');
+        // Check if session exists and has userId
+        if (!req.session || !req.session.userId) {
+            throw new Error("Unauthorized request! No active session.");
         }
 
-        const token = authHeader.split(' ')[1];
-
-        if (!token || token === 'null' || token === 'undefined') {
-            throw new Error('Unauthorized request! Token is empty or invalid.');
+        // Optionally fetch the user from DB to validate existence
+        const currentUser = await User.findById(req.session.userId).select("_id");
+        if (!currentUser) {
+            throw new Error("Unauthorized request! User not found.");
         }
 
-        // Verify the token
-        jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-            if (err) {
-                // Check if the error is due to an expired token
-                if (err.name === 'TokenExpiredError') {
-                    throw new Error("Session expired")
+        // Mimic old JWT middleware behavior
+        req.user = { id: currentUser._id.toString() };
 
-                }
-                // Handle other possible token verification errors
-                throw new Error("Invalid token")
-
-            }
-
-            // Token is verified, attach user info to request object and proceed
-
-            req.user = user;
-            next();
-        });
+        next();
     } catch (error) {
-        return res.status(500).json({ status: false, error: error.message })
+        return res.status(401).json({ status: false, error: error.message });
     }
+};
 
-
-}
-
-module.exports = authenticateUser
+module.exports = authenticateUser;

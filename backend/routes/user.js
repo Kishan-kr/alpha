@@ -12,6 +12,7 @@ const deleteUser = require("../controllers/user/deleteUser")
 const checkDefaultAddress = require("../middlwares/checkDefaultAddress")
 const sendEmailOtp = require("../controllers/user/sendEmailOtp")
 const validateEmail = require("../controllers/user/validateEmail")
+const logout = require("../controllers/user/logout")
 const router = express.Router()
 
 // Auth 
@@ -22,6 +23,9 @@ router.post("/auth/send-otp", [
 
 // POST /api/users/auth/validate-otp    → Validate OTP
 router.post("/auth/validate-otp", validatePhone);
+
+// POST /api/users/auth/logout    → Logout
+router.post("/auth/logout", logout);
 
 
 // Email updation 

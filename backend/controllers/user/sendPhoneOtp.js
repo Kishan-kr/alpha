@@ -22,9 +22,6 @@ const sendPhoneOtp = async (req, res) => {
         // 4. Send OTP via phone
         await sendOTPSms(phone, otp);
 
-        // Placeholder for demonstration
-        console.log(`Sending OTP ${otp} to ${phone}`);
-
         return res.status(200).json({
             status: true,
             message: 'OTP sent successfully'

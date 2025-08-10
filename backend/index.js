@@ -3,6 +3,8 @@ const express = require("express")
 const app = express()
 const cors = require('cors')
 const conntectToDB = require("./db/connection")
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const port = process.env.PORT || 5000
 
 // Route imports
@@ -17,6 +19,26 @@ const imageRoutes = require('./routes/images');
 const testimonialRoutes = require('./routes/testimonials');
 const lookbooksRoutes = require('./routes/lookbookVideo');
 const { MAX_IMAGE_SIZE } = require("./utilis/constants")
+
+// Session config
+const sessionStore = MongoStore.create({
+  mongoUrl: process.env.DATABASE_URI,
+  collectionName: 'sessions',
+  ttl: parseInt(process.env.SESSION_TTL_SECONDS || String(60 * 60 * 24)), // default 1 day
+});
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false, // don't set cookie until something stored
+  store: sessionStore,
+  cookie: {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // send only over HTTPS in prod
+    sameSite: process.env.SESSION_SAMESITE || 'lax', // consider 'strict' if appropriate
+    maxAge: parseInt(process.env.SESSION_MAXAGE_MS || String(24 * 60 * 60 * 1000)), // 1 day default
+  }
+}));
 
 // Get allowed origins from environment variable
 const allowedOrigins = process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(",") : [];
