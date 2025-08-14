@@ -6,15 +6,14 @@ import NewAddressModal from './NewAddressModal';
 import BackButton from './BackButton';
 
 const DeliverySection = ({ handleNext, handleBack }) => {
-  const user = useSelector((state) => state.user); // Assuming `userSlice`
-  const { isLoggedIn } = user;
-  const [addresses, setAddresses] = useState(user?.addresses || []);
+  const { isLoggedIn, userInfo } = useSelector((state) => state.user);
+  const [addresses, setAddresses] = useState(userInfo?.addresses || []);
   const [selectedAddressId, setSelectedAddressId] = useState(addresses[0]?.id || null);
   const [showModal, setShowModal] = useState(false);
 
   const defaultForm = {
-    fullName: user?.firstName + " " + user?.lastName || '',
-    phone: user?.phone || '',
+    fullName: userInfo?.firstName + " " + userInfo?.lastName || '',
+    phone: userInfo?.phone || '',
     line: '',
     pincode: '',
     city: '',

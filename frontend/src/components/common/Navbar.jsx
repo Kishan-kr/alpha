@@ -85,7 +85,7 @@ export default function Navbar() {
           </button>
 
           <Link
-            to={isLoggedIn ? '/profile' : '/signup'}
+            to={isLoggedIn ? '/profile' : '/login'}
             className="hidden md:block cursor-pointer p-1"
           >
             <User className="w-5 h-5" strokeWidth={1} />

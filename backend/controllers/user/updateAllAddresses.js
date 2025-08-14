@@ -3,46 +3,34 @@ const User = require('../../models/user');
 const CustomError = require("../../utilis/customError");
 const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
 
-const updateAddress = async (req, res) => {
-    const addressId = req.params.addressId;
+const updateAllAddresses = async (req, res) => {
   try {
-
-    if(!addressId) {
-        throw new CustomError('Address id is required', 400);
-    }
-
     const result = validationResult(req);
-
     if (!result.isEmpty()) {
       const errors = result.array().reduce((acc, item) => {
-        acc[item.path] = item.msg;
+        // Group errors by address index and field
+        if (!acc[item.path]) acc[item.path] = item.msg;
         return acc;
       }, {});
       return res.status(422).json({ status: false, error: errors });
     }
 
-    const addressData = { ...req.body };
+    const newAddresses = req.body; // Array of addresses
 
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: req.user.id, "addresses._id": addressId },
-      {
-        $set: {
-          "addresses.$": {  _id: addressId, ...addressData }
-        }
-      },
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { $set: { addresses: newAddresses } },
       { new: true, lean: true }
     );
 
     if (!updatedUser) {
-        throw new CustomError('Address not found or already deleted', 404);
+      throw new CustomError("User not found", 404);
     }
-
-    const addresses = updatedUser.addresses;
 
     return res.status(200).json({
       status: true,
-      message: "Address updated successfully",
-      addresses,
+      message: "Addresses updated successfully",
+      addresses: updatedUser.addresses
     });
 
   } catch (error) {
@@ -54,4 +42,4 @@ const updateAddress = async (req, res) => {
   }
 };
 
-module.exports = updateAddress;
+module.exports = updateAllAddresses;

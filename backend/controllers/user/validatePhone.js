@@ -27,6 +27,11 @@ const validatePhone = async (req, res) => {
             });
         }
 
+        // remove unnecessary fields before sending to the client 
+        currentUser = currentUser.toObject();
+        delete currentUser.__v;
+        delete currentUser.createdAt;
+
         // 🔹 Regenerate session ID before saving user data
         req.session.regenerate((err) => {
             if (err) {

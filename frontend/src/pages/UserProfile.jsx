@@ -1,75 +1,23 @@
-import React, { useState } from 'react';
-import { X, Plus } from 'lucide-react';
+import React from 'react';
+import { LoaderCircle } from 'lucide-react';
 import EmailUpdateModal from '../components/userProfile/EmailUpdateModal';
-import { useSearchParams } from 'react-router-dom';
-
-// dummy data of user 
-const user = {
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'john@example.com',
-  phone: '+91 9876543210',
-  addresses: [
-    {
-      addressLine: '123 MG Road',
-      landmark: 'Near Gandhi Maidan',
-      city: 'North Delhi',
-      state: 'Delhi',
-      pincode: '110006',
-      country: 'India',
-    },
-  ],
-}
+import { Link, useSearchParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { LOADING } from '../constants/appConstants';
+import NameUpdateModal from '../components/userProfile/NameUpdateModal';
 
 export default function UserProfile() {
-  const [userData, setUserData] = useState(user);
+  const { userInfo: userData, status } = useSelector(state => state.user);
   const [searchParams, setSearchParams] = useSearchParams();
-  const showModal = searchParams.get('mod') === 'true';
+  const showEmailModal = searchParams.get('mod') === 'email';
+  const showNameModal = searchParams.get('mod') === 'name';
 
-  const handleInputChange = (field, value) => {
-    setUserData(prev => ({ ...prev, [field]: value }));
+  const handleEmailEdit = () => {
+    setSearchParams({ mod: 'email' });
   };
 
-  const handleAddressChange = (index, field, value) => {
-    const updatedAddresses = [...userData.addresses];
-    updatedAddresses[index][field] = value;
-    setUserData(prev => ({ ...prev, addresses: updatedAddresses }));
-  };
-
-  const handleAddAddress = () => {
-    setUserData(prev => ({
-      ...prev,
-      addresses: [
-        ...prev.addresses,
-        {
-          addressLine: '',
-          landmark: '',
-          city: '',
-          state: '',
-          pincode: '',
-          country: 'India',
-        },
-      ],
-    }));
-  };
-
-  const handleRemoveAddress = (index) => {
-    if (userData.addresses.length === 1) return;
-    const updatedAddresses = userData.addresses.filter((_, i) => i !== index);
-    setUserData(prev => ({ ...prev, addresses: updatedAddresses }));
-  };
-
-  const handleSave = (e) => {
-    e.preventDefault();
-    console.log(userData);
-  };
-
-  const handleEmailClick = () => {
-    setSearchParams({ mod: 'true' });
-  };
-
-  const updateEmail = (newEmail) => {
-    setUserData({ ...userData, email: newEmail });
+  const handleNameEdit = () => {
+    setSearchParams({ mod: 'name' });
   };
 
   const closeModal = () => {
@@ -77,151 +25,122 @@ export default function UserProfile() {
     setSearchParams(searchParams);
   };
 
+  const isLoading = status === LOADING;
+
+  const nearby = (landmark) => {
+    if (!landmark) return ''
+
+    let firstWord = landmark.split(' ')[0].toLowerCase();
+    if (['near', 'nearby'].includes(firstWord)) {
+      return landmark;
+    }
+    return `Near ${landmark}`;
+  }
+
+  const loadingScreen = (
+    <div className="flex justify-center py-24 mt-8">
+      <p className='text-xs tracking-wider font-light uppercase animate-spin'><LoaderCircle /></p>
+    </div>
+  )
+
   return (
-    <form onSubmit={handleSave} className="max-w-4xl mx-auto px-4 py-20 md:px-8 md:py-24 text-dark">
-      <h1 className="text-3xl font-bold mb-8">Your Profile</h1>
+    <section className="max-w-4xl mx-auto px-4 py-20 pt- md:pt-28 md:px-8 md:py-24 text-dark">
+      <h1 className="text-xl uppercase font-gfs-didot text-dark mb-6">My Profile</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div>
-          <label className="block text-subtext mb-1">First Name</label>
-          <input
-            value={userData.firstName}
-            onChange={(e) => handleInputChange('firstName', e.target.value)}
-            className="w-full p-2 bg-surface border border-border rounded-md"
-          />
-        </div>
-        <div>
-          <label className="block text-subtext mb-1">Last Name</label>
-          <input
-            value={userData.lastName}
-            onChange={(e) => handleInputChange('lastName', e.target.value)}
-            className="w-full p-2 bg-surface border border-border rounded-md"
-          />
-        </div>
-        <div>
-          <label className="block text-subtext mb-1">Email</label>
-          <input
-            type="email"
-            defaultValue={userData.email}
-            onClick={handleEmailClick}
-            // onChange={(e) => handleInputChange('email', e.target.value)}
-            className="w-full p-2 bg-surface border border-border rounded-md"
-          />
-          <p className="text-xs text-subtext mt-1">* Email change will require OTP verification</p>
-        </div>
-        <div>
-          <label className="block text-subtext mb-1">Phone</label>
-          <input
-            value={userData.phone}
-            disabled
-            className="w-full p-2 bg-accent border border-border rounded-md text-subtext"
-          />
-        </div>
-      </div>
-
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold">Saved Addresses</h2>
-        <button
-          onClick={handleAddAddress}
-          type='button'
-          disabled={userData?.addresses?.length >= 3}
-          className="flex items-center gap-2 text-sm bg-accent hover:bg-hover-tint text-dark px-3 py-1 rounded disabled:bg-hover-tint disabled:text-subtext enabled:cursor-pointer"
-        >
-          <Plus className="w-4 h-4" /> Add Address
-        </button>
-      </div>
-
-      <div className="space-y-6">
-        {userData.addresses.map((addr, index) => (
-          <div key={index} className="bg-surface border border-border rounded-lg p-4 relative">
-            {userData?.addresses?.length > 1 && (
-              <button
-                onClick={() => handleRemoveAddress(index)}
-                type='button'
-                className="absolute top-2 right-2 text-subtext hover:text-dark enabled:cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            )}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
-                <label className="block text-subtext text-sm">Address Line</label>
-                <textarea
-                  required
-
-                  value={addr.addressLine}
-                  onChange={(e) => handleAddressChange(index, 'addressLine', e.target.value)}
-                  className="w-full p-2 bg-light border border-border rounded-md"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-subtext text-sm">Landmark</label>
-                <input
-                  value={addr.landmark}
-                  onChange={(e) => handleAddressChange(index, 'landmark', e.target.value)}
-                  className="w-full p-2 bg-light border border-border rounded-md"
-                />
-              </div>
-              <div>
-                <label className="block text-subtext text-sm">City</label>
-                <input
-                  required
-                  value={addr.city}
-                  onChange={(e) => handleAddressChange(index, 'city', e.target.value)}
-                  className="w-full p-2 bg-light border border-border rounded-md"
-                />
-              </div>
-              <div>
-                <label className="block text-subtext text-sm">State</label>
-                <input
-                  required
-                  value={addr.state}
-                  onChange={(e) => handleAddressChange(index, 'state', e.target.value)}
-                  className="w-full p-2 bg-light border border-border rounded-md"
-                />
-              </div>
-              <div>
-                <label className="block text-subtext text-sm">Pincode</label>
-                <input
-                  required
-                  value={addr.pincode}
-                  onChange={(e) => handleAddressChange(index, 'pincode', e.target.value)}
-                  className="w-full p-2 bg-light border border-border rounded-md"
-                />
-              </div>
-              <div>
-                <label className="block text-subtext text-sm">Country</label>
-                <select
-                  required
-                  value={addr.country}
-                  onChange={(e) => handleAddressChange(index, 'country', e.target.value)}
-                  className="w-full p-2 bg-light border border-border rounded-md"
-                >
-                  <option value="India">India</option>
-                </select>
-              </div>
+      {isLoading ?
+        loadingScreen :
+        <>
+          {/* first name and last name  */}
+          <div className="relative p-6 grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-6 mb-9 border border-hover-tint">
+            <div>
+              <label className="block text-xxs uppercase mb-4 text-hover-tint">First Name</label>
+              <p className='text-dark text-sm font-light'>{userData?.firstName}</p>
             </div>
+            <div>
+              <label className="block text-xxs uppercase text-hover-tint mb-4">Last Name</label>
+              <p className='text-dark text-sm font-light'>{userData?.lastName}</p>
+            </div>
+
+            <button onClick={handleNameEdit} className='absolute md:static top-6 right-6 h-fit uppercase font-light underline text-xs text-dark cursor-pointer'>Edit</button>
           </div>
-        ))}
-      </div>
 
-      <div className="mt-8">
-        <button
-          type='submit'
-          className="bg-dark  text-light px-6 py-2 rounded font-semibold hover:bg-dark/80  transition cursor-pointer uppercase"
-        >
-          Save Changes
-        </button>
-      </div>
+          {/* Phone and Email  */}
+          <div className='relative p-6 grid grid-cols-1 md:grid-cols-[1fr_1fr_auto] gap-x-6 gap-y-9 mb-9 border border-hover-tint'>
+            <div>
+              <label className="block text-xxs uppercase text-hover-tint mb-4">Phone</label>
+              <p className='text-dark text-sm font-light bg-surface px-2 py-2'>{userData?.phone}</p>
+              <p className="text-xs text-subtext font-light mt-4">Phone number cannot be edited</p>
+            </div>
 
-      {showModal && (
-        <EmailUpdateModal
-          email={userData.email}
-          onClose={closeModal}
-          onUpdate={updateEmail}
-        />
-      )}
-    </form>
+            {/* email */}
+            <div>
+              <label className="block text-xxs uppercase text-hover-tint mb-4">Email</label>
+              <p className='text-dark text-sm font-light bg-surface px-2 py-2'>{userData?.email}</p>
+              <p className="text-xs text-subtext font-light mt-4">Email change will require OTP verification</p>
+            </div>
+
+            <button onClick={handleEmailEdit} className='absolute md:static top-6 right-6 h-fit uppercase font-light underline text-xs text-dark cursor-pointer'>Edit</button>
+          </div>
+
+          {/* Addresses  */}
+          <div className="relative sm:p-6 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 sm:border border-hover-tint">
+            <div>
+              <p className="text-xs uppercase mb-4 text-subtext">Saved Addresses</p>
+
+              {userData?.addresses?.length > 0 ? (
+                <ul>
+                  {userData.addresses.map((addr) => (
+                    <div
+                      key={addr.id}
+                      className="bg-surface p-3 sm:p-6 relative"
+                    >
+                      {/* Top Row: Address + Default */}
+                      <div className="flex justify-between items-start mb-2">
+                        <div className="text-dark font-light text-sm">
+                          {[addr.line1, addr.line2, nearby(addr.landmark), addr.city]
+                            .filter(Boolean) // remove empty, null, undefined, or false values
+                            .join(', ')}
+                        </div>
+                        <span className="absolute -top-3 right-1 border-2 border-light text-xs font-light text-light bg-[#5DB7DE] px-2 py-0.5 rounded-full">
+                          Default
+                        </span>
+                      </div>
+
+                      {/* Second Row: City/State/Pincode/Country */}
+                      <div className="text-sm font-light text-dark flex flex-col flex-wrap gap-x-2 gap-y-2">
+                        <p>{addr.state} - {addr.pincode}</p>
+                        <p>{addr.country}</p>
+                      </div>
+                    </div>
+                  ))}
+                </ul>
+              ) : (
+                <div className="bg-surface p-6 text-center text-sm font-light text-subtext border border-dashed border-hover-tint">
+                  You haven’t saved any addresses yet.
+                  <span className="block mt-1">Add one to speed up checkout.</span>
+                </div>
+              )}
+            </div>
+
+            <Link to={'edit-address'} className="absolute md:static top-0 right-0 h-fit uppercase font-light underline text-xs text-dark cursor-pointer">
+              Edit
+            </Link>
+          </div>
+
+          {showEmailModal && (
+            <EmailUpdateModal
+              email={userData?.email}
+              onClose={closeModal}
+            />
+          )}
+          {showNameModal && (
+            <NameUpdateModal
+              firstName={userData?.firstName}
+              lastName={userData?.lastName}
+              onClose={closeModal}
+            />
+          )}
+        </>}
+    </section>
   );
 }

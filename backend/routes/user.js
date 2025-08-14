@@ -6,7 +6,8 @@ const updatePersonalInfo = require("../controllers/user/updatePersonalInfo")
 const authenticateUser = require("../middlwares/authenticateUser")
 const getUser = require("../controllers/user/getUser")
 const addUserAddress = require("../controllers/user/addUserAddress")
-const updateAddress = require("../controllers/user/updateAddress")
+const updateAllAddresses = require("../controllers/user/updateAllAddresses")
+const updateAddressById = require("../controllers/user/updateAddressById")
 const deleteAddress = require("../controllers/user/deleteAddress")
 const deleteUser = require("../controllers/user/deleteUser")
 const checkDefaultAddress = require("../middlwares/checkDefaultAddress")
@@ -85,6 +86,23 @@ router.post("/me/addresses", authenticateUser,
      ], checkDefaultAddress, addUserAddress)
 
 
+// PATCH /api/users/me/addresses       → Replace all addresses at once
+router.patch(
+  "/me/addresses",
+  authenticateUser,
+  [
+    body().isArray({ min: 1 }).withMessage("Addresses must be an array"),
+    body("*.pincode")
+      .isLength({ min: 6, max: 6 }).withMessage("Pincode must be exactly 6 digits")
+      .isNumeric().withMessage("Pincode must contain only numbers"),
+    body("*.state").notEmpty().withMessage("Please fill in the state"),
+    body("*.city").notEmpty().withMessage("Please fill in the city"),
+    body("*.line1").notEmpty().withMessage("Line 1 is required")
+  ],
+  updateAllAddresses
+);
+
+
 // PATCH /api/users/me/addresses        → UPDATE address for logged-in user
 router.patch("/me/addresses/:addressId", authenticateUser,
      [
@@ -110,7 +128,7 @@ router.patch("/me/addresses/:addressId", authenticateUser,
                .notEmpty().withMessage('Please fill in the required fields'),
           body('line2')
                .notEmpty().withMessage('Please fill in the required fields'),
-     ], checkDefaultAddress, updateAddress)
+     ], checkDefaultAddress, updateAddressById)
 
 
 // DELETE /api/users/me/addresses/:addressId       → Delete a specific address

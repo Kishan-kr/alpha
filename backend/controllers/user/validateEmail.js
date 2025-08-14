@@ -1,7 +1,6 @@
 const { validationResult } = require("express-validator")
 const otp = require("../../models/otp")
 const user = require("../../models/user")
-const jwt = require("jsonwebtoken")
 const CustomError = require("../../utilis/customError")
 const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants")
 
@@ -18,10 +17,10 @@ const validateEmail = async (req, res) => {
 
     const isEmailValid = await otp.findOne({ phoneOrEmail: email }).sort({ createdAt: -1 });
     if (!isEmailValid) {
-      throw new CustomError("OTP has expired", 404)
+      throw new CustomError("Code has expired", 404)
     }
     if (isEmailValid.otp !== req.body.otp) {
-      throw new CustomError("Invalid OTP", 401)
+      throw new CustomError("Invalid Code", 401)
     }
 
     // Check if user exists, register if not, then generate token for authentication

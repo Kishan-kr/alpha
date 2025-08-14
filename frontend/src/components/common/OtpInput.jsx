@@ -62,7 +62,7 @@ const OTPInput = ({ length = 6, onChangeOTP, customStyle }) => {
           onChange={(e) => handleChange(e, index)}
           onKeyDown={(e) => handleKeyDown(e, index)}
           onPaste={handlePaste}
-          className='rounded-xl p-2 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-dark bg-light border border-border text-center'
+          className='p-2 w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 text-dark bg-light border border-border text-center'
           style={customStyle}
         />
       ))}

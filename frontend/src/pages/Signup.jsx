@@ -133,7 +133,7 @@ export default function Signup() {
     <section className="min-h-screen flex items-center justify-center px-6 bg-light text-dark py-20">
       <form
         onSubmit={step === SEND_OTP ? handleSendOtp : handleVerifyOtp}
-        className="w-full max-w-md bg-light p-10 border border-hover-tint"
+        className="w-full max-w-md bg-light px-0 xs:px-10 p-10 xs:border border-hover-tint"
       >
         <h2 className="uppercase text-dark tracking-wide font-light mb-12 text-center text-lg">
           {step === SEND_OTP ? "Signup" : "Verify OTP"}
@@ -148,6 +148,7 @@ export default function Signup() {
                 type="text"
                 id='firstName'
                 name="firstName"
+                maxLength={60}
                 autoFocus
                 value={formData.firstName}
                 required
@@ -162,6 +163,7 @@ export default function Signup() {
               <input
                 type="text"
                 id='lastName'
+                maxLength={60}
                 name="lastName"
                 value={formData.lastName}
                 onChange={handleChange}
@@ -173,7 +175,7 @@ export default function Signup() {
             <div className="mb-10">
               <label className="block text-xxs text-border uppercase tracking-wider mb-2">Phone</label>
               <div className="flex">
-                <span className="pb-2 border-b min-w-16 border-border text-dark text-sm">+91</span>
+                <span className="pb-2 border-b min-w-12 xxs:min-w-16 border-border text-dark text-sm">+91</span>
                 <input
                   type="tel"
                   name="phone"
@@ -228,7 +230,7 @@ export default function Signup() {
                   onPaste={(e) => handleOtpPaste(e)}
                   maxLength={1}
                   autoFocus={index === 0}
-                  className="w-12 h-12 text-center text-lg border border-border bg-light outline-none focus:border-dark"
+                  className="w-10 h-10 xs:w-12 xs:h-12 text-center text-base xs:text-lg border border-border bg-light outline-none focus:border-dark"
                 />
               ))}
             </div>

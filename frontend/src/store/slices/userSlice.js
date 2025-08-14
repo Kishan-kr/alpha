@@ -1,40 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { sendOtpOnPhone, verifySmsOtp } from '../actions/userAction';
+import { getUser, sendOtpOnEmail, sendOtpOnPhone, updateAllAddresses, updateUser, verifyEmailOtp, verifySmsOtp } from '../actions/userAction';
 import { FAILED, LOADING, SUCCEEDED } from '../../constants/appConstants';
 
 // dummy data of user 
 const initialState = {
   isLoggedIn: false,
-  firstName: 'John',
-  lastName: 'Doe',
-  email: 'john@example.com',
-  phone: '9876543210',
-  addresses: [
-    {
-      id: 1,
-      addressLine: '123 MG Road',
-      landmark: 'Near Gandhi Maidan',
-      city: 'North Delhi',
-      state: 'Delhi',
-      pincode: '110006',
-      country: 'India',
-      isDefault: true
-    },
-    {
-      id: 2,
-      addressLine: 'WZ-456, Sector 1',
-      landmark: 'Rajendra Place',
-      city: 'North Delhi',
-      state: 'Delhi',
-      pincode: '110008',
-      country: 'India',
-      isDefault: false
-    },
-  ],
+  userInfo: null,
   searchQuery: '',
   phoneStatus: 'idle', // 'loading' | 'succeeded' | 'failed'
   verifyStatus: 'idle', // 'loading' | 'succeeded' | 'failed'
-  verifyError: null,
+  status: 'idle', // 'loading' | 'succeeded' | 'failed'
+  updateStatus: 'idle', // 'loading' | 'succeeded' | 'failed'
+  error: null,
 }
 
 const userSlice = createSlice({
@@ -46,13 +23,34 @@ const userSlice = createSlice({
   },
 
   extraReducers: (builder) => {
+    builder.addCase(getUser.pending, (state) => {
+      state.status = LOADING;
+    })
+      .addCase(getUser.fulfilled, (state, action) => {
+        const user = action.payload;
+        state.userInfo = user;
+        state.isLoggedIn = true;
+        state.status = SUCCEEDED;
+        state.error = null;
+      })
+      .addCase(getUser.rejected, (state, action) => {
+        if (action.payload === 'NOT_LOGGED_IN') {
+          state.isLoggedIn = false;
+          state.userInfo = null;
+        } else {
+          state.status = FAILED;
+          state.error = action.payload;
+        }
+      })
+
+
     builder.addCase(sendOtpOnPhone.pending, (state) => {
       state.phoneStatus = LOADING;
     })
       .addCase(sendOtpOnPhone.fulfilled, (state) => {
         state.phoneStatus = SUCCEEDED;
       })
-      .addCase(sendOtpOnPhone.rejected, (state, action) => {
+      .addCase(sendOtpOnPhone.rejected, (state) => {
         state.phoneStatus = FAILED;
       })
 
@@ -62,22 +60,58 @@ const userSlice = createSlice({
     })
       .addCase(verifySmsOtp.fulfilled, (state, action) => {
         const user = action.payload;
-
-        if (user.firstName) state.firstName = user.firstName;
-        if (user.lastName) state.lastName = user.lastName;
-        if (user.email) state.email = user.email;
-        if (user.phone) state.phone = user.phone;
-        if (Array.isArray(user.addresses)) state.addresses = user.addresses;
-
-        // Mark user as logged in after successful OTP verification
+        state.userInfo = user;
         state.isLoggedIn = true;
-
         state.verifyStatus = SUCCEEDED;
-        state.verifyError = null
       })
       .addCase(verifySmsOtp.rejected, (state, action) => {
         state.verifyStatus = FAILED;
-        state.verifyError = action.payload;
+      })
+
+
+    builder.addCase(updateUser.pending, (state) => {
+      state.updateStatus = LOADING;
+    })
+      .addCase(updateUser.fulfilled, (state) => {
+        state.updateStatus = SUCCEEDED;
+      })
+      .addCase(updateUser.rejected, (state) => {
+        state.updateStatus = FAILED;
+      })
+
+
+    builder.addCase(sendOtpOnEmail.pending, (state) => {
+      state.phoneStatus = LOADING;
+    })
+      .addCase(sendOtpOnEmail.fulfilled, (state) => {
+        state.phoneStatus = SUCCEEDED;
+      })
+      .addCase(sendOtpOnEmail.rejected, (state) => {
+        state.phoneStatus = FAILED;
+      })
+
+
+    builder.addCase(verifyEmailOtp.pending, (state) => {
+      state.verifyStatus = LOADING;
+    })
+      .addCase(verifyEmailOtp.fulfilled, (state, action) => {
+        state.userInfo.email = action.payload;
+        state.verifyStatus = SUCCEEDED;
+      })
+      .addCase(verifyEmailOtp.rejected, (state) => {
+        state.verifyStatus = FAILED;
+      })
+
+
+    builder.addCase(updateAllAddresses.pending, (state) => {
+      state.updateStatus = LOADING;
+    })
+      .addCase(updateAllAddresses.fulfilled, (state, action) => {
+        state.userInfo.addresses = action.payload;
+        state.updateStatus = SUCCEEDED;
+      })
+      .addCase(updateAllAddresses.rejected, (state) => {
+        state.updateStatus = FAILED;
       })
   }
 });

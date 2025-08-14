@@ -15,8 +15,18 @@ import Search from './pages/Search';
 import Products from './pages/Products';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { getUser } from './store/actions/userAction';
+import EditAddress from './components/userProfile/EditAddress';
 
 export default function App() {
+  // const { isLoggedIn } = useSelector(state => state.user);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUser())
+  }, [])
 
   return (
     <Router>
@@ -40,6 +50,7 @@ export default function App() {
           <Route path="/products" element={<Products />} />
           <Route path="/products/:slug" element={<ProductView />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/profile/edit-address" element={<EditAddress />} />
           <Route path="/bag" element={<Bag />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/orders/:orderId" element={<OrderDetails />} />
