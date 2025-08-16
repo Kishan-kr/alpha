@@ -17,7 +17,7 @@ const getCartItemsByUserId = async (req, res) => {
           as: "product"
         }
       },
-      { $unwind: "$product" },
+      { $unwind: { path: "$product", preserveNullAndEmptyArrays: true } },
 
       // Join with categories
       {
@@ -28,7 +28,7 @@ const getCartItemsByUserId = async (req, res) => {
           as: "category"
         }
       },
-      { $unwind: "$category" },
+      { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
 
       // Flatten fields
       {
@@ -44,7 +44,14 @@ const getCartItemsByUserId = async (req, res) => {
           discountedPrice: "$product.discountedPrice",
           effectivePrice: "$product.effectivePrice",
           categoryId: "$category._id",
-          categoryName: "$category.name"
+          categoryName: "$category.name",
+          variantId: {
+            $concat: [
+              { $toString: "$product._id" }, "_",
+              "$size", "_",
+              { $ifNull: ["$color", ""] }
+            ]
+          }
         }
       }
     ]);

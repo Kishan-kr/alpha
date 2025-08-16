@@ -19,7 +19,7 @@ router.patch("/:itemId" , authenticateUser, updateCartByCartId)
 // DELETE /api/carts/:itemId        Remove an item from cart
 router.delete("/:itemId" , authenticateUser , removeCartItemById)
 
-// DELETE /api/carts/:itemId        Remove all items from cart
+// DELETE /api/carts        Remove all items from cart
 router.delete("/" , authenticateUser , removeAllItemsFromCart)
 
 module.exports = router;

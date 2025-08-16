@@ -1,66 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ShoppingBag from '../components/bag/ShoppingBag';
 import Checkout from '../components/bag/Checkout';
 import DeliverySection from '../components/bag/DeliverySection';
-import CartPage from './Cart';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserBagThunk } from '../store/actions/bagAction';
 
-// dummy data
-const initialProducts = [
-  {
-    id: 1,
-    title: 'dark black filled with dragon oversized T-shirt',
-    size: 'S',
-    color: 'White',
-    originalPrice: 145,
-    quantity: 2,
-    selectedSize: 'S',
-    category: 'Oversized T-shirt',
-    availableSizes: ['S', 'M', 'L', 'XL'],
-    thumbnail: 'https://picsum.photos/seed/prod7-1/900/1200'
-  },
-  {
-    id: 2,
-    title: 'Make sure you"re using the Tailwind',
-    // title: 'Green Oversized T-shirt',
-    size: 'M',
-    color: 'Red',
-    originalPrice: 180,
-    quantity: 4,
-    category: 'Oversized T-shirt',
-    selectedSize: 'L',
-    availableSizes: ['M', 'L', 'XL'],
-    thumbnail: 'https://picsum.photos/seed/prod1-2/900/1200'
-  },
-  {
-    id: 3,
-    title: 'Elanore Oversized T-shirt',
-    size: 'L',
-    color: 'Blue',
-    originalPrice: 240,
-    quantity: 8,
-    category: 'Oversized Polo',
-    selectedSize: 'XL',
-    availableSizes: ['S', 'M', 'L'],
-    thumbnail: 'https://picsum.photos/seed/prod1-3/900/1200'
-  },
-];
 
 const Bag = () => {
-  // const [products, setProducts] = useState(initialProducts);
   const { items: products } = useSelector(state => state.bag);
+  const { isLoggedIn } = useSelector(state => state.user);
   const steps = ["Shopping Bag", "Delivery", "Payment"];
   const [activeStep, setActiveStep] = useState(0)
+  const dispatch = useDispatch();
 
-  const subtotal = products.reduce((sum, product) => sum + product.effectivePrice * product.quantity, 0);
-  const discountedPrice = products.reduce((sum, product) => sum + product.originalPrice * product.quantity, 0);
-  const discount = subtotal - discountedPrice;
-  const delivery = 75;
-  const total = subtotal - discount + delivery;
+  // effect to fetch bag items from DB if logged in 
+  useEffect(() => {
+    if (isLoggedIn) {
+      dispatch(fetchUserBagThunk())
+    }
+  }, [isLoggedIn, dispatch])
 
-  // const updateProducts = (newProducts) => {
-  //   setProducts(newProducts)
-  // }
+  const subtotal = products?.reduce((sum, product) => sum + product.effectivePrice * product.quantity, 0);
+  const originalTotal = products?.reduce((sum, product) => sum + product.originalPrice * product.quantity, 0);
+  const discount = originalTotal - subtotal;
+  const delivery = 75; // need to make it dynamic
+  const total = subtotal + delivery;
+  // calculate discount percentage 
+  const discountPercent =
+  originalTotal > 0 ? ((discount / originalTotal) * 100).toFixed(2) : 0;
 
   const nextStep = () => {
     if (activeStep < 2) {
@@ -97,7 +64,7 @@ const Bag = () => {
       {/* title  */}
       <div className='flex gap-2 mt-12 mb-3 md:mb-11'>
         <h2 className="text-xl uppercase font-gfs-didot text-dark">{steps[activeStep]}</h2>
-        {activeStep === 0 && <small className='p-px px-1 mt-1 bg-surface text-xxs h-fit text-subtext'>{products.length} {products.length > 1 ? "items" : "item"}</small>}
+        {activeStep === 0 && <small className='p-px px-1 mt-1 bg-surface text-xxs h-fit text-subtext'>{products?.length} {products?.length > 1 ? "items" : "item"}</small>}
       </div>
 
       {/* return ShoppingBag or Address or Payment component based on active state  */}
@@ -106,6 +73,7 @@ const Bag = () => {
           products={products}
           subtotal={subtotal}
           discount={discount}
+          discountPercent={discountPercent}
           delivery={delivery}
           total={total}
           // updateProducts={updateProducts}

@@ -5,25 +5,27 @@ import { useDispatch, useSelector } from 'react-redux';
 import { removeBagItemAndSync, updateBagItemQuantityAndSync } from '../../utils/bagSync';
 import { getStocksOfCartItems } from '../../store/actions/bagAction';
 import { showErrorToastWithIcon } from '../../utils/customToasts';
-import { 
-  MAX_ALLOWED_QUANTITY_PER_ITEM, 
-  MAX_ALLOWED_QUANTITY_REACH_MSG, 
-  STOCK_LIMIT_REACH_MSG 
+import {
+  MAX_ALLOWED_QUANTITY_PER_ITEM,
+  MAX_ALLOWED_QUANTITY_REACH_MSG,
+  STOCK_LIMIT_REACH_MSG
 } from '../../constants/appConstants';
 
-const ShoppingBag = ({ products, subtotal, discount, delivery, total, handleCheckout }) => {
+const ShoppingBag = ({ products, subtotal, discount, discountPercent, delivery, total, handleCheckout }) => {
 
   const { isLoggedIn } = useSelector(state => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getStocksOfCartItems(products))
+    if(products?.length > 0) {
+      dispatch(getStocksOfCartItems(products))
+    }
   }, []);
 
-  
+
   const handleDelete = (item) => {
-    const itemData = { 
-      variantId: item.variantId, 
+    const itemData = {
+      variantId: item.variantId,
       _id: item?._id,
       title: item.title,
       size: item.size,
@@ -32,47 +34,37 @@ const ShoppingBag = ({ products, subtotal, discount, delivery, total, handleChec
   };
 
   const handleIncrease = async (item) => {
-    let {maxStock, quantity, lastSynced} = item;
+    let { maxStock, quantity } = item;
 
-    // five minutes ago 
-    // let fiveMinsAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
-    // if(lastSynced && lastSynced < fiveMinsAgo){
-    //   await dispatch(getStocksOfCartItems(products))
-    // }
-
-    if(quantity >= maxStock) {
+    if (quantity >= maxStock) {
       showErrorToastWithIcon(STOCK_LIMIT_REACH_MSG)
       return;
     }
 
-    if(quantity >= MAX_ALLOWED_QUANTITY_PER_ITEM) {
+    if (quantity >= MAX_ALLOWED_QUANTITY_PER_ITEM) {
       showErrorToastWithIcon(MAX_ALLOWED_QUANTITY_REACH_MSG)
       return;
     }
 
-    const itemData = { 
-      variantId: item.variantId, 
-      _id: item?._id, 
+    const itemData = {
+      variantId: item.variantId,
+      _id: item?._id,
       quantity: item.quantity + 1
     }
-    
+
     updateBagItemQuantityAndSync(itemData, dispatch, isLoggedIn);
   };
 
   const handleDecrease = (item) => {
-    const itemData = { 
-      variantId: item.variantId, 
-      _id: item?._id, 
+    const itemData = {
+      variantId: item.variantId,
+      _id: item?._id,
       quantity: item.quantity > 1 ? item.quantity - 1 : 1
     }
-    
+
     updateBagItemQuantityAndSync(itemData, dispatch, isLoggedIn);
   };
 
-
-  // const handleSizeChange = (id, selectedSize) => {
-  //   updateProducts(products.map(product => product.id === id ? { ...product, selectedSize } : product));
-  // };
 
   return (
     <div className='relative flex flex-col slg:flex-row gap-6 md:gap-20'>
@@ -90,7 +82,6 @@ const ShoppingBag = ({ products, subtotal, discount, delivery, total, handleChec
               onIncrease={handleIncrease}
               onDecrease={handleDecrease}
               onRemove={handleDelete}
-              // onSizeChange={handleSizeChange}
             />
 
 
@@ -108,12 +99,16 @@ const ShoppingBag = ({ products, subtotal, discount, delivery, total, handleChec
             <span>₹ {subtotal}</span>
           </div>
           <div className="text-subtext text-xs flex justify-between items-center mt-4">
-            <span>Discount (20%)</span>
+            <span>Discount ({discountPercent}%)</span>
             <span>-₹ {discount.toFixed(2)}</span>
           </div>
           <div className="text-subtext text-xs flex justify-between items-center mt-4">
             <span>Delivery Fee</span>
-            <span>₹ {delivery}</span>
+            {delivery > 0 ? (
+              <span>₹ {delivery}</span>
+            ) : (
+              <span className="text-green-600 font-light">Free</span>
+            )}
           </div>
           <div className="text-dark text-base flex justify-between items-center mt-5">
             <span>Total</span>

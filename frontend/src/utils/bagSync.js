@@ -1,14 +1,26 @@
+import { BAG_QUANTITY_UPDATE_DELAY } from "../constants/appConstants";
 import { addItemToBagThunk, removeItemFromBagThunk, updateBagItemThunk } from "../store/actions/bagAction";
 import { addToBag, removeFromBag, updateQuantity } from "../store/slices/bagSlice";
 import { showErrorToastWithIcon, showBagSuccessToast } from "./customToasts";
+import { debounce } from "./debounce";
+
+// keep one debounced function reference
+const debouncedUpdateApi = debounce(async (item, dispatch) => {
+  const resultAction = await dispatch(updateBagItemThunk(item));
+
+  if (!updateBagItemThunk.fulfilled.match(resultAction)) {
+    showErrorToastWithIcon("Failed to update quantity on server");
+  }
+}, BAG_QUANTITY_UPDATE_DELAY);
 
 export const addToBagAndSync = async (item, dispatch, isLoggedIn) => {
   try {
     if (isLoggedIn) {
       const resultAction = await dispatch(addItemToBagThunk(item));
 
-      if (!addItemToBagThunk.fulfilled.match(resultAction)) {
-        showErrorToastWithIcon("Failed to add item to bag");
+      if (resultAction.meta.requestStatus === 'rejected') {
+        const error = resultAction.payload || "Failed to add item to bag";
+        showErrorToastWithIcon(error);
         return;
       }
     }
@@ -25,19 +37,16 @@ export const addToBagAndSync = async (item, dispatch, isLoggedIn) => {
 
 // update Quantity of an item in bag 
 // required props of item : { productId, _id, size, color, quantity }
-export const updateBagItemQuantityAndSync = async (item, dispatch, isLoggedIn) => {
+export const updateBagItemQuantityAndSync = (item, dispatch, isLoggedIn) => {
   try {
+    // Debounced API sync
     if (isLoggedIn) {
-      const resultAction = await dispatch(updateBagItemThunk(item));
-
-      if (!updateBagItemThunk.fulfilled.match(resultAction)) {
-        showErrorToastWithIcon("Failed to update item in bag");
-        return;
-      }
+      debouncedUpdateApi(item, dispatch);
     }
-
+    
+    // Optimistic UI update
     dispatch(updateQuantity(item));
-    // showBagSuccessToast(`${item.title} (${item.size}) updated in your bag`);  // temp
+
   } catch (err) {
     console.error("Unexpected error in bag update sync:", err);
     showErrorToastWithIcon("Something went wrong while updating the bag");
@@ -48,7 +57,7 @@ export const updateBagItemQuantityAndSync = async (item, dispatch, isLoggedIn) =
 export const removeBagItemAndSync = async (item, dispatch, isLoggedIn) => {
   try {
     if (isLoggedIn) {
-      const resultAction = await dispatch(removeItemFromBagThunk(item));
+      const resultAction = await dispatch(removeItemFromBagThunk(item?._id));
 
       if (!removeItemFromBagThunk.fulfilled.match(resultAction)) {
         showErrorToastWithIcon("Failed to remove item from bag");

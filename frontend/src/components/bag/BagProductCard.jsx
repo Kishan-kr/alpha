@@ -1,9 +1,9 @@
-import { Trash2, Plus, Minus, X } from "lucide-react";
+import { Plus, Minus, X } from "lucide-react";
 import React from "react";
-import SizeSelector from "../common/SizeSelector";
 
 
 const BagProductCard = ({ product, onIncrease, onDecrease, onRemove }) => {
+  const {effectivePrice, originalPrice} = product;
  
   return (
     <div className="relative flex sm:items-center justify-between">
@@ -25,7 +25,33 @@ const BagProductCard = ({ product, onIncrease, onDecrease, onRemove }) => {
           <p className="text-xs text-subtext mt-3 uppercase">{product.size} | {product.color}</p>
 
           {/* price */}
-          <p className="text-dark text-base mt-8">₹ {product.originalPrice}</p>
+          {/* <p className="text-dark text-base mt-8">₹ {product.originalPrice}</p> */}
+          {/* Price */}
+          <div className="mt-8 flex items-baseline space-x-2">
+            {originalPrice !== effectivePrice ? (
+              <>
+                <span className="text-dark text-[10px] xxs:text-xs font-light uppercase line-through">
+                  ₹ {originalPrice?.toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </span>
+                <span className="text-dark bg-accent px-1 text-[10px] xxs:text-xs font-light uppercase">
+                  ₹ {effectivePrice?.toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </span>
+              </>
+            ) : (
+              <span className="text-dark text-[10px] xxs:text-xs font-light uppercase">
+                ₹ {effectivePrice?.toLocaleString("en-IN", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </span>
+            )}
+          </div>
 
           {/* quantity manager  */}
           <div className="bg-surface w-max flex items-center text-xs overflow-hidden mt-3">
