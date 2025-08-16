@@ -5,6 +5,7 @@ import { LOADING } from '../../constants/appConstants';
 import { ArrowLeft, LoaderCircle, Plus } from 'lucide-react';
 import { updateAllAddresses } from '../../store/actions/userAction';
 import { showErrorToastWithIcon } from '../../utils/customToasts';
+import toast from 'react-hot-toast';
 
 export default function EditAddress() {
   const navigate = useNavigate();
@@ -21,7 +22,10 @@ export default function EditAddress() {
       // At least one empty address form
       setAddresses([
         {
-          addressLine: '',
+          fullName: '',
+          phone: '',
+          line1: '',
+          line2: '',
           landmark: '',
           city: '',
           state: '',
@@ -45,7 +49,10 @@ export default function EditAddress() {
     setAddresses((prev) => [
       ...prev,
       {
-        addressLine: '',
+        fullName: '',
+        phone: '',
+        line1: '',
+        line2: '',
         landmark: '',
         city: '',
         state: '',
@@ -71,12 +78,10 @@ export default function EditAddress() {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    console.log('Saving addresses:', addresses);
-    // api call to update name 
     const result = await dispatch(updateAllAddresses(addresses));
     if (result.meta.requestStatus === 'fulfilled') {
       toast.success('Your addresses has been updated successfully');
-      onClose();
+      navigate(-1);
     } else {
       const errPayload = result.payload || 'Failed to update the addresses';
 
@@ -120,7 +125,7 @@ export default function EditAddress() {
           type="button"
           onClick={handleAddAddress}
           disabled={addresses.length >= 3}
-          className="ms-auto sm:ms-0 flex items-center gap-2 text-xs uppercase border border-hover-tint hover:bg-surface text-dark px-3 py-1 disabled:bg-hover-tint disabled:text-subtext enabled:cursor-pointer"
+          className="ms-auto sm:ms-0 flex items-center gap-2 text-xs uppercase border border-hover-tint enabled:hover:bg-surface text-dark px-3 py-1 disabled:text-hover-tint enabled:cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Add Address
         </button>
@@ -130,48 +135,99 @@ export default function EditAddress() {
         {addresses.map((addr, index) => (
           <div
             key={index}
-            className="bg-light border border-hover-tint p-4 relative"
+            className="bg-light border border-hover-tint p-6 relative shadow-sm"
           >
             {/* Remove button */}
             {addresses.length > 1 && (
               <button
                 type="button"
                 onClick={() => handleRemoveAddress(index)}
-                className="absolute top-2 right-2 text-subtext hover:text-dark"
+                className="absolute top-3 right-3 text-subtext hover:text-dark"
               >
                 ✕
               </button>
             )}
 
             {/* Address form */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Full Name (Optional) */}
+              <div>
+                <label className="block text-xs uppercase text-subtext mb-1.5">
+                  Full Name <span className="text-subtext lowercase">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={addr.fullName || ''}
+                  onChange={(e) =>
+                    handleAddressChange(index, 'fullName', e.target.value)
+                  }
+                  className="w-full py-3 px-3 bg-light border border-hover-tint focus:outline-none focus:outline-2 focus:outline-blue-500"
+                />
+              </div>
+
+              {/* Phone (Optional) */}
+              <div>
+                <label className="block text-xs uppercase text-subtext mb-1.5">
+                  Contact Number <span className="text-subtext lowercase">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={addr.phone || ''}
+                  onChange={(e) =>
+                    handleAddressChange(index, 'phone', e.target.value)
+                  }
+                  className="w-full py-3 px-3 bg-light border border-hover-tint"
+                  maxLength={10}
+                />
+              </div>
+
+              {/* Address Line */}
               <div className="md:col-span-2">
-                <label className="block text-xs uppercase text-subtext">
-                  Address Line
+                <label className="block text-xs uppercase text-subtext mb-1.5">
+                  Address Line 1
                 </label>
                 <textarea
                   required
-                  value={addr.addressLine}
+                  value={addr.line1}
                   onChange={(e) =>
-                    handleAddressChange(index, 'addressLine', e.target.value)
+                    handleAddressChange(index, 'line1', e.target.value)
                   }
-                  className="w-full p-2 bg-light border border-hover-tint"
+                  className="w-full py-3 px-3 bg-light border border-hover-tint"
                 />
               </div>
+
+              {/* Address Line 2 (optional) */}
               <div className="md:col-span-2">
-                <label className="block text-xs uppercase text-subtext">
-                  Landmark
+                <label className="block text-xs uppercase text-subtext mb-1.5">
+                  Address Line 2 <span className="text-subtext lowercase">(optional)</span>
+                </label>
+                <textarea
+                  required
+                  value={addr.line2}
+                  onChange={(e) =>
+                    handleAddressChange(index, 'line2', e.target.value)
+                  }
+                  className="w-full py-3 px-3 bg-light border border-hover-tint"
+                />
+              </div>
+
+              {/* Landmark */}
+              <div className="md:col-span-2">
+                <label className="block text-xs uppercase text-subtext mb-1.5">
+                  Landmark <span className="text-subtext lowercase">(optional)</span>
                 </label>
                 <input
                   value={addr.landmark}
                   onChange={(e) =>
                     handleAddressChange(index, 'landmark', e.target.value)
                   }
-                  className="w-full p-2 bg-light border border-hover-tint"
+                  className="w-full py-3 px-3 bg-light border border-hover-tint"
                 />
               </div>
+
+              {/* City */}
               <div>
-                <label className="block text-xs uppercase text-subtext">
+                <label className="block text-xs uppercase text-subtext mb-1.5">
                   City
                 </label>
                 <input
@@ -180,11 +236,13 @@ export default function EditAddress() {
                   onChange={(e) =>
                     handleAddressChange(index, 'city', e.target.value)
                   }
-                  className="w-full p-2 bg-light border border-hover-tint"
+                  className="w-full py-3 px-3 bg-light border border-hover-tint"
                 />
               </div>
+
+              {/* State */}
               <div>
-                <label className="block text-xs uppercase text-subtext">
+                <label className="block text-xs uppercase text-subtext mb-1.5">
                   State
                 </label>
                 <input
@@ -193,24 +251,29 @@ export default function EditAddress() {
                   onChange={(e) =>
                     handleAddressChange(index, 'state', e.target.value)
                   }
-                  className="w-full p-2 bg-light border border-hover-tint"
+                  className="w-full py-3 px-3 bg-light border border-hover-tint"
                 />
               </div>
+
+              {/* Pincode */}
               <div>
-                <label className="block text-xs uppercase text-subtext">
+                <label className="block text-xs uppercase text-subtext mb-1.5">
                   Pincode
                 </label>
                 <input
                   required
                   value={addr.pincode}
+                  maxLength={6}
                   onChange={(e) =>
                     handleAddressChange(index, 'pincode', e.target.value)
                   }
-                  className="w-full p-2 bg-light border border-hover-tint"
+                  className="w-full py-3 px-3 bg-light border border-hover-tint"
                 />
               </div>
+
+              {/* Country */}
               <div>
-                <label className="block text-xs uppercase text-subtext">
+                <label className="block text-xs uppercase text-subtext mb-1.5">
                   Country
                 </label>
                 <select
@@ -219,7 +282,7 @@ export default function EditAddress() {
                   onChange={(e) =>
                     handleAddressChange(index, 'country', e.target.value)
                   }
-                  className="w-full p-2 bg-light border border-hover-tint"
+                  className="w-full py-3 px-3 bg-light border border-hover-tint"
                 >
                   <option value="India">India</option>
                 </select>
@@ -227,7 +290,7 @@ export default function EditAddress() {
             </div>
 
             {/* Default address toggle */}
-            <div className="mt-4">
+            <div className="mt-6">
               <label className="inline-flex items-center gap-2 text-sm text-dark">
                 <input
                   type="checkbox"

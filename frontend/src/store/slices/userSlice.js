@@ -38,9 +38,9 @@ const userSlice = createSlice({
           state.isLoggedIn = false;
           state.userInfo = null;
         } else {
-          state.status = FAILED;
           state.error = action.payload;
         }
+        state.status = FAILED;
       })
 
 

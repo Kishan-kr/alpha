@@ -53,4 +53,5 @@ working on get latest stock inside increase quantitiy function in shopping bag
 - remove unnecessary fields from validate phone controller before sending to client
 - replace 'OTP' with 'code' in validate email controller
 - add new route and controller for updating all addresses at once
-- need to test edit address page and update api call, there are some fields mismatch [IMP]
+- fixed edit address page, added ensure default address middleware
+- modified UserProfile to show full name and contact number values also

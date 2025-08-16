@@ -118,10 +118,11 @@ export const verifyEmailOtp = createAsyncThunk(
 export const updateAllAddresses = createAsyncThunk(
   'user/updateAllAddresses',
   async (addresses, { rejectWithValue }) => {
+    const reqBody = addresses;
     try {
       const res = await axios.patch(
         `${BASE_URL}/me/addresses`,
-        { addresses }, // expecting { addresses: [ ... ] } in body
+        reqBody, // expecting [ {addr1}, {addr2}, ... ]  in body
         { ...getAuthHeaders(), withCredentials: true }
       );
 

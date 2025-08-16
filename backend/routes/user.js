@@ -14,6 +14,7 @@ const checkDefaultAddress = require("../middlwares/checkDefaultAddress")
 const sendEmailOtp = require("../controllers/user/sendEmailOtp")
 const validateEmail = require("../controllers/user/validateEmail")
 const logout = require("../controllers/user/logout")
+const { ensureDefaultAddress } = require("../middlwares/ensureDefaultAddress")
 const router = express.Router()
 
 // Auth 
@@ -99,6 +100,7 @@ router.patch(
     body("*.city").notEmpty().withMessage("Please fill in the city"),
     body("*.line1").notEmpty().withMessage("Line 1 is required")
   ],
+  ensureDefaultAddress,
   updateAllAddresses
 );
 

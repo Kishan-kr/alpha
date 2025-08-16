@@ -83,33 +83,38 @@ export default function UserProfile() {
           </div>
 
           {/* Addresses  */}
-          <div className="relative sm:p-6 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 sm:border border-hover-tint">
+          <div className="relative sm:p-6 grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-6 sm:border border-hover-tint">
             <div>
               <p className="text-xs uppercase mb-4 text-subtext">Saved Addresses</p>
 
               {userData?.addresses?.length > 0 ? (
-                <ul>
-                  {userData.addresses.map((addr) => (
+                <ul className='space-y-4'>
+                  {userData.addresses.map((addr, index) => (
                     <div
-                      key={addr.id}
+                      key={index}
                       className="bg-surface p-3 sm:p-6 relative"
                     >
                       {/* Top Row: Address + Default */}
-                      <div className="flex justify-between items-start mb-2">
-                        <div className="text-dark font-light text-sm">
+                      <div className="flex flex-col gap-2 justify-between items-start mb-2 text-dark font-light text-sm">
+                        <p className="">
+                          {[addr.fullName, addr.phone && `+91 ${addr.phone}`]
+                            .filter(Boolean) // remove empty, null, undefined, or false values
+                            .join(', ')}
+                        </p>
+                        <p>
                           {[addr.line1, addr.line2, nearby(addr.landmark), addr.city]
                             .filter(Boolean) // remove empty, null, undefined, or false values
                             .join(', ')}
-                        </div>
-                        <span className="absolute -top-3 right-1 border-2 border-light text-xs font-light text-light bg-[#5DB7DE] px-2 py-0.5 rounded-full">
-                          Default
-                        </span>
-                      </div>
-
-                      {/* Second Row: City/State/Pincode/Country */}
-                      <div className="text-sm font-light text-dark flex flex-col flex-wrap gap-x-2 gap-y-2">
+                        </p>
                         <p>{addr.state} - {addr.pincode}</p>
                         <p>{addr.country}</p>
+                      </div>
+
+                        {addr.isDefault && <span className="absolute -top-3 right-1 border-2 border-light text-xs font-light text-light bg-[#5DB7DE] px-2 py-0.5 rounded-full">
+                          Default
+                        </span>}
+                      {/* Second Row: City/State/Pincode/Country */}
+                      <div className="text-sm font-light text-dark flex flex-col flex-wrap gap-x-2 gap-y-2">
                       </div>
                     </div>
                   ))}
@@ -122,7 +127,7 @@ export default function UserProfile() {
               )}
             </div>
 
-            <Link to={'edit-address'} className="absolute md:static top-0 right-0 h-fit uppercase font-light underline text-xs text-dark cursor-pointer">
+            <Link to={'edit-address'} className="absolute sm:static top-0 right-0 h-fit uppercase font-light underline text-xs text-dark cursor-pointer">
               Edit
             </Link>
           </div>
