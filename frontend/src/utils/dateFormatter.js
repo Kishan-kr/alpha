@@ -50,3 +50,37 @@ export function isWithinCalendarDays(inputDate, days) {
 
   return diffInDays >= 0 && diffInDays <= days;
 }
+
+
+
+/** dd Mon yyyy (e.g., 17 Aug 2025) */
+export const formatDateShort = (d) =>
+  d
+    ? new Date(d).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+    : "";
+
+/** Date + time in user's locale (fallback safe) */
+export const formatDateTime = (d) =>
+  d ? new Date(d).toLocaleString("en-IN") : "";
+
+/** Returns true if deliveredAt is within N days (default 3) of now */
+export const withinNDays = (deliveredAt, n = 3) => {
+  if (!deliveredAt) return false;
+  const MS = n * 24 * 60 * 60 * 1000;
+  return Date.now() - new Date(deliveredAt).getTime() <= MS;
+};
+
+/** Deadline date from deliveredAt + N days (default 3) */
+export const deadlineFromDeliveredAt = (deliveredAt, n = 3) =>
+  deliveredAt ? new Date(new Date(deliveredAt).getTime() + n * 24 * 60 * 60 * 1000) : null;
+
+/** ₹ 12,345.00 (IN locale) */
+export const formatINR = (n) =>
+  Number(n || 0).toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });

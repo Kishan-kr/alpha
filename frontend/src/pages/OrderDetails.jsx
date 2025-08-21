@@ -1,284 +1,240 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import ProductCard from '../components/orders/OrderCard';
-import { formatToRelativeDate, isWithinCalendarDays } from '../utils/dateFormatter';
-import { productStatusBeforeStyles, productStatusBgStyles, productStatusStyles } from '../constants/styleMaps';
-import { orderStatusValues } from '../constants/valueMaps';
-import { Info } from 'lucide-react';
-import BackButton from '../components/bag/BackButton';
-import OrderStatusTimeline from '../components/orders/OrderStatusTimeline';
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useParams } from "react-router-dom";
 
-const orderSample = {
-  "_id": "order123",
-  "orderNumber": "ORD12345",
-  "createdAt": "2025-05-28T12:00:00Z",
-  "orderStatus": "delivered",
-  "deliveredAt": "2025-06-05T12:00:00Z",
-  "shippingAddress": {
-    "fullName": "John Doe",
-    "line1": "123 Street",
-    "landmark": 'Greenland school',
-    "city": "Bandra",
-    "state": "Mumbai",
-    "pincode": "400001",
-    "country": "India"
-  },
-  "products": [
-    {
-      "_id": "prodItem1",
-      "productId": {
-        "title":
-          "Blue Tee",
-        "thumbnail": "https://picsum.photos/seed/prod1-90/500/800",
-        "description": "..."
-      },
-      "size": "M",
-      "quantity": 1,
-      "discountedPrice": 999,
-      "originalPrice": 1499,
-      "status": "delivered",
-      "isReturned": true,
-      "returnInfo": { "status": "refunded", "refundedAt": "2025-05-30" },
-      "isExchangeItem": false,
-      "exchangedFrom": null
-    },
-    {
-      "_id": "prodItem2",
-      "productId": {
-        "title":
-          "Black Oversized Tee",
-        "thumbnail": "https://picsum.photos/seed/prod1-70/500/800",
-        "description": "..."
-      },
-      "size": "M",
-      "quantity": 1,
-      "discountedPrice": 999,
-      "originalPrice": 1499,
-      "status": "exchanged",
-      "isExchangeItem": false,
-      "exchangedFrom": null
-    }
-  ],
-  "subtotal": 1499,
-  "discount": 500,
-  "tax": 99,
-  "deliveryFee": 39,
-  "totalAmount": 1098,
-  paymentDetails: {
-    method: "UPI",
-    amount: 1098,
-    status: "successfull",
-    currency: "INR",
-    gateway: "razorpay",
-  }
-}
+import {
+  fetchOrderById,
+  cancelOrder,
+  requestWholeReturn,
+  requestItemReturn,
+  requestItemExchange,
+} from "../store/actions/orderAction";
+
+// components
+import StatusBadge from "../components/orders/StatusBadge";
+import OrderItem from "../components/orders/OrderItem";
+import OrderSummary from "../components/orders/OrderSummary";
+import PaymentInfo from "../components/orders/PaymentInfo";
+import ShippingInfo from "../components/orders/ShippingInfo";
+import { formatDateShort, withinNDays } from "../utils/dateFormatter";
+import { LoaderCircle } from "lucide-react";
+
 
 export default function OrderDetails() {
   const { orderId } = useParams();
-  const [order, setOrder] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [showReturnInfo, setShowReturnInfo] = useState(false);
+  const dispatch = useDispatch();
+
+  const order = useSelector((s) => s.orders.current);
+  const loading = useSelector((s) => s.orders.currentLoading);
+  const actionLoading = useSelector((s) => s.orders.actionLoading);
+  const currentError = useSelector((s) => s.orders.currentError);
+  const actionError = useSelector((s) => s.orders.actionError);
+
+  const [toast, setToast] = useState("");
 
   useEffect(() => {
-    // fetch(`/api/orders/₹{orderId}`)
-    //   .then(res => res.json())
-    //   .then(data => {
-    //     setOrder(data.order);
-    //     setLoading(false);
-    //   })
-    //   .catch(err => {
-    //     console.error('Failed to fetch order details', err);
-    //     setLoading(false);
-    //   });
-    setLoading(false)
-    setOrder(orderSample)
+    dispatch(fetchOrderById(orderId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId]);
 
-  if (loading) return <div className="p-10 text-center">Loading...</div>;
-  if (!order) return <div className="p-10 text-center">Order not found.</div>;
+  // ===== business rules =====
+  const inProcess = useMemo(
+    () => (order ? ["CONFIRMED", "PROCESSING", "PACKED"].includes(order.status) : false),
+    [order]
+  );
+  const anyShippedOrDelivered = useMemo(
+    () => !!order?.items?.some((i) => ["SHIPPED", "DELIVERED"].includes(i.status)),
+    [order]
+  );
+  const canCancel = inProcess && !anyShippedOrDelivered && order?.status !== "CANCELLED";
 
-  const {
-    orderNumber,
-    createdAt,
-    orderStatus,
-    shippingAddress,
-    products,
-    discount,
-    deliveryFee,
-    subtotal,
-    totalAmount,
-    paymentDetails
-  } = order;
+  const allDelivered = order?.items?.every((i) => i.status === "DELIVERED");
+  const wholeReturnEligible =
+    allDelivered && order?.items?.every((i) => withinNDays(i.deliveredAt, 3));
 
-  const isDelivered = orderStatus === 'delivered';
-  const isPending = orderStatus === 'pending';
-  const isCancelled = orderStatus === 'cancelled';
-  const isReturned = orderStatus === 'returned';
-  const isRefunded = orderStatus === 'refunded';
-  const discountPercent = (discount / subtotal) * 100
+  // totals
+  const itemsTotal = Number(order?.totals?.itemsTotal ?? 0);
+  const shippingFee = Number(order?.totals?.shippingFee ?? 0);
+  const discount = Number(order?.totals?.discount ?? 0);
+  const grandTotal =
+    order?.totals?.grandTotal != null
+      ? Number(order.totals.grandTotal)
+      : itemsTotal + shippingFee - discount;
 
-  // can return within 3 calendar days from deliveredAt date 
-  const isWithin3Days = isWithinCalendarDays(order?.deliveredAt, 3)
-  const canReturnOrExchange = orderStatus === 'delivered' && isWithin3Days;
+  // ===== actions =====
+  const onCancel = async () => {
+    try {
+      await dispatch(cancelOrder(order._id)).unwrap();
+      setToast("Order cancelled.");
+      dispatch(fetchOrderById(orderId));
+    } catch { }
+  };
 
-  const handleBack = () => {
-    history.back()
+  const onWholeReturn = async () => {
+    const reason = window.prompt("Reason for return:");
+    if (!reason) return;
+    try {
+      await dispatch(requestWholeReturn({ orderId: order._id, reason })).unwrap();
+      setToast("Return requested for whole order.");
+      dispatch(fetchOrderById(orderId));
+    } catch { }
+  };
+
+  const onItemReturn = async (itemId) => {
+    const reason = window.prompt("Reason for return:");
+    if (!reason) return;
+    try {
+      await dispatch(requestItemReturn({ orderId: order._id, itemId, reason })).unwrap();
+      setToast("Item return requested.");
+      dispatch(fetchOrderById(orderId));
+    } catch { }
+  };
+
+  const onItemExchange = async (item) => {
+    const reason = window.prompt("Reason for exchange:");
+    if (!reason) return;
+    const newSize = window.prompt("Exchange size (e.g., S/M/L/XL):", item.size || "");
+    const newColor = window.prompt("Exchange color:", item.color || "");
+    const newSku = window.prompt("Exchange SKU (optional):", "");
+    try {
+      await dispatch(
+        requestItemExchange({
+          orderId: order._id,
+          itemId: item._id,
+          payload: { reason, newSize, newColor, newSku },
+        })
+      ).unwrap();
+      setToast("Exchange requested.");
+      dispatch(fetchOrderById(orderId));
+    } catch { }
+  };
+
+  // ===== loading / empty =====
+  if (loading) {
+    return (
+      <div className="flex justify-center py-24 mt-8">
+        <p className='text-xs tracking-wider font-light uppercase animate-spin'><LoaderCircle /></p>
+      </div>
+    );
   }
 
-  const nearby = (landmark) => {
-    if (!landmark) return ''
-
-    let firstWord = landmark.split(' ')[0].toLowerCase();
-    if (['near', 'nearby'].includes(firstWord)) {
-      return landmark;
-    }
-    return `Near ${landmark}`;
+  if (!order) {
+    return (
+      <div className="bg-light px-6 py-20 md:px-24 md:py-24">
+        <div className="border border-hover-tint bg-light px-6 py-12 text-center text-subtext">
+          Order not found.
+        </div>
+      </div>
+    );
   }
+
+  // ===== render =====
+  const idShort = `ORD${String(order._id).slice(-10).toUpperCase()}`;
+  const placed = formatDateShort(order.placedAt || order.createdAt);
 
   return (
-    <div className="p-4 py-20 md:p-8 md:py-24 border">
-      <div className='flex gap-x-2 items-center mb-4'>
-        <BackButton handleClick={handleBack} className='-mt-px' />
-        <h1 className="text-xl text-dark font-semibold">
-          Order details
-        </h1>
+    <div className="bg-light px-6 py-20 md:px-24 md:py-24">
+      {/* Header (stack on small) */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-2">
+          <h2 className="text-2xl uppercase font-gfs-didot text-dark">Order Details</h2>
+          <StatusBadge status={order.status} />
+          <p className="text-xs text-subtext">Placed on {placed}</p>
+        </div>
+        <div className="text-xs">
+          <span className="text-subtext">Order No:&nbsp;</span>
+          <span className="text-dark font-medium">{idShort}</span>
+        </div>
       </div>
 
-      <div className='text-dark flex flex-col flex-wrap slg:flex-row gap-8'>
-        {/* orders section  */}
-        <div className="flex-1 h-fit rounded-2xl border border-light/10 bg-light p-4 sm:p-6 flex flex-col gap-6 md:flex-row md:justify-between">
-          <div className="flex-1 space-y-6 sm:space-y-8">
-
-            {/* Order Header with status + action */}
-            <div className="space-y-2">
-              <div className="flex items-center sm:justify-between gap-2">
-
-                {/* Left: Order ID + Status */}
-                <div className="flex items-center gap-3 flex-wrap">
-                  <h2 className="text-xl font-semibold">#{orderNumber}</h2>
-
-                  <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs ${productStatusBgStyles[order.orderStatus]}`}>
-                    <span className={`${productStatusBeforeStyles[order.orderStatus]} w-1.5 h-1.5 rounded-full`}></span>
-                    <p className={productStatusStyles[order.orderStatus] || 'text-subtext'}>
-                      {orderStatusValues[order.orderStatus]}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right: Return or Cancel Action */}
-                <div className="relative ms-auto flex items-center">
-                  {isDelivered ? (
-                    canReturnOrExchange ? (
-                      <button className="text-sm font-medium text-subtext underline hover:text-blue-400">
-                        Return Order
-                      </button>
-                    ) : (
-                      <>
-                        {/* Desktop: show message inline */}
-                        <span className="hidden sm:block text-sm italic text-subtext bg-accent px-3 py-1 rounded">
-                          This order is no longer eligible for return.
-                        </span>
-
-                        {/* Mobile: show info icon that toggles message */}
-                        <button
-                          className="sm:hidden text-subtext hover:text-blue-400"
-                          onClick={() => setShowReturnInfo(!showReturnInfo)}
-                          aria-label="Show return info"
-                        >
-                          <Info size={18} />
-                        </button>
-
-                        {/* conditionally show Mobile return-expired notice */}
-                        {showReturnInfo && (
-                          <p className="absolute top-0 right-4 w-max z-20 sm:hidden mt-2 text-sm italic text-subtext bg-accent px-3 py-2 rounded shadow-lg">
-                            This order is no longer eligible for return.
-                          </p>
-                        )}
-
-                      </>
-                    )
-                  ) : isPending && (
-                    <button className="text-sm font-medium text-subtext underline hover:text-blue-400">
-                      Cancel Order
-                    </button>
-                  )}
-                </div>
-              </div>
-
-              {/* Subtext: Date Info */}
-              <p className="text-sm text-subtext">
-                Placed on {formatToRelativeDate(createdAt)}{' '}
-                {order?.deliveredAt && `| Delivered on ${formatToRelativeDate(order.deliveredAt)}`}
-              </p>
-
+      {/* Alerts */}
+      {(toast || currentError || actionError) && (
+        <div className="mt-6 space-y-2">
+          {toast && (
+            <div className="border border-hover-tint bg-surface px-4 py-3 text-xs text-dark">
+              {toast}
             </div>
-
-            {/* Timeline (with elegant margin spacing) */}
-            <div className="pt-4 pb-6 border- border-light/10">
-              <OrderStatusTimeline currentStatus={orderStatus} />
+          )}
+          {currentError && (
+            <div className="border border-hover-tint bg-surface px-4 py-3 text-xs text-subtext">
+              {currentError}
             </div>
-
-            {/* Product List */}
-            <div className="space-y-5 sm:space-y-6">
-              {products.map((product, idx) => (
-                <ProductCard
-                  key={idx}
-                  product={product}
-                  orderStatus={orderStatus}
-                />
-              ))}
+          )}
+          {actionError && (
+            <div className="border border-hover-tint bg-surface px-4 py-3 text-xs text-subtext">
+              {actionError}
             </div>
+          )}
+        </div>
+      )}
+
+      {/* Primary actions (wrap on small) */}
+      <div className="mt-8 flex flex-wrap gap-3">
+        <button
+          onClick={onCancel}
+          disabled={!canCancel || actionLoading}
+          className={`uppercase text-xs px-5 py-2 border enabled:cursor-pointer ${canCancel && !actionLoading
+              ? "border-dark text-dark hover:bg-surface"
+              : "border-hover-tint text-hover-tint"
+            }`}
+        >
+          {actionLoading ? "Processing…" : "Cancel Order"}
+        </button>
+
+        <button
+          onClick={onWholeReturn}
+          disabled={!wholeReturnEligible || actionLoading}
+          className={`uppercase text-xs px-5 py-2 border enabled:cursor-pointer ${wholeReturnEligible && !actionLoading
+              ? "border-dark text-dark hover:bg-surface"
+              : "border-hover-tint text-hover-tint"
+            }`}
+        >
+          {actionLoading ? "Processing…" : "Return Whole Order"}
+        </button>
+      </div>
+
+      {/* Main content */}
+      <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Items (2/3 width on desktop) */}
+        <section className="lg:col-span-2 border border-hover-tint bg-light">
+          <div className="px-5 py-4 md:px-8 border-b border-hover-tint text-sm uppercase text-dark">
+            Items
           </div>
+
+          <ul className="px-5 md:px-8">
+            {order.items?.map((item, idx) => (
+              <li key={item._id} className={idx > 0 ? "border-t border-hover-tint" : ""}>
+                <OrderItem
+                  item={item}
+                  actionLoading={actionLoading}
+                  onReturn={onItemReturn}
+                  onExchange={onItemExchange}
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Right column */}
+        <div className="space-y-8">
+          <OrderSummary
+            totals={{
+              itemsTotal,
+              shippingFee,
+              discount,
+              grandTotal,
+            }}
+          />
+          <PaymentInfo payment={order?.payment} />
+          <ShippingInfo address={order?.address} shipment={order?.shipment} />
         </div>
+      </div>
 
-        {/* Summary + Address */}
-        <div className='flex flex-col gap-8 w-full h-fit slg:w-1/3'>
-          {/* Order Summary */}
-          <section className="w-full h-fit sm:p-1 rounded-xl sm:border border-border text-dark shadow-2xl shadow-dark">
-            <div className='bg-light p-6 rounded-lg border border-border'>
-              <h3 className="text-lg font-semibold mb-4">Order Summary</h3>
-              <p className='px-3 py-0.5 mb-3 text-xs rounded border w-fit border-green-700'>{paymentDetails.method}</p>
-              <div className="flex justify-between items-center mb-3">
-                <span>Subtotal</span>
-                <span>₹{subtotal}</span>
-              </div>
-              <div className="flex justify-between items-center mb-3 text-red-500">
-                <span>Discount ({discountPercent.toFixed(2)}%)</span>
-                <span>-₹{discount.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between items-center mb-3">
-                <span>Delivery Fee</span>
-                <span>₹{deliveryFee}</span>
-              </div>
-              <div className="flex justify-between items-center font-bold text-lg mt-4">
-                <span>Total</span>
-                <span>₹{totalAmount.toFixed(2)}</span>
-              </div>
-            </div>
-          </section>
-
-          {/* Address */}
-          <section className="w-full h-fit p-6 rounded-xl border border-border text-dark shadow-2xl shadow-dark">
-            <h4 className="text-lg font-semibold mb-4">Shipping Address</h4>
-            <ul className="text-sm text-subtext space-y-3">
-
-              {/* Top Row: fullname */}
-              <p className="font-semibold text-sm">
-                {shippingAddress?.fullName}, {shippingAddress?.phone}
-              </p>
-              {/* middle Row: Address */}
-              <p className="text-sm">
-                {shippingAddress.line1}, {nearby(shippingAddress?.landmark)}
-              </p>
-
-              {/* Second Row: City/State/Pincode/Country */}
-              <div className="text-sm text-subtext flex flex-wrap gap-x-2 gap-y-1">
-                <p>{shippingAddress.city}, {shippingAddress.state} - {shippingAddress.pincode}</p>
-                <p className="bg-dark/10 text-subtext px-2 py-0.5 rounded">{shippingAddress.country}</p>
-              </div>
-            </ul>
-          </section>
-        </div>
+      {/* Back link */}
+      <div className="mt-12">
+        <Link to="/orders" className="uppercase text-xs underline text-dark">
+          ← Back to Orders
+        </Link>
       </div>
     </div>
   );

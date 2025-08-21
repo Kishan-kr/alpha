@@ -1,79 +1,47 @@
 import React from "react";
-import { productStatusBgStyles, productStatusStyles } from "../../constants/styleMaps";
-import { orderStatusValues } from "../../constants/valueMaps";
+import { Link } from "react-router-dom";
+import StatusBadge from "./StatusBadge";
+import OrderItemRow from "./OrderItemRow";
+import { formatDateShort } from "../../utils/dateFormatter";
 
-export default function ProductCard({ 
-  product, 
-  orderStatus, 
-  showReturn = false,
-  showExchange = false,
-  handleReturn = () => {}, 
-  handleExchange = () => {}, 
- }) {
-  const {
-    productId,
-    size,
-    quantity,
-    discountedPrice,
-    originalPrice,
-    status,
-    isReturned,
-    returnInfo,
-    isExchangeItem,
-    exchangeStatus
-  } = product;
-
-  const shouldShowStatus =
-    ['exchanged', 'returned'].includes(status) &&
-    orderStatus !== status;
+export default function OrderCard({ order }) {
+  const idShort = `ORD${String(order?._id || "").slice(-10).toUpperCase()}`;
+  const placed = formatDateShort(order?.placedAt || order?.createdAt);
 
   return (
-    <div className="flex relative gap-4 p-4 rounded-lg shadow-sm bg-surface border border-light/10">
-      <img
-        src={productId.thumbnail}
-        alt={productId.title}
-        className="w-20 h-20 object-cover rounded"
-      />
+    <section className="border border-hover-tint bg-light">
+      {/* Header */}
+      <div className="flex items-start justify-between px-6 py-5 md:px-8 md:py-6">
+        <div className="space-y-2">
+          <StatusBadge status={order?.status} />
+          <p className="text-xs text-subtext">Placed on <span className="block xs:inline">{placed}</span></p>
+        </div>
+        <div className="text-xs text-right self-end">
+          <span className="text-subtext">Order No:&nbsp;</span>
+          <span className="block xs:inline text-dark font-medium">{idShort}</span>
+        </div>
+      </div>
 
-      <div className="flex-1">
-        <h2 className="font-semibold">{productId.title}</h2>
-        <p className="text-sm text-subtext">
-          Size: {size} | Qty: {quantity}
-        </p>
-        <div className="flex items-center gap-2">
-          <span className="text-dark font-bold">₹{discountedPrice}</span>
-          {originalPrice !== discountedPrice && (
-            <span className="line-through text-subtext text-sm">
-              ₹{originalPrice}
-            </span>
-          )}
+      {/* Items */}
+      <div className="px-6 md:px-8 pb-6 md:pb-8">
+        <div className="bg-light">
+          {(order?.items || []).map((item, idx) => (
+            <div key={item._id} className={idx > 0 ? "border-t border-hover-tint" : ""}>
+              <OrderItemRow item={item} />
+            </div>
+          ))}
         </div>
 
-        {shouldShowStatus && (
-          <p
-            className={`
-              text-xs mt-1 p-0.5 px-3 rounded absolute -top-3 right-2
-              ${productStatusBgStyles[status]}
-              ${productStatusStyles[status]}
-            `}
+        {/* Footer actions */}
+        <div className="mt-6 flex justify-end">
+          <Link
+            to={`/orders/${order?._id}`}
+            className="uppercase text-xs px-5 py-2 bg-dark text-light hover:opacity-90"
           >
-            {orderStatusValues[status]}
-          </p>
-        )}
-
-        {(
-          <div className="mt-1 text-xs text-subtext">
-            {showReturn && (
-              <button className="">
-                Return
-              </button>
-            )}
-            {showExchange && (
-              <button className="">Exchange</button>
-            )}
-          </div>
-        )}
+            View Details &nbsp;›
+          </Link>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
