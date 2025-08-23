@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchOrders } from "../store/actions/orderAction";
-
-// components
 import OrderCard from "../components/orders/OrderCard";
+import LoadingScreen from "../components/common/LoadingScreen";
+import ErrorScreen from "../components/common/ErrorScreen";
 
 export default function Orders() {
   const dispatch = useDispatch();
@@ -37,18 +37,11 @@ export default function Orders() {
         </div>
       </div>
 
-      {/* Alerts */}
-      {listError && (
-        <div className="mt-6 border border-hover-tint bg-surface px-4 py-3 text-xs text-subtext">
-          {listError}
-        </div>
-      )}
 
       {/* Content */}
       <div className="mt-10 space-y-10">
-        {loading ? (
-          <div className="text-sm text-subtext">Loading…</div>
-        ) : !orders?.length ? (
+        {loading ? <LoadingScreen/> : listError ? 
+        <ErrorScreen error={listError} /> : !orders?.length ? (
           <div className="border border-hover-tint bg-light px-6 py-12 text-center text-subtext">
             You haven’t placed any orders yet.
           </div>

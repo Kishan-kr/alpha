@@ -6,7 +6,7 @@ import axios from "axios";
  * - We must send credentials (cookies) on every request.
  */
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || "/api",
+  baseURL: import.meta.env.VITE_API_URL || "/api",
   withCredentials: true, // IMPORTANT for session cookies
   timeout: 20000,
 });

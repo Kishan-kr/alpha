@@ -5,7 +5,7 @@ import OrderItemRow from "./OrderItemRow";
 import { formatDateShort } from "../../utils/dateFormatter";
 
 export default function OrderCard({ order }) {
-  const idShort = `ORD${String(order?._id || "").slice(-10).toUpperCase()}`;
+  const orderNumber = order?.orderNumber;
   const placed = formatDateShort(order?.placedAt || order?.createdAt);
 
   return (
@@ -18,7 +18,7 @@ export default function OrderCard({ order }) {
         </div>
         <div className="text-xs text-right self-end">
           <span className="text-subtext">Order No:&nbsp;</span>
-          <span className="block xs:inline text-dark font-medium">{idShort}</span>
+          <span className="block xs:inline text-dark font-medium">{orderNumber}</span>
         </div>
       </div>
 

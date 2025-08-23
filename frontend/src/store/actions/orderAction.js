@@ -119,3 +119,18 @@ export const requestItemExchange = createAsyncThunk(
     }
   }
 );
+
+
+// Get stocks of a product by id
+export const getStocksOfAnItems = createAsyncThunk(
+  'orders/getStocksOfAnItem',
+  async (productId, {rejectWithValue}) => {
+    try {
+      const res = await api.get(`/products/stocks/${productId}`);
+      return res.data.product; // expected: product: { _id: "...", sizes: [ { size: "L", quantity: 6, }, { size: "XL", quantity: 5, } ] }
+
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.error || err.message);
+    }
+  }
+);

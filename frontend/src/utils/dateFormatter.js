@@ -57,10 +57,10 @@ export function isWithinCalendarDays(inputDate, days) {
 export const formatDateShort = (d) =>
   d
     ? new Date(d).toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      })
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    })
     : "";
 
 /** Date + time in user's locale (fallback safe) */
@@ -84,3 +84,11 @@ export const formatINR = (n) =>
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
+
+
+export const withinHours = (iso, hours) => {
+  if (!iso) return false;
+  const ts = new Date(iso).getTime();
+  if (!Number.isFinite(ts)) return false;
+  return Date.now() - ts <= hours * 60 * 60 * 1000;
+};
