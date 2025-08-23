@@ -1,5 +1,5 @@
 const multer = require("multer");
-const { MAX_IMAGE_SIZE } = require("../utilis/constants");
+const { MAX_IMAGE_SIZE } = require("../utils/constants");
 const { uploadToR2 } = require("../services/configR2");
 
 const storage = multer.memoryStorage();

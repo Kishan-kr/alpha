@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { productOrderStatuses } = require('../utilis/enums');
+const { productOrderStatuses } = require('../utils/enums');
 
 const orderedProductSchema = mongoose.Schema({
   orderId: {

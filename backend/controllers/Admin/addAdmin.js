@@ -1,8 +1,8 @@
 const Admin = require("../../models/admin")
 const { validationResult } = require("express-validator")
 const bcrypt = require("bcryptjs");
-const CustomError = require("../../utilis/customError");
-const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
+const CustomError = require("../../utils/customError");
+const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
 
 const addAdmin = async (req, res) => {
     try {

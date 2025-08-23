@@ -1,5 +1,5 @@
 const Product = require('../../models/product');
-const { sortOrderMap, validProductSortFields } = require('../../utilis/maps');
+const { sortOrderMap, validProductSortFields } = require('../../utils/maps');
 
 const getAllProducts = async (req, res) => {
   try {

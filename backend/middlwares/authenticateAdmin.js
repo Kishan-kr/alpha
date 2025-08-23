@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const CustomError = require("../utilis/customError");
+const CustomError = require("../utils/customError");
 const Admin = require("../models/admin");
 
 const authenticateAdmin = async (req, res, next) => {

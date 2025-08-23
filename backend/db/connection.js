@@ -1,5 +1,5 @@
 const mongooose = require("mongoose")
-const seedSuperAdmin = require("../utilis/seedSuperAdmin")
+const seedSuperAdmin = require("../utils/seedSuperAdmin")
 const seedDatabase = require("../temp/seeders/seedDummyData");
 
 const connect = async () => {

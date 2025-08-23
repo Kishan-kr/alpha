@@ -1,6 +1,6 @@
 const Admin = require("../models/admin");
-const { INTERNAL_SERVER_ERROR } = require("../utilis/constants");
-const CustomError = require("../utilis/customError");
+const { INTERNAL_SERVER_ERROR } = require("../utils/constants");
+const CustomError = require("../utils/customError");
 
 const isSuperAdmin = async (req, res, next) => {
     try {

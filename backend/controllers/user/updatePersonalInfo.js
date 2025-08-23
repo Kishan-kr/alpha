@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator")
 const user = require("../../models/user");
-const CustomError = require("../../utilis/customError");
-const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
+const CustomError = require("../../utils/customError");
+const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
 
 const updatePersonalInfo = async (req, res) => {
     const userId = req.user.id;

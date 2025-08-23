@@ -1,7 +1,7 @@
 // controllers/testimonialController.js
 
 const Testimonials = require('../../models/testimonials');
-const { INTERNAL_SERVER_ERROR } = require('../../utilis/constants');
+const { INTERNAL_SERVER_ERROR } = require('../../utils/constants');
 
 const updateTestimonialStatus = async (req, res) => {
   const statusMap = {

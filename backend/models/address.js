@@ -1,6 +1,6 @@
 // Reusable sub-schema 
 const mongoose = require('mongoose');
-const { countries } = require('../utilis/enums');
+const { countries } = require('../utils/enums');
 
 const addressSchema = new mongoose.Schema(
   {

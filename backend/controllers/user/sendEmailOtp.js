@@ -1,7 +1,7 @@
 const { validationResult } = require('express-validator');
 const Otp = require('../../models/otp');
 const { sendOtpEmail } = require('../../services/smtp');
-const { INTERNAL_SERVER_ERROR } = require('../../utilis/constants');
+const { INTERNAL_SERVER_ERROR } = require('../../utils/constants');
 
 const sendEmailOtp = async (req, res) => {
     try {

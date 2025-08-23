@@ -1,6 +1,6 @@
 const Product = require('../../models/product');
-const { INTERNAL_SERVER_ERROR } = require('../../utilis/constants');
-const { generateUniqueSlug } = require('../../utilis/generateSlug');
+const { INTERNAL_SERVER_ERROR } = require('../../utils/constants');
+const { generateUniqueSlug } = require('../../utils/generateSlug');
 
 const addProduct = async (req, res) => {
   try {

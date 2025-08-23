@@ -1,6 +1,6 @@
 const Cart = require('../../models/cart');
-const { INTERNAL_SERVER_ERROR } = require('../../utilis/constants');
-const CustomError = require('../../utilis/customError');
+const { INTERNAL_SERVER_ERROR } = require('../../utils/constants');
+const CustomError = require('../../utils/customError');
 
 const removeAllItemsFromCart = async (req, res) => {
   try {

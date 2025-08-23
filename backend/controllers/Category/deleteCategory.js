@@ -1,7 +1,7 @@
 const category = require("../../models/category");
 const { getFileKeyFromUrl, deleteFromR2 } = require("../../services/configR2");
-const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
-const CustomError = require("../../utilis/customError");
+const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
+const CustomError = require("../../utils/customError");
 
 const deleteCategory = async (req, res) => {
     const id = req.params.id;

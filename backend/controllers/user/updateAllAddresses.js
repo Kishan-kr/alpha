@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator");
 const User = require('../../models/user');
-const CustomError = require("../../utilis/customError");
-const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
+const CustomError = require("../../utils/customError");
+const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
 
 const updateAllAddresses = async (req, res) => {
   try {

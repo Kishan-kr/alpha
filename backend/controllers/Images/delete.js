@@ -1,5 +1,5 @@
 const { getFileKeyFromUrl, deleteFromR2 } = require("../../services/configR2");
-const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
+const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
 
 const deleteImage = async (req, res) => {
   const fileUrl = req.body.fileUrl;

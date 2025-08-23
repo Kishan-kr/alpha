@@ -1,8 +1,8 @@
 const { validationResult } = require("express-validator")
 const category = require("../../models/category");
-const CustomError = require("../../utilis/customError");
-const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
-const { slugify } = require("../../utilis/generateSlug");
+const CustomError = require("../../utils/customError");
+const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
+const { slugify } = require("../../utils/generateSlug");
 
 const createCategory = async (req, res) => {
   try {

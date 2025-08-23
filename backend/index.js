@@ -18,7 +18,7 @@ const orderRoutes = require('./routes/order');
 const imageRoutes = require('./routes/images');
 const testimonialRoutes = require('./routes/testimonials');
 const lookbooksRoutes = require('./routes/lookbookVideo');
-const { MAX_IMAGE_SIZE } = require("./utilis/constants")
+const { MAX_IMAGE_SIZE } = require("./utils/constants")
 
 // Session config
 const sessionStore = MongoStore.create({

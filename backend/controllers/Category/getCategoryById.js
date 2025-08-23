@@ -1,6 +1,6 @@
 const category = require("../../models/category");
-const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
-const CustomError = require("../../utilis/customError");
+const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
+const CustomError = require("../../utils/customError");
 
 const getCategoryById = async (req, res) => {
   try {

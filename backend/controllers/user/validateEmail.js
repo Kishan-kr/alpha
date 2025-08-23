@@ -1,8 +1,8 @@
 const { validationResult } = require("express-validator")
 const otp = require("../../models/otp")
 const user = require("../../models/user")
-const CustomError = require("../../utilis/customError")
-const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants")
+const CustomError = require("../../utils/customError")
+const { INTERNAL_SERVER_ERROR } = require("../../utils/constants")
 
 const validateEmail = async (req, res) => {
   const userId = req.user.id;

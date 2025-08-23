@@ -1,5 +1,5 @@
 const Product = require("../../models/product");
-const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
+const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
 
 const getStockById = async (req, res) => {
   try {

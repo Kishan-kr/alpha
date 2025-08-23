@@ -5,7 +5,7 @@ const {
   paymentGateways, 
   currencies, 
   paymentStatuses 
-} = require('../utilis/enums');
+} = require('../utils/enums');
 
 const transactionSchema = new mongoose.Schema({
   orderId: {

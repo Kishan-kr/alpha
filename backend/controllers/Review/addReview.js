@@ -1,7 +1,7 @@
 const { validationResult } = require("express-validator")
 const review = require("../../models/review");
-const CustomError = require("../../utilis/customError");
-const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
+const CustomError = require("../../utils/customError");
+const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
 const Order = require("../../models/order");
 const OrderedProduct = require("../../models/orderedProduct");
 

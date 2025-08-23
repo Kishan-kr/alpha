@@ -1,6 +1,6 @@
 const user = require("../../models/user");
-const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
-const CustomError = require("../../utilis/customError");
+const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
+const CustomError = require("../../utils/customError");
 
 const deleteAddress = async (req, res) => {
   try {

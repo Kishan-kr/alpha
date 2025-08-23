@@ -1,5 +1,5 @@
 const Testimonials = require("../../models/testimonials");
-const { INTERNAL_SERVER_ERROR } = require("../../utilis/constants");
+const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
 
 const deleteTestimonial = async (req, res) => {
   try {

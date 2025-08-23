@@ -1,7 +1,7 @@
 const Admin = require("../../models/admin")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
-const { ADMIN_SESSION_EXPIRATION_TIME } = require("../../utilis/constants")
+const { ADMIN_SESSION_EXPIRATION_TIME } = require("../../utils/constants")
 
 const loginAdmin = async (req, res) => {
     try {
