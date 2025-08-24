@@ -18,6 +18,13 @@ const initialState = {
   listLoading: false,
   listError: null,
 
+  pagination: {
+    page: 1,
+    limit: 5,
+    total: 0,
+    totalPages: 1,
+  },
+
   current: null,
   currentLoading: false,
   currentError: null,
@@ -39,6 +46,23 @@ const orderSlice = createSlice({
     resetLastAction(state) {
       state.lastAction = null;
     },
+    // Pagination controls (dispatch then call fetchOrders with new page/limit)
+    setOrdersPage(state, action) {
+      const p = Number(action.payload) || 1;
+      state.pagination.page = Math.max(1, p);
+    },
+    setOrdersLimit(state, action) {
+      const l = Number(action.payload) || 5;
+      state.pagination.limit = Math.max(1, l);
+      state.pagination.page = 1; // reset to first page on limit change
+    },
+    goPrevOrdersPage(state) {
+      state.pagination.page = Math.max(1, state.pagination.page - 1);
+    },
+    goNextOrdersPage(state) {
+      const { page, totalPages } = state.pagination;
+      state.pagination.page = Math.min(totalPages || 1, page + 1);
+    },
   },
   extraReducers: (builder) => {
     // ===== List =====
@@ -49,11 +73,20 @@ const orderSlice = createSlice({
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.listLoading = false;
-        // state.list = action.payload || [];
-        state.list = Array.isArray(action.payload)
-          ? action.payload.map(toPlain)  // clone
-          : [];
-          console.log('fullfilled orders: ', action.payload)//test
+
+        const payload = action.payload || {};
+        const arr = Array.isArray(payload.orders) ? payload.orders : [];
+        state.list = arr.map(toPlain);
+
+        const p = payload.pagination || {};
+        state.pagination = {
+          page: Number(p.page) || state.pagination.page || 1,
+          limit: Number(p.limit) || state.pagination.limit || 5,
+          total: Number(p.total) || 0,
+          totalPages:
+            Number(p.totalPages) ||
+            (p.total && p.limit ? Math.max(Math.ceil(p.total / p.limit), 1) : state.pagination.totalPages || 1),
+        };
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.listLoading = false;
@@ -67,13 +100,11 @@ const orderSlice = createSlice({
         state.currentError = null;
       })
       .addCase(fetchOrderById.fulfilled, (state, action) => {
-        console.log('fullfilled...', action.payload)//test
         state.currentLoading = false;
         // state.current = action.payload || null;
         state.current = toPlain(action.payload || null); // clone
       })
       .addCase(fetchOrderById.rejected, (state, action) => {
-        console.log('rejected...', action.payload)//test
         state.currentLoading = false;
         state.currentError = action.payload || "Failed to fetch order";
       });
@@ -82,10 +113,6 @@ const orderSlice = createSlice({
     const start = (state) => {
       state.actionLoading = true;
       state.actionError = null;
-    };
-    const fail = (state, action) => {
-      state.actionLoading = false;
-      state.actionError = action.payload || "Action failed";
     };
 
     // Cancel whole order
@@ -106,16 +133,22 @@ const orderSlice = createSlice({
           if (idx !== -1) state.list[idx] = { ...state.list[idx], ...updated };
         }
       })
-      .addCase(cancelOrder.rejected, fail);
+      .addCase(cancelOrder.rejected, (state, action) => {
+        state.actionLoading = false;
+        state.actionError = action.payload || "Failed to cancel order";
+      })
 
-    // Whole order return
+    // Whole order return [ NOT IN USE ]
     builder
       .addCase(requestWholeReturn.pending, start)
       .addCase(requestWholeReturn.fulfilled, (state) => {
         state.actionLoading = false;
         state.lastAction = "return_whole";
       })
-      .addCase(requestWholeReturn.rejected, fail);
+      .addCase(requestWholeReturn.rejected, (state, action) => {
+        state.actionLoading = false;
+        state.actionError = action.payload || "Failed to request return";
+      });
 
     // Item return
     builder
@@ -124,7 +157,10 @@ const orderSlice = createSlice({
         state.actionLoading = false;
         state.lastAction = "return_item";
       })
-      .addCase(requestItemReturn.rejected, fail);
+      .addCase(requestItemReturn.rejected, (state, action) => {
+        state.actionLoading = false;
+        state.actionError = action.payload || "Failed to request return";
+      });
 
     // Item exchange
     builder
@@ -133,11 +169,21 @@ const orderSlice = createSlice({
         state.actionLoading = false;
         state.lastAction = "exchange_item";
       })
-      .addCase(requestItemExchange.rejected, fail);
+      .addCase(requestItemExchange.rejected, (state, action) => {
+        state.actionLoading = false;
+        state.actionError = action.payload || "Failed to request exchange";
+      });
   },
 });
 
-export const { clearOrderErrors, resetLastAction } = orderSlice.actions;
+export const {
+  clearOrderErrors,
+  resetLastAction,
+  setOrdersPage,
+  setOrdersLimit,
+  goPrevOrdersPage,
+  goNextOrdersPage,
+} = orderSlice.actions;
 export default orderSlice.reducer;
 
 // ===== Selectors =====

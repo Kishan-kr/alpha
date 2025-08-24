@@ -1,24 +1,37 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../../api/axiosClient";
+import { ORDERS_PAGE_LIMIT } from "../../constants/appConstants";
 
-const USE_MOCK = true; //test
 /**
  * GET /api/orders
+ * { page: 1, limit: 10 }
  * Returns: { status, message, orders }
  */
 export const fetchOrders = createAsyncThunk(
   "orders/fetchOrders",
-  async (_, { rejectWithValue }) => {
+  async (
+    { page = 1, limit = ORDERS_PAGE_LIMIT, status, type } = {},
+    { rejectWithValue }
+  ) => {
     try {
-      // const { data } = await api.get("/orders");
-      const res = await fetch("/mock/orders.json"); //test
-      let data = await res.json(); // test
-      data.status = true; // test
-      data.orders = data; // test
-      if (data?.status !== true) throw new Error(data?.error || "Failed to fetch orders");
-      return data.orders || [];
+      const params = { page, limit };
+      if (status) params.status = status;
+      if (type) params.type = type;
+
+      const { data } = await api.get("/orders", { params });
+
+      if (data?.status !== true) {
+        throw new Error(data?.error || "Failed to fetch orders");
+      }
+
+      return {
+        orders: Array.isArray(data.orders) ? data.orders : [],
+        pagination: data.pagination || { page, limit, total: 0, totalPages: 1 },
+      };
     } catch (err) {
-      return rejectWithValue(err.normalizedMessage || err.message);
+      return rejectWithValue(
+        err?.response?.data?.error || err.message || "Failed to fetch orders"
+      );
     }
   }
 );
@@ -31,14 +44,6 @@ export const fetchOrderById = createAsyncThunk(
   "orders/fetchOrderById",
   async (orderId, { rejectWithValue }) => {
     try {
-      // DEV: point to the mock file
-      if (USE_MOCK) {
-        // IMPORTANT: orderId must match the file name you saved
-        const { data } = await api.get(`/mock/order-${orderId}.json`, { baseURL: "" });
-        // mock returns the order object directly
-        // throw new Error('File not found')
-        return data;
-      }
       const { data } = await api.get(`/orders/${orderId}`);
       if (data?.status !== true) throw new Error(data?.error || "Failed to fetch order");
       return data.order;

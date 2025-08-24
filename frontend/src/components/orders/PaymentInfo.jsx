@@ -1,5 +1,7 @@
 import React from "react";
 import { formatDateShort } from "../../utils/dateFormatter";
+import StatusIndicator from "./StatusIndicator";
+import { PAYMENT_STATUS_COLORS } from "../../constants/styleMaps";
 
 /**
  * PaymentInfo
@@ -31,7 +33,7 @@ export default function PaymentInfo({ payment = {} }) {
 
         <div className="mt-3 flex items-center justify-between text-subtext">
           <span>Status</span>
-          <span className="uppercase">{status}</span>
+          <StatusIndicator status={payment.status} colorMap={PAYMENT_STATUS_COLORS} />
         </div>
 
         {payment.transactionId && (

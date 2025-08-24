@@ -8,6 +8,7 @@ const getAdminDetails = require("../controllers/Admin/getAdminDetails")
 const removeAdmin = require("../controllers/Admin/removeAdmin")
 const isSuperAdmin = require("../middlwares/isSuperAdmin")
 const getAllAdmins = require("../controllers/Admin/getAllAdmins")
+const updateOrderStatus = require("../controllers/Admin/order/updateOrderStatus")
 
 
 // add admin route
@@ -32,6 +33,9 @@ router.get("/" , authenticateAdmin, isSuperAdmin, getAllAdmins)
 
 // delete admin
 router.delete("/:id" , authenticateAdmin , isSuperAdmin, removeAdmin)
+
+// Generic status update route (admin only)
+router.patch("/orders/:orderId/status", authenticateAdmin, updateOrderStatus);
 
 
 module.exports= router

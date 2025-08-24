@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { X, LoaderCircle, Check } from "lucide-react";
 import { showErrorToastWithIcon } from "../../utils/customToasts";
 
@@ -13,6 +13,15 @@ export default function ExchangeModal({ onClose, onConfirm, loading, availableSi
   const [otherReason, setOtherReason] = useState("");
   const [selectedSize, setSelectedSize] = useState(null);
 
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    document.body.classList.add("overflow-hidden", "h-screen");
+
+    return () => {
+      document.body.classList.remove("overflow-hidden", "h-screen");
+    };
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const finalReason = reason === "Other" ? otherReason.trim() : reason;
@@ -25,7 +34,7 @@ export default function ExchangeModal({ onClose, onConfirm, loading, availableSi
       showErrorToastWithIcon("Please provide a reason.")
       return;
     }
-    
+
     if (!finalReason || !selectedSize) return;
     onConfirm({ reason: finalReason, newSize: selectedSize });
   };

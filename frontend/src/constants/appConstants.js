@@ -15,3 +15,5 @@ export const BAG_QUANTITY_UPDATE_DELAY = 500; // debounce wait time in ms
 export const OTP_RESEND_TIMEOUT = 5; // seconds
 export const OTP_LENGTH = 6;
 export const REDIRECT_QUERY_PARAM = 're_dir';
+
+export const ORDERS_PAGE_LIMIT = 10;

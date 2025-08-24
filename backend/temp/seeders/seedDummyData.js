@@ -6,7 +6,6 @@ dotenv.config();
 const User = require('../../models/user');
 const Product = require('../../models/product');
 const Order = require('../../models/order');
-const OrderedProduct = require('../../models/orderedProduct');
 const Category = require('../../models/category');
 
 const seedDatabase = async () => {
@@ -17,7 +16,6 @@ const seedDatabase = async () => {
       User.deleteMany({}),
       Product.deleteMany({}),
       Order.deleteMany({}),
-      OrderedProduct.deleteMany({}),
       Category.deleteMany({})
     ]);
 
@@ -128,75 +126,6 @@ const seedDatabase = async () => {
         description: ['Timeless denim with modern cuts.'],
         story: 'Walk in style with this all-season denim jacket.',
         adminId: null
-      }
-    ]);
-
-    // 🔹 Orders
-    const order1 = await Order.create({
-      userId: user._id,
-      shippingAddress: user.addresses[0],
-      subtotal: 1598,
-      discount: 100,
-      tax: 100,
-      deliveryFee: 50,
-      totalAmount: 1648,
-      currency: 'INR',
-      orderStatus: 'pending',
-      orderNumber: 1010
-    });
-
-    await OrderedProduct.insertMany([
-      {
-        orderId: order1._id,
-        productId: products[0]._id,
-        size: 'M',
-        quantity: 1,
-        originalPrice: 999,
-        discountedPrice: 799,
-        status: 'pending'
-      },
-      {
-        orderId: order1._id,
-        productId: products[1]._id,
-        size: 'S',
-        quantity: 1,
-        originalPrice: 899,
-        discountedPrice: 799,
-        status: 'pending'
-      }
-    ]);
-
-    const order2 = await Order.create({
-      userId: user._id,
-      shippingAddress: user.addresses[0],
-      subtotal: 3598,
-      discount: 200,
-      tax: 200,
-      deliveryFee: 0,
-      totalAmount: 3598,
-      currency: 'INR',
-      orderStatus: 'delivered',
-      orderNumber: 1011
-    });
-
-    await OrderedProduct.insertMany([
-      {
-        orderId: order2._id,
-        productId: products[2]._id,
-        size: 'L',
-        quantity: 1,
-        originalPrice: 1599,
-        discountedPrice: 1399,
-        status: 'delivered'
-      },
-      {
-        orderId: order2._id,
-        productId: products[3]._id,
-        size: 'M',
-        quantity: 1,
-        originalPrice: 1999,
-        discountedPrice: 1699,
-        status: 'delivered'
       }
     ]);
 

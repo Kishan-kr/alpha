@@ -1,129 +1,100 @@
-const Order = require("../../models/order")
+const Order = require("../../models/order");
+const Rma = require("../../models/rma");
+const CustomError = require("../../utils/customError");
+const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
 
-const getOrdersByUserId = async (req, res) => {
-    try {
-        const userId = "665a4e33abf67e001fda998e";
+/**
+ * GET /api/orders
+ * Query:
+ *  - page (default 1)
+ *  - limit (default 10, max 50)
+ *  - status (optional) -> filters order.status
+ *  - type   (optional) -> filters NEW | RETURN | EXCHANGE
+ *  - q      (optional) -> partial match on orderNumber
+ *  - withRma=1 (optional) -> attach minimal RMA object if rmaId present
+ *
+ * Returns minimal fields needed for the Orders list page,
+ * sorted by placedAt (desc), then createdAt (desc).
+ */
+module.exports = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
-        const orders = await Order.find({ userId });
-        if (!orders.length) {
-            return res.status(200).json({ message: 'no orders' });
-        }
+    // pagination & filters
+    const page = Math.max(parseInt(req.query.page, 10) || 1, 1);
+    const limit = Math.min(Math.max(parseInt(req.query.limit, 10) || 10, 1), 50);
+    const { status, type, q, withRma } = req.query || {};
 
-        const orderIds = orders.map(order => order._id);
-        const orderData = await Order.aggregate([
-            { $match: { _id: { $in: orderIds } } },
+    const filter = { userId };
+    if (status) filter.status = status;
+    if (type) filter.type = type;
+    if (q) filter.orderNumber = { $regex: q.trim(), $options: "i" };
 
-            // Lookup ordered products
-            {
-                $lookup: {
-                    from: 'orderedproducts',
-                    localField: '_id',
-                    foreignField: 'orderId',
-                    as: 'products'
-                }
-            },
+    // fields to return (keep list page light)
+    const projection = {
+      orderNumber: 1,
+      type: 1,
+      status: 1,
+      placedAt: 1,
+      deliveredAt: 1,
+      cancelledAt: 1,
+      originalOrderId: 1,
+      rmaId: 1,
+      totals: 1,
+      // item preview fields used in the card
+      "items._id": 1,
+      "items.title": 1,
+      "items.size": 1,
+      "items.color": 1,
+      "items.quantity": 1,
+      "items.price": 1,
+      "items.subtotal": 1,
+      "items.thumbnail": 1,
+      "items.status": 1,
+    };
 
-            // Unwind products array to join each product separately
-            { $unwind: { path: '$products', preserveNullAndEmptyArrays: true } },
+    const [total, orders] = await Promise.all([
+      Order.countDocuments(filter),
+      Order.find(filter)
+        .select(projection)
+        .sort({ placedAt: -1, createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean()
+    ]);
 
-            // Lookup product details for each productId
-            {
-                $lookup: {
-                    from: 'products',
-                    let: { productId: '$products.productId' },
-                    pipeline: [
-                        { $match: { $expr: { $eq: ['$_id', '$$productId'] } } },
-                        { $project: { title: 1, thumbnailImg: 1 } }
-                    ],
-                    as: 'productDetails'
-                }
-            },
-            { $unwind: { path: '$productDetails', preserveNullAndEmptyArrays: true } },
-
-            // Add product details into products.productId
-            {
-                $addFields: {
-                    'products.productId': {
-                        _id: '$productDetails._id',
-                        title: '$productDetails.title',
-                        thumbnail: '$productDetails.thumbnailImg'
-                    }
-                }
-            },
-
-            // Group back by order _id and push all products into an array
-            {
-                $group: {
-                    _id: '$_id',
-                    userId: { $first: '$userId' },
-                    shippingAddress: { $first: '$shippingAddress' },
-                    totalAmount: { $first: '$totalAmount' },
-                    discount: { $first: '$discount' },
-                    tax: { $first: '$tax' },
-                    finalAmount: { $first: '$finalAmount' },
-                    currency: { $first: '$currency' },
-                    orderStatus: { $first: '$orderStatus' },
-                    orderNumber: { $first: '$orderNumber' },
-                    createdAt: { $first: '$createdAt' },
-                    updatedAt: { $first: '$updatedAt' },
-                    products: { $push: '$products' }
-                }
-            },
-            {
-                $lookup: {
-                    from: 'transactions',
-                    localField: '_id',        // order _id
-                    foreignField: 'orderId',  // in transactions
-                    as: 'transactions'
-                }
-            },
-             { $unwind: { path: '$transactions', preserveNullAndEmptyArrays: true } },
-
-            {
-                $project: {
-                    _id: 1,
-                    userId: 1,
-                    // shippingAddress: 1,
-                    totalAmount: 1,
-                    // discount: 1,
-                    // tax: 1,
-                    // finalAmount: 1,
-                    // currency: 1,
-                    orderStatus: 1,
-                    orderNumber: 1,
-                    createdAt: 1,
-                    // updatedAt: 1,
-                    products: {
-                        _id: 1,
-                        productId: 1,
-                        size: 1,
-                        quantity: 1,
-                        originalPrice: 1,
-                        discountedPrice: 1,
-                        // status: 1,
-                        // cancelledAt: 1
-                    },
-                    transactions: {
-                        transactionType: 1,
-                        orderId:1,
-                        method: 1,
-                        gateway: 1,
-                        transactionId: 1,
-                        amount: 1,
-                        currency: 1,
-                        status: 1,
-                        createdAt: 1,
-                        updatedAt:1
-                    }
-                }
-            }
-        ]);
-
-        return res.status(200).json(orderData);
-    } catch (error) {
-        return res.status(500).json({ status: false, error: error.message })
+    // optionally attach minimal RMA details for cards (REQUESTED/REJECTED, reason)
+    if (withRma === "1" || withRma === 1) {
+      const rmaIds = orders.filter(o => o.rmaId).map(o => o.rmaId);
+      if (rmaIds.length) {
+        const rmas = await Rma.find({ _id: { $in: rmaIds } })
+          .select({ status: 1, type: 1, reason: 1, itemId: 1, createdAt: 1, updatedAt: 1 })
+          .lean();
+        const byId = new Map(rmas.map(r => [String(r._id), r]));
+        orders.forEach(o => {
+          if (o.rmaId && byId.has(String(o.rmaId))) {
+            o.rma = byId.get(String(o.rmaId));
+          }
+        });
+      }
     }
-}
 
-
-module.exports = getOrdersByUserId
+    return res.status(200).json({
+      status: true,
+      orders,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.max(Math.ceil(total / limit), 1),
+      },
+    });
+  } catch (error) {
+    console.error("Get orders by user error:", error.message);
+    const statusCode = error.statusCode || 500;
+    return res.status(statusCode).json({
+      status: false,
+      error: error.message || INTERNAL_SERVER_ERROR,
+    });
+  }
+};

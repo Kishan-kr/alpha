@@ -1,21 +1,33 @@
-const express = require("express")
-const createOrder = require("../controllers/Order/createOrderWithTransaction")
-const getOrdersByUserId = require("../controllers/Order/getOrdersByUserId")
-const updateOrderStatus_ProductStatusByOrderId = require("../controllers/Order/updateOrderStatus_ProductStatusByOrderId")
-const updateSingleOrderById = require("../controllers/Order/updateSingleOrderById")
-const authenticateUser = require("../middlwares/authenticateUser")
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
+const authenticateUser = require("../middlwares/authenticateUser");
 
-//create order using mongodb transactions
-router.post("/", authenticateUser, createOrder)  //reminder adding middle ware(authenticateuser) for getting userID
+const createOrder = require("../controllers/Order/createOrder");
+const getOrdersByUserId = require("../controllers/Order/getOrdersByUserId");
+const getOrderById = require("../controllers/Order/getOrderById");
 
-//get all orders by userId
-router.get("/" , getOrdersByUserId)   //reminder adding middle ware(authenticateuser) for getting userID
+const cancelWholeOrder = require("../controllers/Order/cancelWholeOrder");
 
-//update order status
-router.put("/update-orderStatus/:orderId/:status" , updateOrderStatus_ProductStatusByOrderId)  //reminder adding middle for getting the details of admin(authenticateadmin) who changed status
+const requestItemReturn = require("../controllers/Order/requestItemReturn");
+const requestItemExchange = require("../controllers/Order/requestItemExchange");
 
-//update a single product status
-router.put("/update-singleproduct/:id/:status" , updateSingleOrderById)   //reminder adding middle ware(authenticateuser) for getting userID
+// const markReturnPickedUp = require("../controllers/Order/markReturnPickedUp");
+// const markReturnReceived = require("../controllers/Order/markReturnReceived");
+// const markExchangeDelivered = require("../controllers/Order/markExchangeDelivered");
 
-module.exports=router
+router.post("", authenticateUser, createOrder);
+router.get("", authenticateUser, getOrdersByUserId);
+router.get("/:orderId", authenticateUser, getOrderById);
+
+router.post("/:orderId/cancel", authenticateUser, cancelWholeOrder);
+
+// item-level RMA initiations (both create a new ORDER of type RETURN/EXCHANGE)
+router.post("/:orderId/items/:itemId/return", authenticateUser, requestItemReturn);
+router.post("/:orderId/items/:itemId/exchange", authenticateUser, requestItemExchange);
+
+// operational status updates
+// router.post("/rmas/:rmaId/picked-up", authenticateUser, markReturnPickedUp);
+// router.post("/rmas/:rmaId/received", authenticateUser, markReturnReceived);
+// router.post("/rmas/:rmaId/exchange-delivered", authenticateUser, markExchangeDelivered);
+
+module.exports = router;

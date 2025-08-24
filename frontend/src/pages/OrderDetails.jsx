@@ -25,6 +25,7 @@ import BackButton from "../components/bag/BackButton";
 import ReturnModal from "../components/orders/ReturnModal";
 import ExchangeModal from "../components/orders/ExchangeModal";
 import { showErrorToastWithIcon } from "../utils/customToasts";
+import CancelOrderModal from "../components/orders/CancelModal";
 
 export default function OrderDetails() {
   const { orderId } = useParams();
@@ -38,6 +39,7 @@ export default function OrderDetails() {
 
   const [showReturnModal, setShowReturnModal] = useState(null); // itemId
   const [showExchangeModal, setShowExchangeModal] = useState(null); // item object
+  const [showCancelModal, setShowCancelModal] = useState(false);
   const [exchangeSizes, setExchangeSizes] = useState([]);
 
   useEffect(() => {
@@ -46,7 +48,7 @@ export default function OrderDetails() {
   }, [orderId]);
 
   useEffect(() => {
-    if(currentError) {
+    if (currentError) {
       showErrorToastWithIcon(currentError);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -235,7 +237,7 @@ export default function OrderDetails() {
           {(order.type === "RETURN" || order.type === "EXCHANGE") &&
             order.originalOrderId && (
               <div className="mt-2 py-2 text-xs text-dark">
-                This is a {order.type.toLowerCase()} order.{" "}
+                This is {order.type === "RETURN" ? "a" : "an"} {order.type.toLowerCase()} order.{" "}
                 <Link
                   to={`/orders/${order.originalOrderId}`}
                   className="underline hover:text-dark"
@@ -254,7 +256,7 @@ export default function OrderDetails() {
       {/* Primary actions */}
       <div className="mt-8 flex flex-wrap gap-3">
         <button
-          onClick={onCancel}
+          onClick={() => setShowCancelModal(true)}
           disabled={!canCancel || actionLoading}
           className={`uppercase text-xs px-5 py-2 border enabled:cursor-pointer ${canCancel && !actionLoading
             ? "border-dark text-dark hover:bg-surface"
@@ -266,11 +268,14 @@ export default function OrderDetails() {
       </div>
 
       {/* Return/Exchange closed message */}
-      {!canReturnItem(order?.items[0]) && order.status === "DELIVERED" && (
-        <div className="mt-6 border border-hover-tint bg-surface px-4 py-3 text-xs text-subtext">
-          The return or exchange window has been closed for this order.
-        </div>
-      )}
+      {order?.type === "NEW" &&
+        order?.status === "DELIVERED" &&
+        !withinNDays(order?.deliveredAt, 3) && 
+        (
+          <div className="mt-6 border border-hover-tint bg-surface px-4 py-3 text-xs text-subtext">
+            The return or exchange window has been closed for this order.
+          </div>
+        )}
 
       {/* Main content */}
       <div className="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -331,6 +336,18 @@ export default function OrderDetails() {
           onConfirm={handleExchangeConfirm}
         />
       )}
+
+      {showCancelModal && (
+        <CancelOrderModal
+          loading={actionLoading}
+          onClose={() => setShowCancelModal(false)}
+          onConfirm={async () => {
+            await onCancel();
+            setShowCancelModal(false);
+          }}
+        />
+      )}
+
     </div>
   );
 }

@@ -2,6 +2,8 @@ import React from "react";
 import {
   formatINR,
 } from "../../utils/dateFormatter";
+import StatusIndicator from "./StatusIndicator";
+import { ORDER_ITEM_STATUS_COLORS } from "../../constants/styleMaps";
 
 /**
  * OrderItem
@@ -48,13 +50,6 @@ export default function OrderItem({ item, actionLoading, canReturn, canExchange,
             Size: {item?.size || "-"} &nbsp;|&nbsp; Qty: {item?.quantity ?? 1}
           </p>
 
-          {/* Deadline (show only when delivered) */}
-          {/* {delivered && deadline && (
-            <p className="text-xxs text-subtext uppercase mt-1">
-              Return/Exchange until: {formatDateTime(deadline)}
-            </p>
-          )} */}
-
           {/* Price */}
           <div className="mt-5 flex items-baseline gap-2">
             <span className="text-dark text-[10px] xxs:text-xs uppercase">
@@ -64,20 +59,7 @@ export default function OrderItem({ item, actionLoading, canReturn, canExchange,
 
           {/* Item status (only if it exists) */}
           {item?.status && (
-            <div className="mt-2 flex items-center gap-2 text-xxs uppercase text-subtext">
-              <span
-                className={`inline-block w-2 h-2 rounded-full ${{
-                  RETURN_REQUESTED: "bg-amber-500",
-                  RETURN_REJECTED: "bg-red-500",
-                  EXCHANGE_REQUESTED: "bg-teal-500",
-                  EXCHANGE_REJECTED: "bg-red-500",
-                  EXCHANGE_DELIVERED: "bg-green-500",
-                  RETURNED: "bg-emerald-500"
-                }[String(item.status).toUpperCase()] || "bg-gray-400"
-                  }`}
-              />
-              <span>{String(item.status).replace(/_/g, " ")}</span>
-            </div>
+            <StatusIndicator status={item.status} colorMap={ORDER_ITEM_STATUS_COLORS} />
           )}
 
           {/* Actions (respect 3-day window & delivered) */}

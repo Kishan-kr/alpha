@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LoaderCircle, X } from 'lucide-react';
 import { showErrorToastWithIcon } from '../../utils/customToasts';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,6 +11,15 @@ export default function NameUpdateModal({ firstName: initialFirstName, lastName:
   const [lastName, setLastName] = useState(initialLastName || '');
   const { updateStatus } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    document.body.classList.add("overflow-hidden", "h-screen");
+
+    return () => {
+      document.body.classList.remove("overflow-hidden", "h-screen");
+    };
+  }, []);
 
   const handleSave = async (e) => {
     e.preventDefault();
@@ -32,7 +41,7 @@ export default function NameUpdateModal({ firstName: initialFirstName, lastName:
   return (
     <div className="fixed inset-0 z-50 bg-light/80 flex items-center justify-center">
       <form onSubmit={handleSave} className="bg-light p-6 sm:p-10 w-full max-w-lg relative border border-hover-tint animate-fade-in">
-        
+
         {/* Close Button */}
         <button
           onClick={onClose}

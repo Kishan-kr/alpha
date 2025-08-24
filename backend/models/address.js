@@ -5,8 +5,7 @@ const { countries } = require('../utils/enums');
 const addressSchema = new mongoose.Schema(
   {
     fullName: {
-      type: String,
-      required: true
+      type: String
     },
     line1: {
       type: String,

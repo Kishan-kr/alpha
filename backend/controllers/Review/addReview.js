@@ -3,7 +3,6 @@ const review = require("../../models/review");
 const CustomError = require("../../utils/customError");
 const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
 const Order = require("../../models/order");
-const OrderedProduct = require("../../models/orderedProduct");
 
 const addReview = async (req, res) => {
     try {
@@ -17,14 +16,10 @@ const addReview = async (req, res) => {
             throw new CustomError("Product ID is required", 400);
         }
 
-        // Step 1: Check if user has an order with this product
-        const userOrders = await Order.find({ userId }).select('_id'); // get all orderIds of the user
-        const orderIds = userOrders.map(order => order._id);
-
-        // Step 2: Check if any of those orders contain this product
-        const hasPurchased = await OrderedProduct.exists({
-            orderId: { $in: orderIds },
-            productId: productId
+        // Check if user has purchased this product in any order
+        const hasPurchased = await Order.exists({
+            userId,
+            "items.productId": productId, // check inside the items array
         });
 
         if (!hasPurchased) {
@@ -34,13 +29,13 @@ const addReview = async (req, res) => {
         const { comment, images } = req.body;
         const rating = Number(req.body.rating);
 
-        
+
         // check for validation errors 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ status: false, error: errors.array()[0]?.msg });
         }
-        
+
         console.log('rating: ', rating);
         // Check for duplicates
         const existingReview = await review.findOne({ productId, userId });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { X, LoaderCircle, Check } from "lucide-react";
 import { showErrorToastWithIcon } from "../../utils/customToasts";
 
@@ -13,6 +13,15 @@ const REASONS = [
 export default function ReturnModal({ onClose, onConfirm, loading }) {
   const [reason, setReason] = useState(REASONS[0]);
   const [otherReason, setOtherReason] = useState("");
+
+  // Lock body scroll when modal is open
+  useEffect(() => {
+    document.body.classList.add("overflow-hidden", "h-screen");
+
+    return () => {
+      document.body.classList.remove("overflow-hidden", "h-screen");
+    };
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
