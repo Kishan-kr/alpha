@@ -1,29 +1,92 @@
-import React from 'react';
+// src/pages/About.jsx
+import React from "react";
 
-const About = () => {
+export default function About() {
   return (
-    <section className="bg-dark text-gray-900 px-6 md:px-20 py-20">
-      <div className="max-w-5xl mx-auto text-center">
-        <h2 className="text-4xl md:text-5xl font-bold tracking-tight uppercase mb-8">
-          More Than Style—It’s a Statement
-        </h2>
-        <div className="text-lg leading-relaxed space-y-6 text-gray-700">
+    <div className="bg-light px-6 py-20 md:px-24 md:py-24">
+      <div className="max-w-3xl mx-auto">
+        {/* Overline */}
+        <p className="uppercase text-xxs tracking-wide text-subtext">Our Story</p>
+
+        {/* Display title */}
+        <h1 className="mt-3 text-3xl md:text-5xl leading-tight font-gfs-didot text-dark">
+          Tashn
+        </h1>
+
+        {/* Lead */}
+        <p className="mt-6 text-base md:text-lg font-gfs-didot text-dark">
+          An attitude. A feeling. A story only the wearer understands.
+        </p>
+
+        {/* Body */}
+        <div className="mt-6 space-y-5 text-sm md:text-base text-dark">
           <p>
-            At <strong>Tashn</strong>, we believe fashion is more than just what you wear—it's how you express who you are. Born from a passion for individuality and a love for urban culture, we craft elevated essentials for modern men who walk with confidence and live unapologetically bold.
+            Tashn is more than a clothing brand — it’s a reflection of you.
           </p>
           <p>
-            Our mission is simple: to break away from the ordinary and bring you timeless silhouettes infused with edgy details, comfort, and craftsmanship. Each piece in our collection is thoughtfully designed to echo the rhythm of the streets—raw, refined, and relentlessly original.
+            It’s where elegance meets emotion, and where simplicity holds deep meaning.
           </p>
           <p>
-            From oversized tees to slick polos, <strong>Tashn</strong> bridges heritage and hype with an Indian soul and a global attitude. Whether you're hitting the city or chasing your hustle, we’re here to make sure you look like you mean it.
+            We believe that what you wear should go beyond style. It should carry energy.
+            Character. Intention. Tashn is designed for those who live with purpose — artists,
+            creators, dreamers, and believers.
           </p>
-          <p className="text-xl font-semibold text-gray-900 pt-4">
-            This is <span className="text-[#556B2F]">Tashn</span>. Where fit meets finesse, and every thread tells your story.
+          <p>
+            Every piece is carefully crafted with premium quality to not just look good, but feel
+            powerful. When you wear Tashn, you're not just dressing up — you're stepping into your
+            passion, your story, your identity.
           </p>
         </div>
-      </div>
-    </section>
-  );
-};
 
-export default About;
+        {/* Divider */}
+        <div className="mt-10 border-t border-hover-tint" />
+
+        {/* Pillars header */}
+        <h2 className="mt-6 uppercase text-xs tracking-wide text-subtext">
+          What We Stand For
+        </h2>
+
+        {/* Pillars grid */}
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <h3 className="text-sm uppercase text-dark">Premium Quality</h3>
+            <p className="mt-2 text-sm text-subtext">
+              We believe true quality is in the feel — the weight of the fabric, the touch of the thread, the finesse of every detail. Craft that speaks without saying a word.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-sm uppercase text-dark">Designed to Feel</h3>
+            <p className="mt-2 text-sm text-subtext">
+              Every Tashn piece is made to stir something in you — to remind you of your drive,
+              your fire, your purpose. This isn’t just clothing. It’s a feeling.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-sm uppercase text-dark">You, Reflected</h3>
+            <p className="mt-2 text-sm text-subtext">
+              Our designs are honest, intentional, and timeless — made to let you shine through.
+              We don’t believe in distractions. We believe in focus.
+            </p>
+          </div>
+
+          <div>
+            <h3 className="text-sm uppercase text-dark">Built for the Passionate</h3>
+            <p className="mt-2 text-sm text-subtext">
+              Whether you're a storyteller, a painter, a reader, a director, or simply someone who
+              believes deeply in what they do — Tashn is created with you in mind. You live for
+              meaning. So do we.
+            </p>
+          </div>
+        </div>
+
+        {/* Closing mark */}
+        <div className="mt-10 border-t border-hover-tint pt-6">
+          <p className="font-gfs-didot text-dark">Tashn</p>
+          <p className="text-subtext text-sm">Wear what you feel. Live what you believe.</p>
+        </div>
+      </div>
+    </div>
+  );
+}

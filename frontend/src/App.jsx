@@ -19,6 +19,11 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getUser } from './store/actions/userAction';
 import EditAddress from './components/userProfile/EditAddress';
+import Contact from './pages/Contact';
+import ReturnsAndExchangePolicy from './pages/ReturnsAndExchangePolicy';
+import ShippingAndDelivery from './pages/ShippingAndDelivery';
+import Terms from './pages/Terms';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 
 export default function App() {
   // const { isLoggedIn } = useSelector(state => state.user);
@@ -45,7 +50,17 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+
+          {/* company pages routes */}
           <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+
+          {/* policy pages routes */}
+          <Route path="/return-policy" element={<ReturnsAndExchangePolicy />} />
+          <Route path="/shipping" element={<ShippingAndDelivery />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+
           <Route path="/search" element={<Search />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:slug" element={<ProductView />} />
