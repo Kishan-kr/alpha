@@ -56,6 +56,19 @@ export const getUser = createAsyncThunk(
   }
 );
 
+// Logout user
+export const logout = createAsyncThunk(
+  'user/logout',
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axios.post(`${BASE_URL}/auth/logout`, {}, {withCredentials: true});
+      return res.data || {};
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.error || err.message);
+    }
+  }
+);
+
 
 // update user [first name and last name]
 export const updateUser = createAsyncThunk(

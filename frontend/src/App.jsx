@@ -24,6 +24,7 @@ import ReturnsAndExchangePolicy from './pages/ReturnsAndExchangePolicy';
 import ShippingAndDelivery from './pages/ShippingAndDelivery';
 import Terms from './pages/Terms';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import Protected from './components/common/Protected';
 
 export default function App() {
   // const { isLoggedIn } = useSelector(state => state.user);
@@ -61,14 +62,16 @@ export default function App() {
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
 
+          {/* protected routes */}
+          <Route path="/profile" element={<Protected> <UserProfile /> </Protected>} />
+          <Route path="/profile/edit-address" element={<Protected> <EditAddress /> </Protected>} />
+          <Route path="/orders" element={<Protected> <Orders /> </Protected>} />
+          <Route path="/orders/:orderId" element={<Protected> <OrderDetails /> </Protected>} />
+
           <Route path="/search" element={<Search />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:slug" element={<ProductView />} />
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/profile/edit-address" element={<EditAddress />} />
           <Route path="/bag" element={<Bag />} />
-          <Route path="/orders" element={<Orders />} />
-          <Route path="/orders/:orderId" element={<OrderDetails />} />
           <Route path={`/collections/:category`} element={<ValidateCategory />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

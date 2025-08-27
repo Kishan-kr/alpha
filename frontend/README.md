@@ -148,6 +148,7 @@ notes
 - done with orders list page, models, routes and controllers [done]
 - done with order details page, models, routes and controllers [done]
 - added cancel, return, and exchange requests as well as routes and controllers [done]
-- need to protect the orders routes in FE side [IMP]
+- need to protect the orders routes in FE side [done]
+- protect profile routes too [done]
 
 - need to add shiprocket checkout or payment integration [IMP]

@@ -1,13 +1,18 @@
 import React from 'react';
 import { LoaderCircle } from 'lucide-react';
 import EmailUpdateModal from '../components/userProfile/EmailUpdateModal';
-import { Link, useSearchParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { LOADING } from '../constants/appConstants';
 import NameUpdateModal from '../components/userProfile/NameUpdateModal';
+import { logout } from '../store/actions/userAction';
+import { showErrorToastWithIcon } from '../utils/customToasts';
+import toast from 'react-hot-toast';
 
 export default function UserProfile() {
-  const { userInfo: userData, status } = useSelector(state => state.user);
+  const { userInfo: userData, status, logoutStatus } = useSelector(state => state.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
   const showEmailModal = searchParams.get('mod') === 'email';
   const showNameModal = searchParams.get('mod') === 'name';
@@ -18,6 +23,17 @@ export default function UserProfile() {
 
   const handleNameEdit = () => {
     setSearchParams({ mod: 'name' });
+  };
+
+  const handleLogout = async () => {
+    const result = await dispatch(logout());
+    if (result.meta.requestStatus === "fulfilled") {
+      toast.success("You have been logged out");
+      navigate("/login");
+    }
+    else if(result.meta.requestStatus === "rejected"){
+      showErrorToastWithIcon("Failed to logout");
+    }
   };
 
   const closeModal = () => {
@@ -110,9 +126,9 @@ export default function UserProfile() {
                         <p>{addr.country}</p>
                       </div>
 
-                        {addr.isDefault && <span className="absolute -top-3 right-1 border-2 border-light text-xs font-light text-light bg-[#5DB7DE] px-2 py-0.5 rounded-full">
-                          Default
-                        </span>}
+                      {addr.isDefault && <span className="absolute -top-3 right-1 border-2 border-light text-xs font-light text-light bg-[#5DB7DE] px-2 py-0.5 rounded-full">
+                        Default
+                      </span>}
                       {/* Second Row: City/State/Pincode/Country */}
                       <div className="text-sm font-light text-dark flex flex-col flex-wrap gap-x-2 gap-y-2">
                       </div>
@@ -130,6 +146,17 @@ export default function UserProfile() {
             <Link to={'edit-address'} className="absolute sm:static top-0 right-0 h-fit uppercase font-light underline text-xs text-dark cursor-pointer">
               Edit
             </Link>
+          </div>
+
+          {/* Logout Button */}
+          <div className="mt-12">
+            <button
+              onClick={handleLogout}
+              disabled={logoutStatus === LOADING}
+              className="w-full sm:w-[90px] flex items-center justify-center border border-hover-tint text-dark px-5 py-2 uppercase text-xs font-light enabled:hover:bg-surface transition-colors enabled:cursor-pointer disabled:text-hover-tint"
+            >
+              {logoutStatus === LOADING ? <span className='animate-spin text-subtext'><LoaderCircle className='w-4 h-4' /></span> : "Logout"}
+            </button>
           </div>
 
           {showEmailModal && (

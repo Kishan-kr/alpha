@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getUser, sendOtpOnEmail, sendOtpOnPhone, updateAllAddresses, updateUser, verifyEmailOtp, verifySmsOtp } from '../actions/userAction';
+import { getUser, logout, sendOtpOnEmail, sendOtpOnPhone, updateAllAddresses, updateUser, verifyEmailOtp, verifySmsOtp } from '../actions/userAction';
 import { FAILED, LOADING, SUCCEEDED } from '../../constants/appConstants';
 
 // dummy data of user 
@@ -9,6 +9,7 @@ const initialState = {
   searchQuery: '',
   phoneStatus: 'idle', // 'loading' | 'succeeded' | 'failed'
   verifyStatus: 'idle', // 'loading' | 'succeeded' | 'failed'
+  logoutStatus: 'idle', // 'loading' | 'succeeded' | 'failed'
   status: 'idle', // 'loading' | 'succeeded' | 'failed'
   updateStatus: 'idle', // 'loading' | 'succeeded' | 'failed'
   error: null,
@@ -41,6 +42,21 @@ const userSlice = createSlice({
           state.error = action.payload;
         }
         state.status = FAILED;
+      })
+
+
+    builder.addCase(logout.pending, (state) => {
+      state.logoutStatus = LOADING;
+    })
+      .addCase(logout.fulfilled, (state) => {
+        state.userInfo = null;
+        state.isLoggedIn = false;
+        state.logoutStatus = SUCCEEDED;
+        state.error = null;
+      })
+      .addCase(logout.rejected, (state, action) => {
+        state.error = action.payload;
+        state.logoutStatus = FAILED;
       })
 
 

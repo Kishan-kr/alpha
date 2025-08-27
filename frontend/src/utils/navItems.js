@@ -1,4 +1,4 @@
-import { Home, Info, LayoutGrid, Truck, User } from "lucide-react";
+import { Home, Info, LayoutGrid, Package, Store, Truck, User } from "lucide-react";
 
 export default [
   { name: 'Home', path: '/', Icon: Home },
@@ -8,7 +8,7 @@ export default [
       // { name: 'Oversized Polos', path: '/collections/oversized-polo' },
     ],
   },
+  { name: 'Shop', path: '/products', Icon: Store },
+  { name: 'Orders', path: '/orders', Icon: Package },
   { name: 'About Us', path: '/about', Icon: Info },
-  { name: 'Account', path: '/account', Icon: User },
-  { name: 'Track Order', path: '/track-order', Icon: Truck },
 ];
