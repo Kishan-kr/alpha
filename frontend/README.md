@@ -1,4 +1,4 @@
-### Need to add category ID (from mongoDB) manually in constant/category file `IMP` ###
+### Need to add category ID (from mongoDB) manually in constant/category file [IMP] ###
 
 ### HOMEPAGE ###
   - Hero section `done`. Need to replace video
@@ -32,7 +32,7 @@
   - shopping bag page: done inc-dec and remove items from bag for all users `done`
   - shopping bag page: tested inc-dec and remove items from bag for public users only `done`
   - shopping bag page: tested inc-dec and remove items from bag for logged in users also
-  - need to see the logic for dynamic delivery fee, currently it is static (75) [IMP]
+  - need to see the logic for dynamic delivery fee, currently it is static 0 [IMP]
 
 
 - add loader and error element in new arrivals section
@@ -54,7 +54,7 @@
 - add new route and controller for updating all addresses at once
 - fixed edit address page, added ensure default address middleware
 - modified UserProfile to show full name and contact number values also
-- need to wrap the profile page in a protected component [IMP]
+- need to wrap the profile page in a protected component [done]
 
 
 some modification in the order management.
@@ -152,3 +152,6 @@ notes
 - protect profile routes too [done]
 
 - need to add shiprocket checkout or payment integration [IMP]
+
+- If a guest user at bag page fills address and verifies otp, his bag items gets fetched from DB and bag state gets updated [done] [issue]
+- fixed the above by removing isLoggedIn dependency state from effect

@@ -11,6 +11,7 @@ const Bag = () => {
   const { isLoggedIn } = useSelector(state => state.user);
   const steps = ["Shopping Bag", "Delivery", "Payment"];
   const [activeStep, setActiveStep] = useState(0)
+  const [deliveryAddress, setDeliveryAddress] = useState({});
   const dispatch = useDispatch();
 
   // effect to fetch bag items from DB if logged in 
@@ -18,13 +19,13 @@ const Bag = () => {
     if (isLoggedIn) {
       dispatch(fetchUserBagThunk())
     }
-  }, [isLoggedIn, dispatch])
+  }, [dispatch])
 
   const subtotal = products?.reduce((sum, product) => sum + product.effectivePrice * product.quantity, 0);
   const originalTotal = products?.reduce((sum, product) => sum + product.originalPrice * product.quantity, 0);
   const discount = originalTotal - subtotal;
-  const delivery = 75; // need to make it dynamic
-  const total = subtotal + delivery;
+  const deliveryFee = 0; // need to make it dynamic
+  const total = subtotal + deliveryFee;
   // calculate discount percentage 
   const discountPercent =
   originalTotal > 0 ? ((discount / originalTotal) * 100).toFixed(2) : 0;
@@ -62,10 +63,10 @@ const Bag = () => {
       </div>
 
       {/* title  */}
-      <div className='flex gap-2 mt-12 mb-3 md:mb-11'>
+      {activeStep === 0 && <div className='flex gap-2 mt-12 mb-3 md:mb-11'>
         <h2 className="text-xl uppercase font-gfs-didot text-dark">{steps[activeStep]}</h2>
         {activeStep === 0 && <small className='p-px px-1 mt-1 bg-surface text-xxs h-fit text-subtext'>{products?.length} {products?.length > 1 ? "items" : "item"}</small>}
-      </div>
+      </div>}
 
       {/* return ShoppingBag or Address or Payment component based on active state  */}
       {activeStep === 0 &&
@@ -74,24 +75,26 @@ const Bag = () => {
           subtotal={subtotal}
           discount={discount}
           discountPercent={discountPercent}
-          delivery={delivery}
+          delivery={deliveryFee}
           total={total}
-          // updateProducts={updateProducts}
           handleCheckout={nextStep}
         />}
       {activeStep === 1 &&
         <DeliverySection
           handleNext={nextStep}
           handleBack={prevStep}
+          setDeliveryAddress={setDeliveryAddress}
         />}
       {activeStep === 2 &&
         <Checkout
           products={products}
           subtotal={subtotal}
           discount={discount}
-          delivery={delivery}
+          delivery={deliveryFee}
+          deliveryAddress={deliveryAddress}
           total={total}
-          updateProducts={updateProducts}
+          // need to provide the onPlaceOrder method for COD
+          // need to provide the onStartPayment method for online payment
           handleBack={prevStep}
         />}
     </div>

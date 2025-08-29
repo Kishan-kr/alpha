@@ -12,7 +12,7 @@ export const MAX_ALLOWED_QUANTITY_REACH_MSG = "You’ve reached the maximum allo
 export const STOCK_LIMIT_REACH_MSG = "You’ve reached the available stock limit for this item";
 export const BAG_QUANTITY_UPDATE_DELAY = 500; // debounce wait time in ms
 
-export const OTP_RESEND_TIMEOUT = 5; // seconds
+export const OTP_RESEND_TIMEOUT = 120; // seconds
 export const OTP_LENGTH = 6;
 export const REDIRECT_QUERY_PARAM = 're_dir';
 
