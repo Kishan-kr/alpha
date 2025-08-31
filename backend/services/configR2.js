@@ -37,6 +37,18 @@ const uploadToR2 = async (buffer, originalname, prefix = 'products/') => {
   return `${process.env.CDN_URL}/${key}`;
 };
 
+const uploadBufferToR2 = async (buffer, key, contentType) => {
+  const command = new PutObjectCommand({
+    Bucket: process.env.R2_BUCKET,
+    Key: key,
+    Body: buffer,
+    ContentType: contentType,
+    CacheControl: 'public, max-age=31536000, immutable',
+  });
+  await r2.send(command);
+  return `${process.env.CDN_URL}/${key}`;
+};
+
 /**
  * Deletes a file from Cloudflare R2
  * @param {string} fileKey - The key (path) of the file inside the bucket
@@ -103,4 +115,4 @@ const getFileKeyFromUrl = (url) => {
   return url.startsWith(cdnPrefix) ? url.slice(cdnPrefix.length) : null;
 };
 
-module.exports = { r2, uploadToR2, deleteFromR2, deleteMultipleFromR2, getFileKeyFromUrl };
+module.exports = { r2, uploadToR2, deleteFromR2, deleteMultipleFromR2, getFileKeyFromUrl, uploadBufferToR2 };

@@ -4,6 +4,7 @@ const uploadImages = require('../controllers/Images/upload');
 const authenticateAdmin = require('../middlwares/authenticateAdmin');
 const { MAX_IMAGE_SIZE } = require('../utils/constants');
 const deleteImage = require('../controllers/Images/delete');
+const uploadImagesWithVariants = require('../controllers/Images/uploadWithVariants');
 
 const router = express.Router();
 const storage = multer.memoryStorage();
@@ -23,6 +24,17 @@ router.post(
     { name: 'images', maxCount: 5 }
   ]),
   uploadImages
+);
+
+// POST /api/images/variants             → Upload images
+router.post(
+  '/variants',
+  authenticateAdmin,
+  upload.fields([
+    { name: 'thumbnail', maxCount: 1 },
+    { name: 'images', maxCount: 5 }
+  ]),
+  uploadImagesWithVariants
 );
 
 // DELETE /api/images             → Delete an image
