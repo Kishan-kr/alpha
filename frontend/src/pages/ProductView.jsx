@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { fetchProductDetail, fetchProducts } from "../store/actions/productAction";
 import { LOADING } from "../constants/appConstants";
 import SizeChartModal from "../components/common/SizeChartModal";
+import ResponsiveImage from "../components/common/ResponsiveImage";
 
 
 const ProductView = () => {
@@ -70,8 +71,8 @@ const ProductView = () => {
   // Replace with actual related products logic
   const moreProducts = items?.filter(item => item._id !== product._id);
 
-  const openSizeChartModal = () => {setShowSizeChartModal(true)}
-  const closeSizeChartModal = () => {setShowSizeChartModal(false)}
+  const openSizeChartModal = () => { setShowSizeChartModal(true) }
+  const closeSizeChartModal = () => { setShowSizeChartModal(false) }
 
   return (
     <section className="bg-white text-dark px-6 sm:px-6 md:px-28 pt-20 pb-6 md:pt-26 md:pb-8">
@@ -80,11 +81,20 @@ const ProductView = () => {
         <div className="grid grid-cols-1 gap-6 md:gap-y-15">
           {images.length > 0 && images.map((src, index) => (
             <figure key={index} className="overflow-hidden aspect-[2/3] bg-surface">
-              <img
+              {/* <img
                 src={src}
                 alt={title}
                 loading="lazy"
                 className="w-full h-full object-cover"
+              /> */}
+
+              <ResponsiveImage
+                source={src}
+                alt={`${title} – ${index + 1}`}
+                className="w-full h-full object-cover"
+                variants={["phone", "listing", "desktop"]} // include multiple responsive sizes
+                sizes="(max-width: 768px) 100vw, (max-width: 1280px) 70vw, 800px"
+                defaultVariant="listing"
               />
             </figure>
 
@@ -146,7 +156,7 @@ const ProductView = () => {
           <ul className="text-subtext font-light text-sm mb-6">{description?.map((line, idx) => (
             <li key={idx}>{line}</li>
           ))}</ul>
-          <DescriptionAndCare description={story}/>
+          <DescriptionAndCare description={story} />
         </div>
 
         {/* Sticky bottm bar on mobile, static on md+ */}

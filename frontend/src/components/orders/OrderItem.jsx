@@ -4,6 +4,7 @@ import {
 } from "../../utils/dateFormatter";
 import StatusIndicator from "./StatusIndicator";
 import { ORDER_ITEM_STATUS_COLORS } from "../../constants/styleMaps";
+import ResponsiveImage from "../common/ResponsiveImage";
 
 /**
  * OrderItem
@@ -26,11 +27,20 @@ export default function OrderItem({ item, actionLoading, canReturn, canExchange,
         {/* Thumb (2/3 ratio) */}
         <figure className="w-28 min-w-24 xxs:w-32 xxs:min-w-28 md:w-40 md:min-w-40 aspect-[2/3] bg-surface overflow-hidden">
           {item?.thumbnail ? (
-            <img
-              src={item.thumbnail}
-              alt={item.title || "Product"}
+            // <img
+            //   src={item.thumbnail}
+            //   alt={item.title || "Product"}
+            //   className="h-full w-full object-cover"
+            //   loading="lazy"
+            // />
+
+            <ResponsiveImage
+              source={item.thumbnail}      // DB-stored single URL
+              alt={item.title}
               className="h-full w-full object-cover"
-              loading="lazy"
+              variants={["thumb"]}    // strictly thumbnail only
+              sizes="33vw"            // small card; override as you like
+              defaultVariant="thumb"  // use the tiny file as <img src>
             />
           ) : null}
         </figure>

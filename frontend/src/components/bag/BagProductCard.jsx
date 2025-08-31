@@ -1,18 +1,28 @@
 import { Plus, Minus, X } from "lucide-react";
 import React from "react";
+import ResponsiveImage from "../common/ResponsiveImage";
 
 
 const BagProductCard = ({ product, onIncrease, onDecrease, onRemove }) => {
-  const {effectivePrice, originalPrice} = product;
- 
+  const { effectivePrice, originalPrice } = product;
+
   return (
     <div className="relative flex sm:items-center justify-between">
       <div className="flex items-center sm:items-start gap-4 xxs:gap-6 md:gap-16 w-full">
         <figure className="w-48 min-w-36 md:min-w-44 md:w-44 overflow-hidden aspect-[2/3] bg-surface">
-          <img
+          {/* <img
             src={product.thumbnail}
             alt={product.title}
             className="h-full object-cover"
+          /> */}
+
+          <ResponsiveImage
+            source={product.thumbnail}      // DB-stored single URL
+            alt={product.title}
+            className="h-full object-cover"
+            variants={["thumb"]}    // strictly thumbnail only
+            sizes="33vw"            // small card; override as you like
+            defaultVariant="thumb"  // use the tiny file as <img src>
           />
         </figure>
 

@@ -139,9 +139,9 @@ notes
 
 
 # media optimization
-- currently, I am storing images like {thumbnail, images: [], ...} in schema and the files will stored at cloudflare r2.
-- I want to go fully free for now.
-- what if I store different versions, like for desktops, serving the images default stored urls in DB, and for phone, another versions that will be stored at R2 by prepending /phone or something like this with same ids.
+- created new route and controller to store different variants of an image on R2.
+- optimized all pages where product images are rendered, to render appropriate variant according to screen size and resolution.
+- For thumbnails, it will always render the thumbnail version only irrespective of screen size
 
 
 # ORDERS MANAGEMENT
