@@ -3,7 +3,8 @@ import axios from 'axios';
 import getAuthHeaders from '../../utils/authHeaderHelper';
 
 // Global API base
-const BASE_URL = `${import.meta.env.VITE_API_URL}/carts`;
+const API_BASE = import.meta.env.VITE_API_URL ?? "/api"
+const BASE_URL = `${API_BASE}/carts`;
 
 // Add to bag
 export const addItemToBagThunk = createAsyncThunk(

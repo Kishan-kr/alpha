@@ -4,7 +4,7 @@ import axios from "axios";
 import { NEW_ARRIVALS_COUNT } from "../../constants/appConstants";
 
 // Global API base
-const BASE_URL = `${import.meta.env.VITE_API_URL}`;
+const BASE_URL = import.meta.env.VITE_API_URL ?? "/api";
 
 // Fetch all customer reviews to show on customer diaries section
 export const fetchHomeReviews = createAsyncThunk(
