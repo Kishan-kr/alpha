@@ -1,12 +1,26 @@
 import React, { useEffect, useRef } from 'react';
-import heroDestopVideo from '../../assets/videos/heroDestopVideo.mp4';
-import heroMobileVideo from '../../assets/videos/heroMobileVideo.mp4';
+import heroLandscapePosterLocal from '../../assets/photos/hero_landscape_poster.jpg';
+import heroPortraitPosterLocal from '../../assets/photos/hero_portrait_poster.jpg';
 import { ArrowRight } from 'lucide-react';
+import useMediaQuery from '../../hooks/useMediaQuery';
+
+// Get base URLs from .env
+const BASE_URL = import.meta.env.VITE_HERO_VIDEO_BASE || "https://cdn.tashn.in/videos/";
+
+const heroPortraitMp4 = `${BASE_URL}hero_portrait.mp4`;
+const heroPortraitWebm = `${BASE_URL}hero_portrait.webm`;
+const heroPortraitPoster = `${BASE_URL}hero_portrait_poster.jpg`;
+
+const heroLandscapeMp4 = `${BASE_URL}hero_landscape.mp4`;
+const heroLandscapeWebm = `${BASE_URL}hero_landscape.webm`;
+const heroLandscapePoster = `${BASE_URL}hero_landscape_poster.jpg`;
 
 export default function Hero({ handleNewCollection }) {
   const desktopRef = useRef(null)
   const mobileRef = useRef(null)
   const heroRef = useRef(null)
+  // check screen size
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   // Pause video when Hero scrolls out of view
   useEffect(() => {
@@ -39,9 +53,37 @@ export default function Hero({ handleNewCollection }) {
         loop
         muted
         playsInline
+        poster={isMobile ? 
+          heroPortraitPoster || heroPortraitPosterLocal : 
+          heroLandscapePoster || heroLandscapePosterLocal
+        }
       >
-        <source src={heroMobileVideo} media="(max-width: 768px)" type="video/mp4" />
-        <source src={heroDestopVideo} media="(min-width: 769px)" type="video/mp4" />
+        {/* <source src={heroMobileVideo} media="(max-width: 768px)" type="video/mp4" />
+        <source src={heroDestopVideo} media="(min-width: 769px)" type="video/mp4" /> */}
+
+        {/* Portrait (mobile) */}
+        <source
+          src={heroPortraitWebm}
+          media="(max-width: 768px)"
+          type="video/webm"
+        />
+        <source
+          src={heroPortraitMp4}
+          media="(max-width: 768px)"
+          type="video/mp4"
+        />
+
+        {/* Landscape (desktop) */}
+        <source
+          src={heroLandscapeWebm}
+          media="(min-width: 769px)"
+          type="video/webm"
+        />
+        <source
+          src={heroLandscapeMp4}
+          media="(min-width: 769px)"
+          type="video/mp4"
+        />
         Your browser does not support the video tag.
       </video>
 
