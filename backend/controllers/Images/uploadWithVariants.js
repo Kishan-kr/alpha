@@ -57,7 +57,13 @@ const uploadImagesWithVariants = async (req, res) => {
       result.images.push({ id: assetId, slug, ...set });
     }
 
-    return res.status(200).json(result);
+    // simplified version of urls also to be directly used in add product route
+    const simplified = {
+      thumbnail: result.thumbnail?.variants?.thumb_600x900?.jpg,
+      images: result.images.map(img => img?.variants?.listing_1200?.jpg)
+    };
+
+    return res.status(200).json({ ...result, simplified });
   } catch (error) {
     console.error('Upload error:', error);
     return res.status(500).json({ error: 'Upload failed' });
