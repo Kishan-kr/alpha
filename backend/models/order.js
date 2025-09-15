@@ -114,6 +114,7 @@ const OrderSchema = new Schema(
     placedAt: { type: Date, default: Date.now },
     cancelledAt: { type: Date },
     deliveredAt: { type: Date },
+    shiprocketOrderId: { type: String },
   },
   { timestamps: true }
 );

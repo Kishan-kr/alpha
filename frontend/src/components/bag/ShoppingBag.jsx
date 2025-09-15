@@ -10,6 +10,7 @@ import {
   MAX_ALLOWED_QUANTITY_REACH_MSG,
   STOCK_LIMIT_REACH_MSG
 } from '../../constants/appConstants';
+import CheckoutButton from './FastrrCheckoutButton';
 
 const ShoppingBag = ({ products, subtotal, discount, discountPercent, delivery, total, handleCheckout }) => {
 
@@ -114,9 +115,10 @@ const ShoppingBag = ({ products, subtotal, discount, discountPercent, delivery, 
             <span>Total</span>
             <span>₹ {total.toFixed(2)}</span>
           </div>
-          <button onClick={handleCheckout} className="text-sm mt-9 uppercase w-full justify-center items-center px-6 py-2 bg-dark text-light cursor-pointer">
+          {/* <button onClick={handleCheckout} className="text-sm mt-9 uppercase w-full justify-center items-center px-6 py-2 bg-dark text-light cursor-pointer">
             Checkout
-          </button>
+          </button> */}
+          <CheckoutButton />
         </div>
 
       </section>}
