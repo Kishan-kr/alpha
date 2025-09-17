@@ -25,7 +25,6 @@ import ShippingAndDelivery from './pages/ShippingAndDelivery';
 import Terms from './pages/Terms';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Protected from './components/common/Protected';
-import OrderSuccess from './pages/OrderSuccess';
 
 export default function App() {
   // const { isLoggedIn } = useSelector(state => state.user);
@@ -74,7 +73,6 @@ export default function App() {
           <Route path="/products/:slug" element={<ProductView />} />
           <Route path="/bag" element={<Bag />} />
           <Route path={`/collections/:category`} element={<ValidateCategory />} />
-          <Route path="/order-success" element={<OrderSuccess />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Layout>

@@ -155,16 +155,3 @@ notes
 
 - If a guest user at bag page fills address and verifies otp, his bag items gets fetched from DB and bag state gets updated [done] [issue]
 - fixed the above by removing isLoggedIn dependency state from effect
-
-
-# SHIPROCKET INTEGRATION
-- /api/products   to fetch all products
-- /api/products?category=cat_id     fetch all products of a category(collection)
-- /api/categories   to fetch all categories(collections)
-
-Alternate catalog APIs for Fastrr
-- /api/fastrr/products?limit=10&page=1    to fetch all products
-- /api/fastrr/products?collection_id=abc123&limit=10&page=1   to fetch all products of a category(collection)
-- /api/fastrr/collections?page=1&limit=10     to fetch all categories(collections)
-
-- in index.html test css and js scripts are added, need to replace with production ones [IMP]
