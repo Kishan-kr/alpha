@@ -130,7 +130,7 @@ module.exports = async (req, res) => {
         method: origin.payment?.method || "CARD",
         status: PAYMENT_STATUS.PAID, // zero-value / covered by original (adjust if you charge deltas)
         amount: 0,
-        currencies: DEFAULT_CURRENCY,
+        currency: DEFAULT_CURRENCY,
         createdAt: new Date(),
       },
       shipping: { status: "CREATED" }, // checkpoints can be appended later

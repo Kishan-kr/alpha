@@ -64,7 +64,7 @@ module.exports = async (req, res) => {
         status: initialPaymentStatus,
         amount: totals.grandTotal,
         transactionId: payment.transactionId || undefined,
-        currencies: DEFAULT_CURRENCY,
+        currency: DEFAULT_CURRENCY,
         createdAt: new Date(),
       },
       shipping,

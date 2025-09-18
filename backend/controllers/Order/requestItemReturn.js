@@ -104,7 +104,7 @@ module.exports = async (req, res) => {
         method: origin.payment?.method || "CARD",
         status: PAYMENT_STATUS.REFUND_PENDING,
         amount: line.subtotal,
-        currencies: DEFAULT_CURRENCY,
+        currency: DEFAULT_CURRENCY,
         createdAt: new Date(),
       },
       shipping: {}, // pickup logistics can later populate shipment/checkpoints if you wish

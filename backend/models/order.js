@@ -44,7 +44,7 @@ const PaymentSchema = new Schema(
     },
     amount: { type: Number, required: true, min: 0 },
     transactionId: { type: String },
-    currencies: {
+    currency: {
       type: String,
       enum: CURRENCIES,
       default: CURRENCY.INR,
