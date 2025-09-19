@@ -23,4 +23,27 @@ async function sendOTPSms(phoneNumber, otpValue) {
   }
 }
 
-module.exports = { sendOTPSms }
+/**
+ * Send order confirmation SMS to user
+ * @param {string} phone - User's phone number
+ * @param {string} orderNumber - Order number
+ * @param {number|string} orderTotal - Order grand total
+ */
+async function sendOrderConfirmationSMS(phone, orderNumber, orderTotal) {
+  try {
+    if (phone.length == 10) {
+      phone = `+91${phone}`;
+    }
+    // Compose message
+    const message = `Thank you for your order! Order No: ${orderNumber}. Total: ₹${orderTotal}. Team Tashn.`;
+    // 2Factor API for custom SMS
+    const url = `https://2factor.in/API/V1/${encode(apiKey)}/SMS/${encode(phone)}/${encode(message)}`;
+    const response = await axios.get(url);
+    console.log(`Order confirmation SMS sent to ${phone} for order ${orderNumber}`);
+    return response.data;
+  } catch (err) {
+    console.error("Error sending order confirmation SMS:", err.message);
+  }
+}
+
+module.exports = { sendOTPSms, sendOrderConfirmationSMS }

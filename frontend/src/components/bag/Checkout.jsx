@@ -1,10 +1,11 @@
-// src/components/bag/Checkout.jsx
 import React, { useMemo, useState } from "react";
 import CheckoutProductCard from "./CheckoutProductCard";
 import { Lock } from "lucide-react";
 import BackButton from "./BackButton";
 import toast from "react-hot-toast";
 import { showErrorToastWithIcon } from "../../utils/customToasts";
+import RazorpayPaymentButton from "./RazorpayPaymentButton";
+import api from "../../api/axiosClient";
 
 /**
  * Props:
@@ -13,7 +14,6 @@ import { showErrorToastWithIcon } from "../../utils/customToasts";
  *  - deliveryAddress?: { fullName, phone, line1, line2, city, state, pincode, country }
  *  - handleBack: () => void
  *  - onPlaceOrder?: (payload) => Promise<void> | void         // called for COD
- *  - onStartPayment?: (payload) => Promise<void> | void       // called for Online
  */
 export default function Checkout({
   products = [],
@@ -23,11 +23,11 @@ export default function Checkout({
   total = 0,
   deliveryAddress,
   handleBack,
-  onPlaceOrder,
-  onStartPayment,
+  onOrderSuccess = () => {}
 }) {
   const [paymentMethod, setPaymentMethod] = useState("ONLINE"); // "COD" | "ONLINE"
   const [loading, setLoading] = useState(false);
+  // const [errors, setErrors] = useState([]);
 
   const cleanItems = useMemo(
     () =>
@@ -36,10 +36,12 @@ export default function Checkout({
         title: p.title,
         quantity: Number(p.quantity || 1),
         price: Number(p.effectivePrice ?? p.originalPrice ?? 0),
+        subtotal: Number(p.effectivePrice ?? p.originalPrice ?? 0),
         size: p.size,
         color: p.color,
         sku: p.sku,
         thumbnail: p.thumbnail,
+        variantId: p.variantId
       })),
     [products]
   );
@@ -70,30 +72,44 @@ export default function Checkout({
     return true;
   };
 
+  // handle COD order placement only
   const handlePlaceOrder = async () => {
     if (!ensureAddress()) return;
+    setLoading(true);
     try {
-      setLoading(true);
-      if (paymentMethod === "COD") {
-        if (typeof onPlaceOrder === "function") {
-          await onPlaceOrder(payload);
+      // 1. Create order in backend (DB + Razorpay)
+      const response = await api.post("/orders", payload);
+      const { data, status } = response;
+
+      if (!data.status) {
+        // Handle backend error codes
+        if (status === 503) {
+          showErrorToastWithIcon("Failed to process order. Please try again.");
+        } else if (status === 409 && Array.isArray(data.errors)) {
+          // Stock error: show all errors
+          data.errors.forEach((errMsg) => showErrorToastWithIcon(errMsg));
+        } else if (data.error) {
+          showErrorToastWithIcon(data.error);
         } else {
-          // fallback for now if not wired
-          console.warn("onPlaceOrder callback not provided. Payload:", payload);
-          toast.success("Order placed (COD) — integrate onPlaceOrder to persist.");
+          showErrorToastWithIcon("Failed to process order. Try again.");
         }
-      } else {
-        if (typeof onStartPayment === "function") {
-          await onStartPayment(payload); // expect this to open your gateway / redirect
-        } else {
-          console.warn("onStartPayment callback not provided. Payload:", payload);
-          showErrorToastWithIcon("Online payment is not configured yet.");
-        }
+        return;
       }
+
+      const { order, token } = data;
+      onOrderSuccess(order?.orderNumber, token);
     } catch (err) {
-      showErrorToastWithIcon(
-        (typeof err === "object" && err && err.message) || String(err) || "Failed to proceed"
-      );
+      console.error(err);
+      // Handle network or unexpected errors
+      if (err?.response?.status === 503) {
+        showErrorToastWithIcon("Failed to process order. Please try again.");
+      } else if (err?.response?.status === 409 && Array.isArray(err?.response?.data?.errors)) {
+        err.response.data.errors.forEach((errMsg) => showErrorToastWithIcon(errMsg));
+      } else if (err?.response?.data?.error) {
+        showErrorToastWithIcon(err.response.data.error);
+      } else {
+        showErrorToastWithIcon("Something went wrong. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -186,7 +202,7 @@ export default function Checkout({
               <span className="text-sm">Online Payment (UPI / Card / NetBanking)</span>
               {paymentMethod === "ONLINE" && <span className="text-xxs uppercase">Selected</span>}
             </div>
-            <p className="mt-1 text-xxs uppercase text-subtext">Secure payment via gateway</p>
+            <p className="mt-1 text-xxs uppercase text-subtext">Secure payment via Razorpay</p>
           </label>
 
           <label className={`block border p-3 cursor-pointer mb-2 ${paymentMethod === "COD" ? "bg-surface border-dark" : "bg-light border-hover-tint"}`}>
@@ -206,23 +222,23 @@ export default function Checkout({
         </div>
 
         {/* Action button */}
-        <button
-          onClick={handlePlaceOrder}
-          disabled={loading}
-          className="mt-6 w-full rounded-none bg-dark text-light text-xs uppercase px-6 py-3 enabled:cursor-pointer hover:opacity-90 flex items-center justify-center gap-2"
-        >
-          {loading ? (
-            "Processing…"
-          ) : paymentMethod === "COD" ? (
-            <>
-              <Lock size={16} /> Place Order (COD) — ₹{Number(total || 0).toFixed(2)}
-            </>
-          ) : (
-            <>
-              <Lock size={16} /> Continue to Payment — ₹{Number(total || 0).toFixed(2)}
-            </>
-          )}
-        </button>
+        {paymentMethod === "COD" ?
+          <button
+            onClick={handlePlaceOrder}
+            disabled={loading}
+            className="mt-6 w-full rounded-none bg-dark text-light text-xs uppercase px-6 py-3 enabled:cursor-pointer hover:opacity-90 flex items-center justify-center gap-2"
+          >
+            {loading ? (
+              "Processing…"
+            ) : (
+              <>
+                <Lock size={16} /> Place Order (COD) — ₹{Number(total || 0).toFixed(2)}
+              </>
+            )}
+          </button> :
+          <RazorpayPaymentButton orderPayload={payload} onOrderSuccess={onOrderSuccess}/>
+        }
+
 
         {/* tiny reassurance */}
         <p className="mt-3 text-xxs uppercase text-subtext">

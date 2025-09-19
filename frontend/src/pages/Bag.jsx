@@ -4,6 +4,7 @@ import Checkout from '../components/bag/Checkout';
 import DeliverySection from '../components/bag/DeliverySection';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserBagThunk } from '../store/actions/bagAction';
+import { clearBag } from '../store/slices/bagSlice';
 
 
 const Bag = () => {
@@ -28,7 +29,7 @@ const Bag = () => {
   const total = subtotal + deliveryFee;
   // calculate discount percentage 
   const discountPercent =
-  originalTotal > 0 ? ((discount / originalTotal) * 100).toFixed(2) : 0;
+    originalTotal > 0 ? ((discount / originalTotal) * 100).toFixed(2) : 0;
 
   const nextStep = () => {
     if (activeStep < 2) {
@@ -40,6 +41,12 @@ const Bag = () => {
     if (activeStep > 0) {
       setActiveStep(activeStep - 1)
     }
+  }
+
+  // method to handle successful order placement 
+  const onOrderSuccess = async (orderNumber, token) => {
+    dispatch(clearBag());
+    window.location.href = `/order-success?ordn=${orderNumber}&token=${token}`;
   }
 
   return (
@@ -93,8 +100,7 @@ const Bag = () => {
           delivery={deliveryFee}
           deliveryAddress={deliveryAddress}
           total={total}
-          // need to provide the onPlaceOrder method for COD
-          // need to provide the onStartPayment method for online payment
+          onOrderSuccess={onOrderSuccess}
           handleBack={prevStep}
         />}
     </div>

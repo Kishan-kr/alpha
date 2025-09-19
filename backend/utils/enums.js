@@ -20,6 +20,7 @@ const ORDER_TYPES = Object.freeze(Object.values(ORDER_TYPE));
 
 // ---- Order status (as per your Order schema) ----
 const ORDER_STATUS = Object.freeze({
+  INITIATED: "INITIATED",
   PENDING: "PENDING",
   CONFIRMED: "CONFIRMED",
   SHIPPED: "SHIPPED",
@@ -33,6 +34,7 @@ const ORDER_STATUS = Object.freeze({
   RETURN_REJECTED: "RETURN_REJECTED",
   EXCHANGE_REJECTED: "EXCHANGE_REJECTED",
   EXCHANGE_REQUESTED: "EXCHANGE_REQUESTED",
+  ABANDONED: "ABANDONED",
 });
 const ORDER_STATUSES = Object.freeze(Object.values(ORDER_STATUS));
 
@@ -54,6 +56,7 @@ const PAYMENT_METHOD = Object.freeze({
   UPI: "UPI",
   NETBANKING: "NETBANKING",
   WALLET: "WALLET",
+  NONE: "NONE",
 });
 const PAYMENT_METHODS = Object.freeze(Object.values(PAYMENT_METHOD));
 

@@ -10,12 +10,13 @@ const cancelWholeOrder = require("../controllers/Order/cancelWholeOrder");
 
 const requestItemReturn = require("../controllers/Order/requestItemReturn");
 const requestItemExchange = require("../controllers/Order/requestItemExchange");
+const verifyStocks = require("../middlwares/verifyStocks");
 
 // const markReturnPickedUp = require("../controllers/Order/markReturnPickedUp");
 // const markReturnReceived = require("../controllers/Order/markReturnReceived");
 // const markExchangeDelivered = require("../controllers/Order/markExchangeDelivered");
 
-router.post("", authenticateUser, createOrder);
+router.post("", authenticateUser, verifyStocks, createOrder);
 router.get("", authenticateUser, getOrdersByUserId);
 router.get("/:orderId", authenticateUser, getOrderById);
 

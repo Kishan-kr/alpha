@@ -18,3 +18,6 @@ exports.ORDER_NUMBER_PREFIX = Object.freeze({
 // Finance
 exports.DEFAULT_CURRENCY = "INR";
 
+// order received email address
+exports.ORDERS_EMAIL_ADDRESS = "orders@tashn.in"
+

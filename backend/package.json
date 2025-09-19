@@ -25,6 +25,7 @@
     "mongoose": "^8.14.1",
     "multer": "^2.0.1",
     "nodemailer": "^7.0.3",
+    "razorpay": "^2.9.6",
     "sharp": "^0.34.3",
     "uuid": "^11.1.0"
   }

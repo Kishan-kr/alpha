@@ -8,27 +8,24 @@ try { Product = require("../models/product"); } catch { /* app may name it diffe
  * Adjust inventory by delta (+ to restock, - to reserve)
  * Best effort across common shapes: product-level or variants[].
  */
-async function adjustStock({ productId, variantId, size, color, delta }) {
+async function adjustStock({ productId, size, delta, color }) {
   if (!Product || !mongoose.Types.ObjectId.isValid(productId) || !delta) return;
 
-  // Variant first
-  if (variantId && mongoose.Types.ObjectId.isValid(variantId)) {
-    await Product.updateOne(
-      { _id: productId, "variants._id": variantId },
-      { $inc: { "variants.$.stock": delta } }
+  // Adjust by size (main inventory logic)
+  if (size) {
+    const result = await Product.updateOne(
+      { _id: productId, "sizes.size": size },
+      { $inc: { "sizes.$.quantity": delta } }
     ).exec();
-    return;
+    if (result?.modifiedCount) {
+      console.log('Stock adjusted for product', productId, 'size', size, 'by', delta); // debug
+      return
+    };
   }
 
-  // Fallback by size/color (if you index variants by attributes)
-  const tryAttrs = await Product.updateOne(
-    { _id: productId, "variants.size": size, "variants.color": color },
-    { $inc: { "variants.$.stock": delta } }
-  ).exec();
-  if (tryAttrs?.modifiedCount) return;
-
-  // Fallback: product-level stock
-  await Product.updateOne({ _id: productId }, { $inc: { stock: delta } }).exec();
+  // Fallback: product-level stock (not present in schema, but for legacy)
+  // If you want to support a product-level stock, uncomment below:
+  // await Product.updateOne({ _id: productId }, { $inc: { stock: delta } }).exec();
 }
 
 module.exports = { adjustStock };

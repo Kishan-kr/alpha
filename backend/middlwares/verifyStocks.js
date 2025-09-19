@@ -6,7 +6,7 @@ const Product = require('../models/product');
  */
 const verifyStocks = async (req, res, next) => {
   try {
-    const cart = req.body.products;
+    const cart = req.body.items;
     if (!Array.isArray(cart) || cart.length === 0) {
       return res.status(400).json({ error: 'Cart is empty or invalid' });
     }
@@ -24,8 +24,13 @@ const verifyStocks = async (req, res, next) => {
       const size = product.sizes.find((s) => s.size?.toUpperCase() === selectedSize);
       const availableStock = size.quantity;
 
-      if (item.quantity > availableStock) {
-        stockErrors.push(`${product.title} (${selectedSize}) has only ${availableStock} items in stock.`);
+      const getTitleCase = (str) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+
+      if (availableStock <= 0) {
+        stockErrors.push(`${getTitleCase(product.title)} (${selectedSize}) is out of stock.`);
+      }
+      else if (item.quantity > availableStock) {
+        stockErrors.push(`${getTitleCase(product.title)} (${selectedSize}) has only ${availableStock} items in stock.`);
       }
     }
 

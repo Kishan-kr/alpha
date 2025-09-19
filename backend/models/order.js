@@ -43,7 +43,9 @@ const PaymentSchema = new Schema(
       default: PAYMENT_STATUS.PENDING,
     },
     amount: { type: Number, required: true, min: 0 },
-    transactionId: { type: String },
+    transactionId: { type: String }, // razorpay_payment_id
+    razorpay_order_id: { type: String },
+    razorpay_signature: { type: String },
     currency: {
       type: String,
       enum: CURRENCIES,
