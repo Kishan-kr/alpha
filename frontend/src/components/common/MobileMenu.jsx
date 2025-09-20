@@ -46,13 +46,18 @@ export default function MobileMenu({ navItems, menuOpen, setMenuOpen }) {
           <ul className="space-y-1">
             {navItems.map(({ name, path, Icon, children }) => {
               const isOpen = openSections[name];
+              const hasChildren = Array.isArray(children) && children.length > 0;
+
               return (
-                <li key={name} className=" uppercase rounded-md overflow-hidden">
+                <li 
+                key={name} 
+                onClick={() => {hasChildren && toggleSection(name)}} 
+                className=" uppercase rounded-md overflow-hidden">
                   <div className="flex items-center justify-between">
                     <NavLink
                       to={path}
                       end={children ? false : true}
-                      onClick={() => setMenuOpen(false)}
+                      onClick={() => {!hasChildren && setMenuOpen(false)}}
                       className={({ isActive }) =>
                         `flex items-center py-2 transition-colors ${
                           isActive ? "text-dark" : "text-subtext"
@@ -64,9 +69,9 @@ export default function MobileMenu({ navItems, menuOpen, setMenuOpen }) {
                     </NavLink>
 
                     {/* toggle button  */}
-                    {children && (
+                    {hasChildren && (
                       <button
-                        onClick={() => toggleSection(name)}
+                        // onClick={() => toggleSection(name)}
                         className="p-2 text-subtext hover:text-dark transition"
                       >
                         <ChevronDown

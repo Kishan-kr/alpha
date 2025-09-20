@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ShoppingBag, User, Search, Menu } from 'lucide-react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux'
-import navItems from '../../utils/navItems';
+import navItems, { mobileMenuItems } from '../../utils/navItems';
 import MobileMenu from './MobileMenu';
 import SearchBar from './SearchBar';
 import { VALID_CATEGORIES } from '../../constants/categories';
@@ -111,7 +111,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       <MobileMenu
-        navItems={navItems}
+        navItems={mobileMenuItems}
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
       />

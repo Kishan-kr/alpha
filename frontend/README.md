@@ -157,7 +157,7 @@ notes
 - fixed the above by removing isLoggedIn dependency state from effect
 
 # FIXES
-- add profile option in mobile navigation
+- add profile option in mobile navigation [done]
 - user's name isn't rendering on order details page under shipping address
 - removing item from cart throws error if item doesn't exist in cart DB, but in local storage
 - session isn't stored in cookies, intead in local storage

@@ -12,3 +12,19 @@ export default [
   { name: 'Orders', path: '/orders', Icon: Package },
   { name: 'About Us', path: '/about', Icon: Info },
 ];
+
+const mobileMenuItems = [
+  { name: 'Home', path: '/', Icon: Home },
+  { name: 'Profile', path: '/profile', Icon: User },
+  { name: 'Collections', path: '/collections', Icon: LayoutGrid,
+    children: [
+      { name: 'Oversized T-Shirt', path: '/collections/oversized-t-shirt' },
+      // { name: 'Oversized Polos', path: '/collections/oversized-polo' },
+    ],
+  },
+  { name: 'Shop', path: '/products', Icon: Store },
+  { name: 'Orders', path: '/orders', Icon: Package },
+  { name: 'About Us', path: '/about', Icon: Info },
+];
+
+export { mobileMenuItems };
