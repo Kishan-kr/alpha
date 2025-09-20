@@ -4,7 +4,7 @@ import api from "../../api/axiosClient";
 import { Lock } from "lucide-react";
 import { showErrorToastWithIcon } from "../../utils/customToasts";
 
-export default function RazorpayPaymentButton({ orderPayload, onOrderSuccess = () => {} }) {
+export default function RazorpayPaymentButton({ orderPayload, onOrderSuccess = () => {}, setVerificationInProgress = () => {} }) {
   const [loading, setLoading] = useState(false);
   const { userInfo: user } = useSelector(state => state.user);
 
@@ -66,6 +66,7 @@ export default function RazorpayPaymentButton({ orderPayload, onOrderSuccess = (
         description: "Order Payment",
         order_id: order.id, // Razorpay order_id
         handler: async function (response) {
+          setVerificationInProgress(true);
           // 3. Verify payment in backend
           const verifyRes = await api.post("/payments/verify-payment", {
               order_id: order.id,
@@ -80,6 +81,7 @@ export default function RazorpayPaymentButton({ orderPayload, onOrderSuccess = (
           } else {
             showErrorToastWithIcon(verifyData.error || "Payment verification failed");
           }
+          setVerificationInProgress(false);
         },
         prefill: {
           name: fullname || "Customer",

@@ -27,6 +27,7 @@ export default function Checkout({
 }) {
   const [paymentMethod, setPaymentMethod] = useState("ONLINE"); // "COD" | "ONLINE"
   const [loading, setLoading] = useState(false);
+  const [verificationInProgress, setVerificationInProgress] = useState(false);
   // const [errors, setErrors] = useState([]);
 
   const cleanItems = useMemo(
@@ -140,6 +141,18 @@ export default function Checkout({
     return parts;
   }, [deliveryAddress]);
 
+  if( verificationInProgress ) {
+    return (
+      <div className="py-6 md:p-10 gap-8 text-dark grid grid-cols-1 lg:grid-cols-2">
+        <div className="col-span-2 flex flex-col items-center justify-center min-h-[300px]">
+          <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-8 w-8 mb-4"></div>
+          <p className='text-xs tracking-wider font-light uppercase animate-pulse'>Verifying Payment...</p>
+          <p className="text-subtext text-xs font-light mt-2 text-center">Please do not refresh or close the page.</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="py-6 md:p-10 gap-8 text-dark grid grid-cols-1 lg:grid-cols-2">
       {/* Left: Order Summary */}
@@ -236,7 +249,11 @@ export default function Checkout({
               </>
             )}
           </button> :
-          <RazorpayPaymentButton orderPayload={payload} onOrderSuccess={onOrderSuccess}/>
+          <RazorpayPaymentButton 
+            orderPayload={payload} 
+            onOrderSuccess={onOrderSuccess}
+            setVerificationInProgress={setVerificationInProgress}
+          />
         }
 
 

@@ -162,6 +162,6 @@ notes
 - removing item from cart throws error if item doesn't exist in cart DB, but in local storage [done]
 - don't show orders with status = initiated and abondoned to users [done]
 - update order confirmation SMS function: need to create template first [IMP]
-- show loading while verifying order at checkout page
+- show loading while verifying order at checkout page [done]
 - frontend side validation on items' stock before proceeding to checkout [done]
 - frontend side validation on items' stock before adding item to bag
