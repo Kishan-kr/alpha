@@ -60,8 +60,10 @@ export const removeBagItemAndSync = async (item, dispatch, isLoggedIn) => {
       const resultAction = await dispatch(removeItemFromBagThunk(item?._id));
 
       if (!removeItemFromBagThunk.fulfilled.match(resultAction)) {
-        showErrorToastWithIcon("Failed to remove item from bag");
-        return;
+        if (resultAction?.payload !== "Cart item doesn't exist or may already have been removed") {
+          showErrorToastWithIcon("Failed to remove item from bag");
+          return;
+        }
       }
     }
 
