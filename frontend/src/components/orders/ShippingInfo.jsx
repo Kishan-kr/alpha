@@ -24,8 +24,8 @@ export default function ShippingInfo({ address = {}, shipment = {} }) {
       <div className="px-5 md:px-6 py-5 text-sm">
         {/* Address */}
         <div className="text-dark">
-          {address?.name}
-          {address?.phone ? <> · {address.phone}</> : null}
+          {address?.fullName}
+          {address?.fullName && address?.phone ? <> , {address.phone}</> : address?.phone || null}
         </div>
         <div className="text-subtext mt-1">
           {address?.line1}
