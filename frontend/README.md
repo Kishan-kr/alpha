@@ -151,7 +151,7 @@ notes
 - need to protect the orders routes in FE side [done]
 - protect profile routes too [done]
 
-- need to add shiprocket checkout or payment integration [IMP]
+- need to add shiprocket checkout or payment integration [done]
 
 - If a guest user at bag page fills address and verifies otp, his bag items gets fetched from DB and bag state gets updated [done] [issue]
 - fixed the above by removing isLoggedIn dependency state from effect
@@ -162,5 +162,7 @@ notes
 - removing item from cart throws error if item doesn't exist in cart DB, but in local storage
 - session isn't stored in cookies, intead in local storage
 - don't show orders with status = initiated to users
-- update order confirmation SMS function: need to create template first
+- update order confirmation SMS function: need to create template first [IMP]
 - show loading while verifying order at checkout page
+- frontend side validation on items' stock before proceeding to checkout [done]
+- frontend side validation on items' stock before adding item to bag

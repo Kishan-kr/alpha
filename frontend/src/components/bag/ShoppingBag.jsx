@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import BagProductCard from './BagProductCard';
 import EmptyBag from './EmptyBag';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,13 +14,27 @@ import {
 const ShoppingBag = ({ products, subtotal, discount, discountPercent, delivery, total, handleCheckout }) => {
 
   const { isLoggedIn } = useSelector(state => state.user);
+  const [existOutOfStock, setExistOutOfStock] = useState(false);
   const dispatch = useDispatch();
 
+  // Fetch stocks only if any product is missing maxStock (prevents infinite loop)
   useEffect(() => {
-    if(products?.length > 0) {
-      dispatch(getStocksOfCartItems(products))
+    if (
+      products?.length > 0 &&
+      products.some(p => typeof p.maxStock === 'undefined')
+    ) {
+      dispatch(getStocksOfCartItems(products));
     }
-  }, []);
+  }, [products, dispatch]);
+
+  // check out of stock existence
+  useEffect(() => {
+    if (products?.length > 0) {
+      setExistOutOfStock(products.some(p => p.maxStock === 0));
+    } else {
+      setExistOutOfStock(false);
+    }
+  }, [products]);
 
 
   const handleDelete = (item) => {
@@ -114,7 +128,7 @@ const ShoppingBag = ({ products, subtotal, discount, discountPercent, delivery, 
             <span>Total</span>
             <span>₹ {total.toFixed(2)}</span>
           </div>
-          <button onClick={handleCheckout} className="text-sm mt-9 uppercase w-full justify-center items-center px-6 py-2 bg-dark text-light cursor-pointer">
+          <button onClick={handleCheckout} disabled={existOutOfStock} className="text-sm mt-9 uppercase w-full justify-center items-center px-6 py-2 bg-dark text-light enabled:cursor-pointer disabled:opacity-80">
             Checkout
           </button>
         </div>
@@ -127,7 +141,7 @@ const ShoppingBag = ({ products, subtotal, discount, discountPercent, delivery, 
           <p className='text-base mt-1'>₹ {total.toFixed(2)}</p>
           <small className='text-subtext block text-xxs mt-0'>Including GST</small>
         </div>
-        <button onClick={handleCheckout} className="w-full h-fit flex justify-center items-center uppercase px-6 py-3 bg-dark text-sm text-light font-light cursor-pointer">
+        <button onClick={handleCheckout} disabled={existOutOfStock} className="w-full h-fit flex justify-center items-center uppercase px-6 py-3 bg-dark text-sm text-light font-light enabled:cursor-pointer disabled:opacity-80">
           Checkout
         </button>
       </div>}

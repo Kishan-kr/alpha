@@ -4,10 +4,21 @@ import ResponsiveImage from "../common/ResponsiveImage";
 
 
 const BagProductCard = ({ product, onIncrease, onDecrease, onRemove }) => {
-  const { effectivePrice, originalPrice } = product;
-
+  const { effectivePrice, originalPrice, maxStock } = product;
+  // Handle loading/fallback for undefined maxStock // debug
+  if (typeof maxStock === 'undefined') {
+    return (
+      <div className="relative flex items-center justify-center min-h-32 bg-surface animate-pulse">
+        <span className="text-xs text-subtext">Loading stock info...</span>
+      </div>
+    );
+  }
+  
+  const isOutOfStock = maxStock === 0;
+  const isStockLimitReached = product.quantity >= maxStock;
+  
   return (
-    <div className="relative flex sm:items-center justify-between">
+    <div className={`relative flex sm:items-center justify-between ${isOutOfStock ? "opacity-60" : ""}`}>
       <div className="flex items-center sm:items-start gap-4 xxs:gap-6 md:gap-16 w-full">
         <figure className="w-48 min-w-36 md:min-w-44 md:w-44 overflow-hidden aspect-[2/3] bg-surface">
           {/* <img
@@ -17,12 +28,12 @@ const BagProductCard = ({ product, onIncrease, onDecrease, onRemove }) => {
           /> */}
 
           <ResponsiveImage
-            source={product.thumbnail}      // DB-stored single URL
+            source={product.thumbnail}
             alt={product.title}
             className="h-full object-cover"
-            variants={["thumb"]}    // strictly thumbnail only
-            sizes="33vw"            // small card; override as you like
-            defaultVariant="thumb"  // use the tiny file as <img src>
+            variants={["thumb"]}
+            sizes="33vw"
+            defaultVariant="thumb"
           />
         </figure>
 
@@ -34,8 +45,6 @@ const BagProductCard = ({ product, onIncrease, onDecrease, onRemove }) => {
           {/* size and color */}
           <p className="text-xs text-subtext mt-3 uppercase">{product.size} | {product.color}</p>
 
-          {/* price */}
-          {/* <p className="text-dark text-base mt-8">₹ {product.originalPrice}</p> */}
           {/* Price */}
           <div className="mt-8 flex items-baseline space-x-2">
             {originalPrice !== effectivePrice ? (
@@ -67,7 +76,7 @@ const BagProductCard = ({ product, onIncrease, onDecrease, onRemove }) => {
           <div className="bg-surface w-max flex items-center text-xs overflow-hidden mt-3">
             <button
               onClick={() => onDecrease(product)}
-              disabled={product.quantity <= 1}
+              disabled={product.quantity <= 1 || isOutOfStock}
               className="px-2 py-1.5 text-subtext disabled:text-hover-tint enabled:hover:text-dark enabled:cursor-pointer"
             >
               <Minus size={12} />
@@ -75,11 +84,20 @@ const BagProductCard = ({ product, onIncrease, onDecrease, onRemove }) => {
             <span className="px-3 py-1 text-dark min-w-10 text-center">{product.quantity}</span>
             <button
               onClick={() => onIncrease(product)}
-              className="px-2 py-1.5 text-subtext enabled:hover:text-dark enabled:cursor-pointer"
+              disabled={isStockLimitReached || isOutOfStock}
+              className="px-2 py-1.5 text-subtext enabled:hover:text-dark enabled:cursor-pointer disabled:text-hover-tint"
             >
               <Plus size={12} />
             </button>
           </div>
+          {/* Out of stock message */}
+          {isOutOfStock && (
+            <div className="text-xs text-red-500 mt-2">Out of Stock</div>
+          )}
+          {/* Stock limit reached message */}
+          {isStockLimitReached && !isOutOfStock && (
+            <div className="text-xs text-red-500 mt-2">Stock limit reached</div>
+          )}
 
           {/* delete button for small screens only  */}
           <button

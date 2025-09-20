@@ -30,7 +30,30 @@ const getCartItemsByUserId = async (req, res) => {
       },
       { $unwind: { path: "$category", preserveNullAndEmptyArrays: true } },
 
-      // Flatten fields
+      // Flatten fields and include maxStock for the selected size
+      {
+        $addFields: {
+          maxStock: {
+            $let: {
+              vars: {
+                matchedSize: {
+                  $arrayElemAt: [
+                    {
+                      $filter: {
+                        input: "$product.sizes",
+                        as: "sz",
+                        cond: { $eq: ["$$sz.size", "$size"] }
+                      }
+                    },
+                    0
+                  ]
+                }
+              },
+              in: "$matchedSize.quantity"
+            }
+          }
+        }
+      },
       {
         $project: {
           _id: 1,
@@ -51,7 +74,8 @@ const getCartItemsByUserId = async (req, res) => {
               "$size", "_",
               { $ifNull: ["$color", ""] }
             ]
-          }
+          },
+          maxStock: 1
         }
       }
     ]);
