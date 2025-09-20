@@ -17,3 +17,5 @@ export const OTP_LENGTH = 6;
 export const REDIRECT_QUERY_PARAM = 're_dir';
 
 export const ORDERS_PAGE_LIMIT = 10;
+
+export const STATIC_SIZE_OPTIONS = ["S", "M", "L", "XL"];

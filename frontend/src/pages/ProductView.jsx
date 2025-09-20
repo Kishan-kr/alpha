@@ -61,7 +61,7 @@ const ProductView = () => {
     sizes = [],
   } = product;
 
-  const availableSizes = sizes.map((item) => item.size);
+  const availableSizes = sizes?.filter(item => item.size && item.quantity > 0).map(item => item.size);
 
   const handleSizeSelect = (product, size) => {
     const bagItem = getBagProductData(product, size);
@@ -143,7 +143,7 @@ const ProductView = () => {
 
             {/* add to bag button */}
             <SizeSelectMenu
-              sizes={availableSizes}
+              availableSizes={availableSizes}
               onChange={(size) => { handleSizeSelect(product, size) }}
             >
               <button className="text-dark block border border-border uppercase mt-4 md:mt-8 px-6 py-2 md:py-3 w-full text-sm font-medium enabled:cursor-pointer">

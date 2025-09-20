@@ -88,8 +88,8 @@ function Product({
     effectivePrice
   } = product;
 
-  const availableSizes = sizes?.map(item => item.size);
-
+  const availableSizes = sizes?.filter(item => item.size && item.quantity > 0).map(item => item.size);
+  
   return (
     <article
       className="h-full basis-52 mx-auto max-w-60 grow shrink flex flex-col"
@@ -144,7 +144,7 @@ function Product({
 
         {/* add to bag button */}
         <SizeSelectMenu
-          sizes={availableSizes}
+          availableSizes={availableSizes}
           onChange={(size) => { handleSizeSelect(product, size) }}
         >
           <button className='bg-surface h-7 w-7 p-1 text-xl font-thin flex items-center justify-center hover:border-subtext cursor-pointer'>+</button>
