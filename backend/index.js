@@ -19,6 +19,7 @@ const imageRoutes = require('./routes/images');
 const testimonialRoutes = require('./routes/testimonials');
 const lookbooksRoutes = require('./routes/lookbookVideo');
 const paymentRoutes = require('./routes/payment');
+const newsletterRoutes = require('./routes/newsletter');
 const { MAX_IMAGE_SIZE } = require("./utils/constants")
 
 // Session config
@@ -74,6 +75,7 @@ app.use('/api/images', imageRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/lookbooks', lookbooksRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/newsletter', newsletterRoutes);
 
 app.get("/", (req, res) => {
   res.send("Happy Hacking!")

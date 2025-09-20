@@ -12,7 +12,7 @@
 
 ### FOOTER ###
   - UI `done`. Need to add all pages 
-  - setup newsletter left
+  - setup newsletter left [done]
   
 ### COLLECTIONS ###
   - collections page `done`

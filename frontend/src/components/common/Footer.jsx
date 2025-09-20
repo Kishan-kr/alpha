@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
+import { showErrorToastWithIcon, showBagSuccessToast } from '../../utils/customToasts';
 import { Link } from "react-router-dom";
+import api from "../../api/axiosClient";
 
 export default function Footer() {
   const year = new Date().getFullYear();
+  const [loading, setLoading] = useState(false);
 
   const navCompany = [
     { label: "About Us", to: "/about" },
@@ -33,9 +36,24 @@ export default function Footer() {
     </li>
   );
 
-  const onSubscribe = (e) => {
+
+  const onSubscribe = async (e) => {
     e.preventDefault();
-    // TODO: connect to newsletter API
+    setLoading(true);
+    const form = e.target;
+    const email = form.email.value;
+    try {
+      const res = await api.post("/newsletter/subscribe", { email });
+      if (res.data.status) {
+        showBagSuccessToast("Subscribed successfully!");
+        form.reset();
+      } else {
+        showErrorToastWithIcon(res.data.error || "Subscription failed.");
+      }
+    } catch (err) {
+      showErrorToastWithIcon(err?.response?.data?.error || "Network error. Please try again.");
+    }
+    setLoading(false);
   };
 
   return (
@@ -86,9 +104,10 @@ export default function Footer() {
             />
             <button
               type="submit"
-              className="w-full border border-[var(--olive-green)] text-dark px-4 py-2 uppercase text-xs font-medium tracking-widest hover:bg-[var(--olive-green)]/10 transition-colors duration-300"
+              disabled={loading}
+              className="w-full border border-[var(--olive-green)] text-dark px-4 py-2 uppercase text-xs font-medium tracking-widest hover:bg-[var(--olive-green)]/10 transition-colors duration-300 enabled:cursor-pointer disabled:opacity-60"
             >
-              Subscribe
+              {loading ? "Subscribing..." : "Subscribe"}
             </button>
             <p className="text-xxs text-subtext uppercase">
               By subscribing you agree to our{" "}
