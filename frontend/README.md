@@ -26,7 +26,7 @@
   - fetching more products excluding the current `done`
   - add to cart `done`
   - size chart `done`
-  - need to update measurement guide image in size chart `IMP` 
+  - need to update measurement guide image in size chart [done]
 
 ### SHOPPING BAG ###
   - shopping bag page: done inc-dec and remove items from bag for all users `done`
@@ -164,4 +164,4 @@ notes
 - update order confirmation SMS function: need to create template first [IMP]
 - show loading while verifying order at checkout page [done]
 - frontend side validation on items' stock before proceeding to checkout [done]
-- frontend side validation on items' stock before adding item to bag
+- frontend side validation on items' stock before adding item to bag [done]
