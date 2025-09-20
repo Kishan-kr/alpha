@@ -2,9 +2,10 @@ const Order = require("../../models/order");
 const Rma = require("../../models/rma");
 const CustomError = require("../../utils/customError");
 const { INTERNAL_SERVER_ERROR } = require("../../utils/constants");
+const { ORDER_STATUS } = require("../../utils/enums");
 
 /**
- * GET /api/orders
+ * GET /api/orders (for users only)
  * Query:
  *  - page (default 1)
  *  - limit (default 10, max 50)
@@ -26,7 +27,15 @@ module.exports = async (req, res) => {
     const { status, type, q, withRma } = req.query || {};
 
     const filter = { userId };
-    if (status) filter.status = status;
+
+    // Always exclude ABANDONED and INITIATED orders
+    filter.status = { $nin: [ORDER_STATUS.ABANDONED, ORDER_STATUS.INITIATED] };
+    if (status && Array.isArray(status)) {
+      filter.status.$in = status;
+    } else if (status) {
+      filter.status.$in = [status];
+    }
+
     if (type) filter.type = type;
     if (q) filter.orderNumber = { $regex: q.trim(), $options: "i" };
 
